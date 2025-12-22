@@ -18,6 +18,8 @@ class ObjectMapping:
             "z_order": 25,
             "unknown_31" : 31, # Almost certainly text field for "A" block
             "scale": 32,
+            "unknown41" : 41, # No clue, related to a one-sided-block outline?
+            "unknown43": 43,  # No clue, related to a one-sided-block outline?
             "unknown_54" : 54, # Something to do with teleport portals
             "groups": 57,  # See Google Doc ("Period-separated list (e.g., 1.2.10)")
             "editor_layer_two": 61,
@@ -42,15 +44,22 @@ class ObjectMapping:
             "trigger_easing_id": 30,
             "trigger_opacity": 35,
             "unknown36": 36, # Always 1, for some unknown reason. (No clue what this does)
+
             "unknown_45": 45,  # Has some role in the functionality of toggle triggers
             "trigger_target_group_id": 51,
             "trigger_center_group_id": 52,
             "unknown_56": 56,  # Has some role in the functionality of toggle triggers
+            "unknown_58": 58, # Related to Move trigger
+            "unknown_68": 68,  # Related to Rotate trigger
+            "unknown_69": 69,  # Related to Rotate trigger
+            "unknown_70": 70,  # Related to Rotate trigger
+            "unknown_71": 71, # Related to Rotate trigger
+            "unknown_85": 85,  # Related to Rotate trigger
             "trigger_pickup_id" : 80,
             "trigger_multi_trigger": 87,
             "unknown_128": 128, # Has some role in the functionality of toggle triggers
             "unknown_129": 129  # Has some role in the functionality of toggle triggers
         }
         self.key_to_attribute = {value: key for key, value in self.attribute_to_key.items()}
-        print(self.attribute_to_key)
-        print(self.key_to_attribute)
+        # print(self.attribute_to_key)
+        # print(self.key_to_attribute)

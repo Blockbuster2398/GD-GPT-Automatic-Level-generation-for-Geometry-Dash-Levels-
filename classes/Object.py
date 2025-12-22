@@ -16,6 +16,8 @@ class GMD_Object:
         "z_order" : 0,
         "unknown_31": None,  # Almost certainly text field for "A" block,
         "scale" : 1,
+        "unknown41": 41,  # No clue, related to a one-sided-block outline
+        "unknown43": 43,  # No clue, related to a one-sided-block outline
         "unknown_54": None,  # Something to do with teleport portals
         "groups" : "", # See Google Doc ("Period-separated list (e.g., 1.2.10)")
         "editor_layer_two" : 0,
@@ -44,6 +46,12 @@ class GMD_Object:
         "trigger_target_group_id" : None,
         "trigger_center_group_id" : None,
         "unknown_56": None,  # Has some role in the functionality of toggle triggers
+        "unknown_58": None,  # Related to Move trigger
+        "unknown_68": None,  # Related to Rotate trigger
+        "unknown_69": None,  # Related to Rotate trigger
+        "unknown_70": None,  # Related to Rotate trigger
+        "unknown_71": None,  # Related to Rotate trigger
+        "unknown_85": None,  # Related to Rotate trigger
         "trigger_pickup_id" : None,
         "trigger_multi_trigger" : None,
         "unknown_128": None, # Has some role in the functionality of toggle triggers
@@ -52,22 +60,6 @@ class GMD_Object:
 
     def __init__(self):
         return
-    """def __init__(self, objectID, xPosition, yPosition, hFlip, vFlip, rotation):
-        # Simple Constructor
-        self.details = {
-            "object_type": "",  # Custom, implemented by me
-            "object_id": objectID,
-            "x_position": xPosition,
-            "y_position": yPosition,
-            "flip_horizontal": hFlip,
-            "flip_vertical": vFlip,
-            "rotation": rotation,
-        }"""
-
-    """def __init__(self, objectID, xPosition, yPosition):
-        self.object_id = objectID
-        self.x_position = xPosition
-        self.y_position = yPosition"""
 
     def __str__(self):
         return (
