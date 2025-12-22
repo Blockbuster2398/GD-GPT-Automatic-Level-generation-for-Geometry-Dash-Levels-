@@ -8,16 +8,21 @@ class GMD_Object:
         "flip_horizontal" : False,
         "flip_vertical" : False,
         "rotation" : 0,
+        "unknown_19": 19,  # Something to do with the sideways path guide arrow
         "editor_layer_one" : 0,
         "color_one_id": None,
         "color_two_id" : None,
         "z_layer" : 0,
         "z_order" : 0,
+        "unknown_31": None,  # Almost certainly text field for "A" block,
         "scale" : 1,
+        "unknown_54": None,  # Something to do with teleport portals
         "groups" : "", # See Google Doc ("Period-separated list (e.g., 1.2.10)")
         "editor_layer_two" : 0,
         "dont_fade" : None,
         "dont_enter" : None,
+        "unknown155": None, # Appears frequently in Nine Circles
+        "unknown156": 156,  # Appears frequently in Nine Circles
         # Specific to Triggers
         "trigger_red" : None,
         "trigger_green" : None,
@@ -25,6 +30,7 @@ class GMD_Object:
         "trigger_duration" : None,
         "trigger_touch" : None,
         "trigger_checked" : None,
+        "tint_ground": None,
         "trigger_player_one" : None,
         "trigger_player_two" : None,
         "trigger_blending" : None,
@@ -33,10 +39,15 @@ class GMD_Object:
         "trigger_y_movement" : None,
         "trigger_easing_id" : None,
         "trigger_opacity" : None,
+        "unknown36": None,  # Always 1, for some unknown reason. (No clue what this does)
+        "unknown_45": None,  # Has some role in the functionality of toggle triggers
         "trigger_target_group_id" : None,
         "trigger_center_group_id" : None,
+        "unknown_56": None,  # Has some role in the functionality of toggle triggers
         "trigger_pickup_id" : None,
-        "trigger_multi_trigger" : None
+        "trigger_multi_trigger" : None,
+        "unknown_128": None, # Has some role in the functionality of toggle triggers
+        "unknown_129": None # Has some role in the functionality of toggle triggers
     }
 
     def __init__(self):
