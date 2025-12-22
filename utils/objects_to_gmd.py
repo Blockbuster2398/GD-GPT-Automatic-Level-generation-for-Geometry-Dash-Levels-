@@ -1,6 +1,5 @@
 import base64
 import gzip
-import struct
 
 # 1. DEFINE THE KEY MAP (Human Readable -> GD ID)
 # This must match the keys you used in your parser
@@ -49,6 +48,7 @@ def objects_to_string(object_list):
 
         obj_strings.append(",".join(properties))
 
+    print(";".join(obj_strings))
     return ";".join(obj_strings)
 
 
@@ -93,13 +93,15 @@ def save_to_gmd(filename, level_name, level_desc, level_string):
 # 1. Define your new objects (Code Representation)
 # Example: A line of spikes
 new_objects = []
-for i in range(5):
+
+for i in range(15):
     new_objects.append({
         'id': 3,  # Spike ID
         'x': 100 + (i * 30),
         'y': 30,
         'group': 1
     })
+
 
 # 2. Define the Level Header
 # This string defines background, speed, song, etc.
@@ -111,4 +113,4 @@ default_header = "kA13,0,kA15,0,kA16,0,kA14,,kA6,0,kA7,0,kA17,0,kA18,0,kS38,1,1,
 final_string = create_level_string(default_header, new_objects)
 
 # 4. Save
-save_to_gmd("new_level.gmd", "My PyLevel", "Generated with Python", final_string)
+save_to_gmd("new_level.gmd", "My PyLevel (Nightmare)", "Generated with Python", final_string)

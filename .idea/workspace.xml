@@ -5,13 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5a4e2c22-c5b6-4abb-944e-838f0397918e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Level.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Object.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/levels/nine_circles.gmd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/objects_to_gmd.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/classes/Level.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/classes/Object.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/ObjectDetailMapping.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/levels/nightmare.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/gmd_to_objects.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Level.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Object.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/gmd_to_objects.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/gmd_to_objects.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/new_level.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/utils/new_level.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/objects_to_gmd.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/objects_to_gmd.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +31,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -39,14 +45,19 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.Level.executor": "Run",
+    "Python.LevelClass.executor": "Run",
+    "Python.Object.executor": "Run",
+    "Python.ObjectDetailMapping.executor": "Run",
     "Python.gmd_to_objects.executor": "Run",
     "Python.main.executor": "Run",
     "Python.objects_to_gmd.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/justi/GMDgenerator",
-    "settings.editor.selected.configurable": "preferences.fileTypes"
+    "settings.editor.selected.configurable": "configurable.group.appearance"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -54,8 +65,9 @@
       <recent name="C:\Users\justi\GMDgenerator" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\justi\GMDgenerator\levels" />
+      <recent name="C:\Users\justi\GMDgenerator\classes" />
       <recent name="C:\Users\justi\GMDgenerator\utils" />
+      <recent name="C:\Users\justi\GMDgenerator\levels" />
       <recent name="C:\Users\justi\GMDgenerator" />
     </key>
   </component>

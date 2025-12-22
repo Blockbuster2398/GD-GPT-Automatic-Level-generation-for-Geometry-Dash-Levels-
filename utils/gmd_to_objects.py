@@ -1,6 +1,7 @@
 import base64
 import zlib
 
+
 def gmd_to_objects(raw_data):
     # Returns list of Objects from left to right, bottom to top
     raw_k4_data = raw_data.split("</s><k>k4</k><s>")[1].split("==")[0]
@@ -59,6 +60,7 @@ def gmd_to_objects(raw_data):
     # for idx, obj in enumerate(parsed_objects[:30]):
     for idx, obj in enumerate(parsed_objects):
         print(f"Obj {idx}: {obj}")
+
 
 
 # Decodes Level Easy
