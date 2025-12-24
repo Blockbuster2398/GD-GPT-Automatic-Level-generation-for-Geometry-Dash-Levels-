@@ -1,15 +1,17 @@
 import base64
 import zlib
+from operator import attrgetter
 
 from classes.Object import GMD_Object
 from utils.ObjectDetailMapping import ObjectMapping
 
 
 class GMD_Level:
-    objects_list = []
-    plain_object_data = ""
+
     # raw_string = None
     def __init__(self, path):
+        self.objects_list = []
+        self.plain_object_data = ""
         k4 = ""
         try:
             with open(path, "r") as file:
@@ -37,21 +39,33 @@ class GMD_Level:
         # print(self.plain_object_data)
         # For every object in data, add the object to the object list with data
         map = ObjectMapping()
-        for i in range(len(self.plain_object_data))[1:]:
+        for i in (range(len(self.plain_object_data))[1:-1]):
             object = self.plain_object_data[i]
             object_segmented = object.split(",")
             new_object = GMD_Object()
-
+            new_object.sequence_order = i-1
             for j in range(int(len(object_segmented)/2)):
                 if int(object_segmented[j*2]) in map.key_to_attribute.keys():
                     new_object.details[map.key_to_attribute[int(object_segmented[j*2])]] = object_segmented[j*2+1]
-                self.objects_list.append(new_object)
-    def print_objects(self):
+            self.objects_list.append((new_object))
+        #
+        self.sort()
+    def __str__(self):
+        to_string = ""
+        for i in self.objects_list: to_string += ("\n" + str(i))
+        return to_string
+    def sort(self):
+        self.objects_list = sorted(
+            self.objects_list,
+            key=lambda GMDObject: (float(GMDObject.details['x_position']), float(GMDObject.details['y_position'])))
         for i in range(len(self.objects_list)):
-            print(str(i) + "th object: " + str(self.objects_list[i]))
-
-
+            self.objects_list[i].sequence_order = i
     def create_gmd(self, new_file_name):
         default_header = "kA13,0,kA15,0,kA16,0,kA14,,kA6,0,kA7,0,kA17,0,kA18,0,kS38,1,1,1,255,2,255,3,255,4,255,5,1,8,1"
 
 
+"""
+level = GMD_Level("../levels/the_nightmare.gmd")
+level.sort()
+print(level)
+"""

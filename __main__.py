@@ -9,7 +9,7 @@ level2 = GMD_Level("levels/the_nightmare.gmd")
 # level4 = GMD_Level("levels/level_easy.gmd")
 # level1 = GMD_Level("levels/nine_circles.gmd")
 
-level2.print_objects()
+print(level2)
 
 """for file_path in Path("./levels").iterdir():
     print(file_path)
