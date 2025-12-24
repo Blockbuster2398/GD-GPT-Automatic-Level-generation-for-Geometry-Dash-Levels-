@@ -6,9 +6,70 @@
   <component name="ChangeListManager">
     <list default="true" id="5a4e2c22-c5b6-4abb-944e-838f0397918e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__main__.py" beforeDir="false" afterPath="$PROJECT_DIR$/__main__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/classes/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Level.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/classes/Object.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Object.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/__main__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/1.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/1.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Adrift.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Adrift.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Afterglow.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Afterglow.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Back on Track RM.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Back on Track RM.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Back on Track v2.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Back on Track v2.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Captain Jonne.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Captain Jonne.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/ColorZ.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/ColorZ.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Crystal Blossoms.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Crystal Blossoms.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Dark Paradise.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Dark Paradise.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Dreamland.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Dreamland.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Dry Out RM.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Dry Out RM.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Dynamic On Track.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Dynamic On Track.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Dynasty.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Dynasty.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Easy .gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Easy .gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Edification.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Edification.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/ElectroWorld.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/ElectroWorld.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Enchanted.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Enchanted.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/End Of Line.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/End Of Line.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Gabber Fly.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Gabber Fly.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Glitter Jumper.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Glitter Jumper.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Glitter Madness 2k15.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Glitter Madness 2k15.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Globe Navigation.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Globe Navigation.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/GoldenClub.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/GoldenClub.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Hexagon HyperDrive.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Hexagon HyperDrive.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/High hill.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/High hill.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Iceland.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Iceland.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Lunar Ocean.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Lunar Ocean.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Mystery Dungeon.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Mystery Dungeon.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/P0RTAL.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/P0RTAL.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Partition Madness.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Partition Madness.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Polargeist X.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Polargeist X.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Polargeist v01.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Polargeist v01.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Polargeist v2.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Polargeist v2.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Remake Level 2.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Remake Level 2.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Ruinest Zone.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Ruinest Zone.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Sonar 2.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Sonar 2.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/SoulDust.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/SoulDust.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Stage Mix.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Stage Mix.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Standard Madness.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Standard Madness.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Stereo Electro v3.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Stereo Electro v3.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Stereo Madness X.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Stereo Madness X.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Sunwalker.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Sunwalker.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/The Prism 2.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/The Prism 2.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/Time is Eco.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/Time is Eco.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/dorabaebasic4.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/dorabaebasic4.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/dorabaebasic5.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/dorabaebasic5.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/endless.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/endless.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/flappy hexagon.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/flappy hexagon.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/geometry level.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/geometry level.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/level_easy.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/level_easy.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/nine_circles.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/nine_circles.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/polargeist reverse.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/polargeist reverse.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/simple cloud.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/simple cloud.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/square adventure.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/square adventure.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/stage of madness.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/stage of madness.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/stereo dynamicness.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/stereo dynamicness.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/stereo madness v2.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/stereo madness v2.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels/the_nightmare.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/input_levels/the_nightmare.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/ObjectDetailMapping.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/ObjectDetailMapping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/gmd_to_objects.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/objects_to_gmd.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/objects_to_gmd.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

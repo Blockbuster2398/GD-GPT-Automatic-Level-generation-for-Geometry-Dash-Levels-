@@ -57,7 +57,7 @@ def create_level_string(header_string, object_list):
     Combines the header and objects, compresses, and encodes them.
     """
     # 1. Build the raw text string
-    # GD levels always end with a semicolon
+    # GD input_levels always end with a semicolon
     raw_body = objects_to_string(object_list)
     full_level_text = f"{header_string};{raw_body};"
 

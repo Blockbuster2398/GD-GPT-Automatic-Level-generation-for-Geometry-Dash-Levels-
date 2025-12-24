@@ -1,5 +1,5 @@
+from utils.ObjectDetailMapping import ObjectMapping
 class GMD_Object:
-
 
     def __init__(self):
         self.details = {
@@ -8,8 +8,8 @@ class GMD_Object:
             "object_id" : None,
             "x_position" : None, # Change to None?
             "y_position" : None, # Change to None?
-            "flip_horizontal" : False,
-            "flip_vertical" : False,
+            "flip_horizontal" : 0, # False,
+            "flip_vertical" : 0, # False,
             "rotation" : 0,
             "unknown_19": 19,  # Something to do with the sideways path guide arrow
             "editor_layer_one" : 0,
@@ -22,7 +22,7 @@ class GMD_Object:
             "unknown41": 41,  # No clue, related to a one-sided-block outline
             "unknown43": 43,  # No clue, related to a one-sided-block outline
             "unknown_54": None,  # Something to do with teleport portals
-            "groups" : "", # See Google Doc ("Period-separated list (e.g., 1.2.10)")
+            "groups" : None, # See Google Doc ("Period-separated list (e.g., 1.2.10)")
             "editor_layer_two" : 0,
             "dont_fade" : None,
             "dont_enter" : None,
@@ -61,6 +61,16 @@ class GMD_Object:
             "unknown_129": None # Has some role in the functionality of toggle triggers
         }
         self.sequence_order = None # 0 indexed order of object in level placement
+        self.map = ObjectMapping()
+    def to_gmd_format(self):
+        object_string = ""
+        for key in self.details.keys():
+            if self.details[key] != None:
+                # object_string += (str(key) + str(self.details[key]) + ",")
+                object_string += (str(self.map.attribute_to_key[str(key)]) + "," + str(self.details[key]) + ",")
+        object_string = object_string[:-1]
+        return object_string
+
 
     def __str__(self):
         return (
@@ -68,3 +78,6 @@ class GMD_Object:
                 ", GMD_Object ID: " + str(self.details["object_id"]) +
                 ", X: " + str(self.details["x_position"]) +
                 ", Y: " + str(self.details["y_position"]))
+
+object = GMD_Object()
+object.to_gmd_format()

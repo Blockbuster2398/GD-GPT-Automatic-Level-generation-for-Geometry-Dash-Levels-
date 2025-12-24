@@ -1,16 +1,11 @@
 from classes.Level import GMD_Level
 from pathlib import Path
 from utils.ObjectDetailMapping import ObjectMapping
-from utils.gmd_to_objects import gmd_to_objects
 
-# level1 = GMD_Level("levels/Sonar 2.gmd")
-level2 = GMD_Level("levels/the_nightmare.gmd")
-# level3 = Level("levels/level_easy.gmd")
-# level4 = GMD_Level("levels/level_easy.gmd")
-# level1 = GMD_Level("levels/nine_circles.gmd")
 
-print(level2)
+level = GMD_Level("../input_levels/nine_circles.gmd")
+level.create_gmd("../output_levels/ten_circles.gmd", "ten_circles", "(10/10)")
 
-"""for file_path in Path("./levels").iterdir():
+"""for file_path in Path("./input_levels").iterdir():
     print(file_path)
     level = GMD_Level(file_path)"""

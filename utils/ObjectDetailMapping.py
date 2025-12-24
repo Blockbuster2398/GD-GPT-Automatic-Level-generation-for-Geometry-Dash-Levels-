@@ -2,6 +2,7 @@ class ObjectMapping:
     attribute_to_key = {}
     key_to_attribute = {}
     def __init__(self):
+        # Where booleans are applicable, 0 = false and 1 = true
         self.attribute_to_key = {
             "object_type": 999,  # Custom, implemented by me
             "object_id": 1,
