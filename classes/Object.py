@@ -1,4 +1,4 @@
-from utils.ObjectDetailMapping import ObjectMapping
+from utils.ObjectMapping import ObjectMap
 class GMD_Object:
 
     def __init__(self):
@@ -58,10 +58,15 @@ class GMD_Object:
             "trigger_pickup_id" : None,
             "trigger_multi_trigger" : None,
             "unknown_128": None, # Has some role in the functionality of toggle triggers
-            "unknown_129": None # Has some role in the functionality of toggle triggers
+            "unknown_129": None, # Has some role in the functionality of toggle triggers
+
+            # Special Details
+            "x_distance": None,
+            "y_distance": None
         }
         self.sequence_order = None # 0 indexed order of object in level placement
-        self.map = ObjectMapping()
+        self.map = ObjectMap()
+        self.category = None
     def to_gmd_format(self):
         object_string = ""
         for key in self.details.keys():
@@ -73,6 +78,14 @@ class GMD_Object:
 
 
     def __str__(self):
+        return (
+                "Sequence order: " + str(self.sequence_order) +
+                ", GMD_Object ID: " + str(self.details["object_id"]) +
+                ", X: " + str(self.details["x_position"]) +
+                ", Y: " + str(self.details["y_position"]) +
+                ", X_distance: " + str(self.details["x_distance"]) +
+                ", Y_distance: " + str(self.details["y_distance"]))
+
         return (
                 "Sequence order: " + str(self.sequence_order) +
                 ", GMD_Object ID: " + str(self.details["object_id"]) +

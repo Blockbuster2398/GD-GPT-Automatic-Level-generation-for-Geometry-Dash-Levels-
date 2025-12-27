@@ -1,8 +1,9 @@
-class ObjectMapping:
+class ObjectMap:
     attribute_to_key = {}
     key_to_attribute = {}
     def __init__(self):
         # Where booleans are applicable, 0 = false and 1 = true
+        # Sets default values for an object
         self.attribute_to_key = {
             "object_type": 999,  # Custom, implemented by me
             "object_id": 1,
@@ -62,5 +63,13 @@ class ObjectMapping:
             "unknown_129": 129  # Has some role in the functionality of toggle triggers
         }
         self.key_to_attribute = {value: key for key, value in self.attribute_to_key.items()}
-        # print(self.attribute_to_key)
-        # print(self.key_to_attribute)
+
+        # Initializes mappings for object_categories
+        # object_types: collision_death, collision_touchable, portal/gameplay, no collision, trigger
+        crash_object_ids = []
+        collision_object_ids = []
+        gameplay_object_ids = []
+        no_collision_object_ids = []
+        trigger_object_ids = []
+
+        self.category_mapping = {}
