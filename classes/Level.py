@@ -11,69 +11,63 @@ from utils.ObjectMapping import ObjectMap
 class GMD_Level:
 
     # raw_string = None
-    def __init__(self, path):
+    def __init__(self, path, objects_list = None):
         self.objects_list = []
         self.plain_object_data = ""
         self.is_modified = False
         self.tokens = []
         k4 = ""
-        try:
-            with open(path, "r") as file:
-                content = file.read()
-                # print(content)
-        except FileNotFoundError:
-            print("File not found.")
-        except Exception as e:
-            print(f"An error occured: {e}")
-
-        try:
-            # Attempts to extract level object data from file contents
-            # k4 = content.split("</s><k>k4</k><s>")[1].split("==")[0]
-            k4 = content.split("</s><k>k4</k><s>")[1].split("</s>")[0]
-        except IndexError:
-            print("GMD file likely improperly formatted.")
-        except Exception as e:
-            print(f"An error occured: {e}")
-        safe_string = k4.replace('-', '+').replace('_', '/')
-        padding = len(safe_string) % 4
-        if padding:
-            safe_string += '=' * (4 - padding)
-        compressed_data = base64.b64decode(safe_string)
-        self.plain_object_data = zlib.decompress(compressed_data, 15 + 32).decode('utf-8').split(";")
-        # For every object in data, add the object to the object list with data
-        # print(self.plain_object_data)
         self.map = ObjectMap()
-        for i in (range(len(self.plain_object_data))[1:-1]):
-            object = self.plain_object_data[i]
-            object_segmented = object.split(",")
-            new_object = GMD_Object()
-            new_object.sequence_order = i-1
-            for j in range(int(len(object_segmented)/2)):
-                # Initializes all normal attributes of the new object
-                if int(object_segmented[j*2]) in self.map.key_to_attribute.keys():
-                    new_object.details[self.map.key_to_attribute[int(object_segmented[j*2])]] = object_segmented[j*2+1]
-                else:
-                    self.is_modified = True
-            new_object.details["x_position"] = int(float(new_object.details["x_position"]))
-            new_object.details["y_position"] = int(float(new_object.details["y_position"]))
+        if not objects_list:
+            try:
+                with open(path, "r") as file:
+                    content = file.read()
+                    # print(content)
+            except FileNotFoundError:
+                print("File not found.")
+            except Exception as e:
+                print(f"An error occured: {e}")
 
-            self.objects_list.append((new_object))
+            try:
+                # Attempts to extract level object data from file contents
+                # k4 = content.split("</s><k>k4</k><s>")[1].split("==")[0]
+                k4 = content.split("</s><k>k4</k><s>")[1].split("</s>")[0]
+            except IndexError:
+                print("GMD file likely improperly formatted.")
+            except Exception as e:
+                print(f"An error occured: {e}")
+            safe_string = k4.replace('-', '+').replace('_', '/')
+            padding = len(safe_string) % 4
+            if padding:
+                safe_string += '=' * (4 - padding)
+            compressed_data = base64.b64decode(safe_string)
+            self.plain_object_data = zlib.decompress(compressed_data, 15 + 32).decode('utf-8').split(";")
+            # For every object in data, add the object to the object list with data
+            # print(self.plain_object_data)
+
+            for i in (range(len(self.plain_object_data))[1:-1]):
+                object = self.plain_object_data[i]
+                object_segmented = object.split(",")
+                new_object = GMD_Object()
+                new_object.sequence_order = i-1
+                for j in range(int(len(object_segmented)/2)):
+                    # Initializes all normal attributes of the new object
+                    if int(object_segmented[j*2]) in self.map.key_to_attribute.keys():
+                        new_object.details[self.map.key_to_attribute[int(object_segmented[j*2])]] = object_segmented[j*2+1]
+                    else:
+                        self.is_modified = True
+                new_object.details["x_position"] = int(float(new_object.details["x_position"]))
+                new_object.details["y_position"] = int(float(new_object.details["y_position"]))
+
+                self.objects_list.append((new_object))
+        else:
+            self.objects_list = objects_list
         self.sort()
         # Initializes relative distances of objects
         x_distance = 0
         y_distance = 0
         # Creates relative object distances
         for i in range(len(self.objects_list))[1:]:
-            """# If the difference between the objects has changed, change the distance between objects
-            if float(self.objects_list[i].details["x_position"]) != float(self.objects_list[i-1].details["x_position"]):
-                x_distance = float(self.objects_list[i].details["x_position"]) - float(self.objects_list[i-1].details["x_position"])
-                x_distance = float(int(x_distance * 100)) / 100
-            if float(self.objects_list[i].details["y_position"]) != float(self.objects_list[i-1].details["y_position"]):
-                y_distance = float(self.objects_list[i].details["y_position"]) - float(self.objects_list[i-1].details["y_position"])
-                y_distance = float(int(y_distance * 100)) / 100
-            self.objects_list[i].details["x_distance"] = int(x_distance)
-            self.objects_list[i].details["y_distance"] = int(y_distance)"""
-
             self.objects_list[i].details["x_distance"] = self.objects_list[i].details["x_position"] - self.objects_list[i-1].details["x_position"]
             self.objects_list[i].details["y_distance"] = self.objects_list[i].details["y_position"] - self.objects_list[i-1].details["y_position"]
 
@@ -152,10 +146,10 @@ class GMD_Level:
             # print(i)
             if i.details["x_distance"] is not None and i.details["x_distance"] > 0:
                 tokens.append("x_reset")
-                tokens.append("x_increment_" + str(get_x_increment(i.details["x_distance"])))
+                tokens.append("x_increment-" + str(get_x_increment(i.details["x_distance"])))
             if i.details["y_distance"] is not None:
                 if i.details["y_distance"] > 0:
-                    tokens.append("y_increment_" + str(get_y_increment(i.details["y_distance"])))
+                    tokens.append("y_increment-" + str(get_y_increment(i.details["y_distance"])))
                 elif i.details["y_distance"] < 0:
                     tokens.append("y_reset")
 
@@ -215,36 +209,67 @@ class GMD_Level:
 
             # Half Blocks
             elif int(i.details["object_id"]) in (self.map.category_to_id['half_block']):
-                tokens.append("half_block_" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
+                tokens.append("half_block-" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
             # Pads
             elif int(i.details["object_id"]) in (self.map.category_to_id['red_pad']):
-                tokens.append("red_pad_" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
+                tokens.append("red_pad-" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
             elif int(i.details["object_id"]) in (self.map.category_to_id['yellow_pad']):
-                tokens.append("yellow_pad_" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
+                tokens.append("yellow_pad-" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
             elif int(i.details["object_id"]) in (self.map.category_to_id['blue_pad']):
-                tokens.append("blue_pad_" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
+                tokens.append("blue_pad-" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
             elif int(i.details["object_id"]) in (self.map.category_to_id['purple_pad']):
-                tokens.append("purple_pad_" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
+                tokens.append("purple_pad-" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
 
             # Spikes
             elif int(i.details["object_id"]) in (self.map.category_to_id['spike']):
-                tokens.append("spike_" + get_90_rotation_spike(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+                tokens.append("spike-" + get_90_rotation_spike(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
             elif int(i.details["object_id"]) in (self.map.category_to_id['spike_short']):
-                tokens.append("spike_short_" + get_90_rotation_spike(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+                tokens.append("spike_short-" + get_90_rotation_spike(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
             elif int(i.details["object_id"]) in (self.map.category_to_id['spike_mini']):
-                tokens.append("spike_mini_" + get_90_rotation_spike(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+                tokens.append("spike_mini-" + get_90_rotation_spike(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
 
             # Slopes
             elif int(i.details["object_id"]) in (self.map.category_to_id['slope']):
-                tokens.append("slope_" + get_90_rotation_slope(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+                tokens.append("slope-" + get_90_rotation_slope(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
             elif int(i.details["object_id"]) in (self.map.category_to_id['slope_long']):
-                tokens.append("slope_long_" + get_90_rotation_slope(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+                tokens.append("slope_long-" + get_90_rotation_slope(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
             else:
                 tokens.append("_")
         tokens.append("end")
         # print(tokens)
         self.tokens = tokens
 
+    def decode_tokens(tokens : str):
+        map = ObjectMap()
+        token_array = tokens.split(";")
+        current_x = 0
+        current_y = 0
+        object_array = []
+        for i in token_array:
+
+            if "y_increment-" in i:
+                current_y += int(i[len("y_increment-"):])
+                print(f"y: {current_y}")
+            elif "x_increment-" in i:
+                current_x += int(i[len("x_increment-"):])
+                print(f"x: {current_x}")
+            elif i == "x_reset": pass # Do nothing
+            elif i == "y_reset": current_y = 0
+            elif i == "start": pass # Do nothing
+            elif i == "end": break # Does this make sense?
+            # Token must represent an object
+            else:
+                object_category = i.split("-")[0]
+                print(i)
+                print(object_category)
+                new_object = GMD_Object()
+                new_object.details["x_position"] = (current_x)
+                new_object.details["y_position"] = (current_y)
+                new_object.details["object_id"] = (map.category_to_id_create[object_category])
+                object_array.append(new_object)
+
+
+        return object_array
     def create_gmd(self, filename, level_name, level_description):
         full_level_text = ""
         k4_prefix = ""

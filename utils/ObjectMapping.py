@@ -137,6 +137,60 @@ class ObjectMap:
 
         }
 
+        self.category_to_id_create = {
+            # Orbs (dx, dy)
+            "green_orb": 1022,
+            "red_orb": 1333,  # Exclude???
+            "black_orb": 1330,
+            "purple_orb": 141,
+            "yellow_orb": 36,
+            "blue_orb": 84,
+            # Pads (dx, dy, rotation*)
+            "red_pad": 1332,
+            "yellow_pad": 35,
+            "blue_pad": 67,
+            "purple_pad": 140,
+            # Portals (dx, dy)
+            "blue_gravity": 10,
+            "yellow_gravity": 11,
+            "cube_portal": 12,
+            "ship_portal": 13,
+            "ball_portal": 47,
+            "ufo_portal": 111,
+            "wave_portal": 660,
+            "robot_portal": 745,
+            "spider_portal": 1331,
+            "teleport_portal": 747,
+            "green_size": 99,
+            "pink_size": 101,
+            "start_dual": 287,
+            "end_dual": 286,
+            "orange_reflect": 46,
+            "blue_reflect": 46,
+            "xhalf_speed": 200,
+            "x1_speed": 201,
+            "x2_speed": 202,
+            "x3_speed": 203,
+            "x4_speed": 1334,  # Exclude???
+            # Blocks (dx, dy) and (dx, dy, hFlip)
+            "full_block": 83,
+            "half_block": 40,
+            "mini_block": 195,
+            # Spikes (dx, dy, flip*)
+            "spike": 8,
+            "spike_short": 39,
+            "spike_mini": 103,
+            # Saws (dx, dy)
+            "saw_mini": 98,
+            "saw_med": 89,
+            "saw_large": 88,
+            # Slopes (dx, dy, flip*) and (dx, dy, flip*, and rotation)
+            "slope": 289,
+            "slope_long": 291,
+
+            "_": 396
+        }
+
 
 
         # Avoid creating variations of tokens based on dx and dy, as changes in position will be encoded by their own tokens

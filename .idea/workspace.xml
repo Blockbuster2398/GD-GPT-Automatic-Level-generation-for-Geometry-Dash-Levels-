@@ -5,11 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5a4e2c22-c5b6-4abb-944e-838f0397918e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/data_tokenized.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/token_decoder.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/input_levels_short/Dreamland.gmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/prepare_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/__main__.py" beforeDir="false" afterPath="$PROJECT_DIR$/__main__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/classes/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Level.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes/Object.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Object.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output_levels/ten_circles.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/output_levels/ten_circles.gmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/data_tokenized.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/data_tokenized.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/ObjectMapping.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/ObjectMapping.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,33 +42,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Python.Level.executor&quot;: &quot;Run&quot;,
-    &quot;Python.LevelClass.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Object.executor&quot;: &quot;Run&quot;,
-    &quot;Python.ObjectDetailMapping.executor&quot;: &quot;Run&quot;,
-    &quot;Python.__main__.executor&quot;: &quot;Run&quot;,
-    &quot;Python.gmd_to_objects.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.objects_to_gmd.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/justi/GMDgenerator&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.appearance&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Python.Level.executor": "Run",
+    "Python.LevelClass.executor": "Run",
+    "Python.Object.executor": "Run",
+    "Python.ObjectDetailMapping.executor": "Run",
+    "Python.__main__.executor": "Run",
+    "Python.gmd_to_objects.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.objects_to_gmd.executor": "Run",
+    "Python.prepare_data.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/justi/GMDgenerator/input_levels_short",
+    "settings.editor.selected.configurable": "configurable.group.appearance"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\justi\GMDgenerator\input_levels_short" />
       <recent name="C:\Users\justi\GMDgenerator" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\justi\GMDgenerator\utils" />
       <recent name="C:\Users\justi\GMDgenerator\levels" />
       <recent name="C:\Users\justi\GMDgenerator\classes" />
-      <recent name="C:\Users\justi\GMDgenerator\utils" />
       <recent name="C:\Users\justi\GMDgenerator" />
     </key>
   </component>

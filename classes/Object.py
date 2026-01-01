@@ -70,7 +70,8 @@ class GMD_Object:
     def to_gmd_format(self):
         object_string = ""
         for key in self.details.keys():
-            if self.details[key] != None:
+            # Special details not encoded
+            if self.details[key] != None and key != "x_distance" and key != "y_distance":
                 # object_string += (str(key) + str(self.details[key]) + ",")
                 object_string += (str(self.map.attribute_to_key[str(key)]) + "," + str(self.details[key]) + ",")
         object_string = object_string[:-1]
