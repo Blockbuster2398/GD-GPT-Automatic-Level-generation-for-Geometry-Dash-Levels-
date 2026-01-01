@@ -87,14 +87,15 @@ class GMD_Level:
 
     def create_tokens(self):
         def get_x_increment(num):
-            increments_x = [1, 3, 5, 10, 15, 30, 45, 60, 75, 90, 105, 120, 150, 180, 210, 240, 270, 300]
+            increments_x = [1, 2, 3, 5, 7, 10, 12, 15, 30, 45, 60, 75, 90, 105, 120, 150, 180, 210, 240, 270, 300]
             i = 0
             if num >= increments_x[-1]: return increments_x[-1]
             while num > increments_x[i]: i += 1
             return str(increments_x[i])
 
         def get_y_increment(num):
-            increments_y = [1, 3, 5, 10, 15, 30, 45, 60, 75, 90, 105, 120, 150, 180, 210, 240, 270, 300, 360, 420, 480]
+            increments_y = [1, 2, 3, 5, 7, 10, 12, 15, 22, 30, 37, 45, 52, 60, 75, 90, 105, 120, 135, 150, 180, 210, 240, 270, 300, 360, 420, 480]
+            increments_y = range(300)
             i = 0
             if num >= increments_y[-1]: return increments_y[-1]
             while num > increments_y[i]: i += 1
@@ -256,7 +257,7 @@ class GMD_Level:
             elif i == "x_reset": pass # Do nothing
             elif i == "y_reset": current_y = 0
             elif i == "start": pass # Do nothing
-            elif i == "end": break # Does this make sense?
+            elif i == "end": pass #break # Does this make sense?
             # Token must represent an object
             else:
                 object_category = i.split("-")[0]
@@ -266,6 +267,8 @@ class GMD_Level:
                 new_object.details["x_position"] = (current_x)
                 new_object.details["y_position"] = (current_y)
                 new_object.details["object_id"] = (map.category_to_id_create[object_category])
+                if len(i.split("-")) > 1:
+                    new_object.details["rotation"] = i.split("-")[1]
                 object_array.append(new_object)
 
 

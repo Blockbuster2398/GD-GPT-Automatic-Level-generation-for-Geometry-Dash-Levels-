@@ -16,4 +16,4 @@ with open("./resources/data_tokenized.txt", "r") as f:
     for i in objects: print(i)
 
 level = GMD_Level("_", objects)
-level.create_gmd("output_levels/square.gmd", "squares", "???")
+level.create_gmd("output_levels/square5.gmd", "squares", "???")
