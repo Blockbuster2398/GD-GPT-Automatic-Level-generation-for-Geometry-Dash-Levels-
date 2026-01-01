@@ -86,11 +86,11 @@ class GMD_Object:
                 ", X_distance: " + str(self.details["x_distance"]) +
                 ", Y_distance: " + str(self.details["y_distance"]))
 
-        return (
+"""        return (
                 "Sequence order: " + str(self.sequence_order) +
                 ", GMD_Object ID: " + str(self.details["object_id"]) +
                 ", X: " + str(self.details["x_position"]) +
                 ", Y: " + str(self.details["y_position"]))
-
+"""
 object = GMD_Object()
 object.to_gmd_format()

@@ -41,7 +41,7 @@ class GMD_Level:
         self.plain_object_data = zlib.decompress(compressed_data, 15 + 32).decode('utf-8').split(";")
         # For every object in data, add the object to the object list with data
         # print(self.plain_object_data)
-        map = ObjectMap()
+        self.map = ObjectMap()
         for i in (range(len(self.plain_object_data))[1:-1]):
             object = self.plain_object_data[i]
             object_segmented = object.split(",")
@@ -49,8 +49,8 @@ class GMD_Level:
             new_object.sequence_order = i-1
             for j in range(int(len(object_segmented)/2)):
                 # Initializes all normal attributes of the new object
-                if int(object_segmented[j*2]) in map.key_to_attribute.keys():
-                    new_object.details[map.key_to_attribute[int(object_segmented[j*2])]] = object_segmented[j*2+1]
+                if int(object_segmented[j*2]) in self.map.key_to_attribute.keys():
+                    new_object.details[self.map.key_to_attribute[int(object_segmented[j*2])]] = object_segmented[j*2+1]
                 else:
                     self.is_modified = True
             self.objects_list.append((new_object))
@@ -58,6 +58,7 @@ class GMD_Level:
         # Initializes relative distances of objects
         x_distance = 0
         y_distance = 0
+        # Creates relative object distances
         for i in range(len(self.objects_list))[1:]:
             # If the difference between the objects has changed, change the distance between objects
             if float(self.objects_list[i].details["x_position"]) != float(self.objects_list[i-1].details["x_position"]):
@@ -69,9 +70,7 @@ class GMD_Level:
             self.objects_list[i].details["x_distance"] = x_distance
             self.objects_list[i].details["y_distance"] = y_distance
 
-
-
-
+        self.create_tokens()
     def __str__(self):
         to_string = ""
         for i in self.objects_list:
@@ -84,6 +83,131 @@ class GMD_Level:
             key=lambda GMDObject: (float(GMDObject.details['x_position']), float(GMDObject.details['y_position'])))
         for i in range(len(self.objects_list)):
             self.objects_list[i].sequence_order = i
+
+    def create_tokens(self):
+        def get_90_rotation_spike(rotation, vFlip, hFlip):
+            # Watch out for stupid infinite negative edge case
+            rotation = int(rotation)
+            vFlip = int(vFlip)
+            hFlip = int(hFlip)
+            # print(rotation)
+            # print(f"hFlip: {hFlip}")
+            # print(f"vFlip: {vFlip}")
+            if rotation < 0: rotation = 360 + rotation
+            # print(rotation)
+            rotation = rotation - rotation % 90
+            # print(rotation)
+            if (rotation == 90 or rotation == 270):
+                rotation += 180 * hFlip
+            elif (rotation == 0 or rotation == 180):
+                rotation += 180 * vFlip
+            rotation = rotation - rotation % 90
+            # print(rotation)
+            return str(rotation)
+        def get_180_rotation(rotation, vFlip):
+            rotation = int(rotation)
+            if rotation < 0: rotation = 360 + rotation
+            rotation = rotation - rotation % 180
+            rotation += 180 * int(vFlip)
+            return str(rotation)
+
+        def get_90_rotation_slope(rotation, vFlip, hFlip):
+            rot = 0
+            if (hFlip != 0 and vFlip == 0): rot += 90
+            if (vFlip != 0 and hFlip == 0): rot += 270
+            if (hFlip != 0 and vFlip != 0): rot += 180
+            rotation = int(rotation)
+            rotation = rotation - rotation % 90
+            rotation += rot
+            rotation = rotation % 360
+
+            return str(rotation)
+
+        tokens = []
+        tokens.append("start")
+        for i in self.objects_list:
+
+            # Handle object categorization
+
+            # No rotational details
+            if int(i.details["object_id"]) in (self.map.category_to_id['full_block']):
+                tokens.append("full_block")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['mini_block']):
+                tokens.append("mini_block")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['saw_mini']):
+                tokens.append("saw_mini")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['saw_med']):
+                tokens.append("saw_med")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['saw_large']):
+                tokens.append("saw_large")
+
+            elif int(i.details["object_id"]) in (self.map.category_to_id['x1_speed']):
+                tokens.append("x1_speed")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['x2_speed']):
+                tokens.append("x2_speed")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['x3_speed']):
+                tokens.append("x3_speed")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['x4_speed']):
+                tokens.append("x4_speed")
+
+            elif int(i.details["object_id"]) in (self.map.category_to_id['green_orb']): tokens.append("green_orb")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['red_orb']):tokens.append("red_orb")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['black_orb']):tokens.append("black_orb")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['purple_orb']):tokens.append("purple_orb")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['yellow_orb']):tokens.append("yellow_orb")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['blue_orb']):tokens.append("blue_orb")
+
+            elif int(i.details["object_id"]) in (self.map.category_to_id['blue_gravity']):tokens.append("blue_gravity")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['yellow_gravity']):tokens.append("yellow_gravity")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['cube_portal']):tokens.append("cube_portal")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['ship_portal']):tokens.append("ship_portal")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['ball_portal']):tokens.append("ball_portal")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['ufo_portal']):tokens.append("ufo_portal")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['wave_portal']):tokens.append("wave_portal")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['robot_portal']):tokens.append("robot_portal")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['spider_portal']):tokens.append("spider_portal")
+
+            elif int(i.details["object_id"]) in (self.map.category_to_id['teleport_portal']):tokens.append("teleport_portal")
+
+            elif int(i.details["object_id"]) in (self.map.category_to_id['green_size']):tokens.append("green_size")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['pink_size']):tokens.append("pink_size")
+
+            elif int(i.details["object_id"]) in (self.map.category_to_id['start_dual']):tokens.append("start_dual")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['end_dual']):tokens.append("end_dual")
+
+            elif int(i.details["object_id"]) in (self.map.category_to_id['orange_reflect']):tokens.append("orange_reflect")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['blue_reflect']):tokens.append("blue_reflect")
+
+            # Require special logic
+
+            # Half Blocks
+            elif int(i.details["object_id"]) in (self.map.category_to_id['half_block']):
+                tokens.append("half_block_" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
+            # Pads
+            elif int(i.details["object_id"]) in (self.map.category_to_id['red_pad']):
+                tokens.append("red_pad_" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
+            elif int(i.details["object_id"]) in (self.map.category_to_id['yellow_pad']):
+                tokens.append("yellow_pad_" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
+            elif int(i.details["object_id"]) in (self.map.category_to_id['blue_pad']):
+                tokens.append("blue_pad_" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
+            elif int(i.details["object_id"]) in (self.map.category_to_id['purple_pad']):
+                tokens.append("purple_pad_" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
+
+            # Spikes
+            elif int(i.details["object_id"]) in (self.map.category_to_id['spike']):
+                tokens.append("spike_" + get_90_rotation_spike(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+            elif int(i.details["object_id"]) in (self.map.category_to_id['spike_short']):
+                tokens.append("spike_short_" + get_90_rotation_spike(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+            elif int(i.details["object_id"]) in (self.map.category_to_id['spike_mini']):
+                tokens.append("spike_mini_" + get_90_rotation_spike(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+
+            # Slopes
+            elif int(i.details["object_id"]) in (self.map.category_to_id['slope']):
+                tokens.append("slope_" + get_90_rotation_slope(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+            elif int(i.details["object_id"]) in (self.map.category_to_id['slope_long']):
+                tokens.append("slope_long_" + get_90_rotation_slope(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+        print(tokens)
+
     def create_gmd(self, filename, level_name, level_description):
         full_level_text = ""
         k4_prefix = ""
