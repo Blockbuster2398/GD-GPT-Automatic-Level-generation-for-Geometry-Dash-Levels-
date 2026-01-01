@@ -92,6 +92,19 @@ class GMD_Level:
             self.objects_list[i].sequence_order = i
 
     def create_tokens(self):
+        def get_x_increment(num):
+            increments_x = [1, 3, 5, 10, 15, 30, 45, 60, 75, 90, 105, 120, 150, 180, 210, 240, 270, 300]
+            i = 0
+            if num >= increments_x[-1]: return increments_x[-1]
+            while num > increments_x[i]: i += 1
+            return str(increments_x[i])
+
+        def get_y_increment(num):
+            increments_y = [1, 3, 5, 10, 15, 30, 45, 60, 75, 90, 105, 120, 150, 180, 210, 240, 270, 300, 360, 420, 480]
+            i = 0
+            if num >= increments_y[-1]: return increments_y[-1]
+            while num > increments_y[i]: i += 1
+            return str(increments_y[i])
         def get_90_rotation_spike(rotation, vFlip, hFlip):
             # Watch out for stupid infinite negative edge case
             rotation = int(rotation)
@@ -137,11 +150,12 @@ class GMD_Level:
         for i in self.objects_list:
             # handle dx dy tokens
             # print(i)
-            if i.details["x_distance"] != None and i.details["x_distance"] > 0:
-                tokens.append("x_increment" + str(i.details["x_distance"]))
-            if i.details["y_distance"] != None:
+            if i.details["x_distance"] is not None and i.details["x_distance"] > 0:
+                tokens.append("x_reset")
+                tokens.append("x_increment_" + str(get_x_increment(i.details["x_distance"])))
+            if i.details["y_distance"] is not None:
                 if i.details["y_distance"] > 0:
-                    tokens.append("y_increment" + str(i.details["y_distance"]))
+                    tokens.append("y_increment_" + str(get_y_increment(i.details["y_distance"])))
                 elif i.details["y_distance"] < 0:
                     tokens.append("y_reset")
 
