@@ -12,6 +12,3 @@ level = GMD_Level("input_levels/nine_circles.gmd")
 """for file_path in Path("./input_levels").iterdir():
     print(file_path)
     level = GMD_Level(file_path)"""
-
-# todo give level modified boolean
-# object_types: collision_death, collision_touchable, portal/gameplay, no collision, trigger

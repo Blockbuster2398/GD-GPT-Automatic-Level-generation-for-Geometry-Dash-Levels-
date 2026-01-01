@@ -15,6 +15,7 @@ class GMD_Level:
         self.objects_list = []
         self.plain_object_data = ""
         self.is_modified = False
+        self.tokens = []
         k4 = ""
         try:
             with open(path, "r") as file:
@@ -53,6 +54,9 @@ class GMD_Level:
                     new_object.details[self.map.key_to_attribute[int(object_segmented[j*2])]] = object_segmented[j*2+1]
                 else:
                     self.is_modified = True
+            new_object.details["x_position"] = int(float(new_object.details["x_position"]))
+            new_object.details["y_position"] = int(float(new_object.details["y_position"]))
+
             self.objects_list.append((new_object))
         self.sort()
         # Initializes relative distances of objects
@@ -60,15 +64,18 @@ class GMD_Level:
         y_distance = 0
         # Creates relative object distances
         for i in range(len(self.objects_list))[1:]:
-            # If the difference between the objects has changed, change the distance between objects
+            """# If the difference between the objects has changed, change the distance between objects
             if float(self.objects_list[i].details["x_position"]) != float(self.objects_list[i-1].details["x_position"]):
                 x_distance = float(self.objects_list[i].details["x_position"]) - float(self.objects_list[i-1].details["x_position"])
                 x_distance = float(int(x_distance * 100)) / 100
             if float(self.objects_list[i].details["y_position"]) != float(self.objects_list[i-1].details["y_position"]):
                 y_distance = float(self.objects_list[i].details["y_position"]) - float(self.objects_list[i-1].details["y_position"])
                 y_distance = float(int(y_distance * 100)) / 100
-            self.objects_list[i].details["x_distance"] = x_distance
-            self.objects_list[i].details["y_distance"] = y_distance
+            self.objects_list[i].details["x_distance"] = int(x_distance)
+            self.objects_list[i].details["y_distance"] = int(y_distance)"""
+
+            self.objects_list[i].details["x_distance"] = self.objects_list[i].details["x_position"] - self.objects_list[i-1].details["x_position"]
+            self.objects_list[i].details["y_distance"] = self.objects_list[i].details["y_position"] - self.objects_list[i-1].details["y_position"]
 
         self.create_tokens()
     def __str__(self):
@@ -124,8 +131,20 @@ class GMD_Level:
             return str(rotation)
 
         tokens = []
+        current_x_distance = 0
         tokens.append("start")
+        # Fix deco not being added
         for i in self.objects_list:
+            # handle dx dy tokens
+            # print(i)
+            if i.details["x_distance"] != None and i.details["x_distance"] > 0:
+                tokens.append("x_increment" + str(i.details["x_distance"]))
+            if i.details["y_distance"] != None:
+                if i.details["y_distance"] > 0:
+                    tokens.append("y_increment" + str(i.details["y_distance"]))
+                elif i.details["y_distance"] < 0:
+                    tokens.append("y_reset")
+
 
             # Handle object categorization
 
@@ -206,7 +225,11 @@ class GMD_Level:
                 tokens.append("slope_" + get_90_rotation_slope(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
             elif int(i.details["object_id"]) in (self.map.category_to_id['slope_long']):
                 tokens.append("slope_long_" + get_90_rotation_slope(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
-        print(tokens)
+            else:
+                tokens.append("_")
+        tokens.append("end")
+        # print(tokens)
+        self.tokens = tokens
 
     def create_gmd(self, filename, level_name, level_description):
         full_level_text = ""
