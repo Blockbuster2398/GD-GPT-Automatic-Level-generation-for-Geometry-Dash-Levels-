@@ -18,6 +18,7 @@ class GMD_Level:
         self.tokens = []
         k4 = ""
         self.map = ObjectMap()
+        self.offset = 0
         if not objects_list:
             try:
                 with open(path, "r") as file:
@@ -60,6 +61,12 @@ class GMD_Level:
                 new_object.details["y_position"] = int(float(new_object.details["y_position"]))
 
                 self.objects_list.append((new_object))
+            # If objects before start of level
+            print(f"THE THING {self.objects_list[0]}")
+            if int(self.objects_list[0].details["x_position"]) < 0:
+                print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+                self.offset = self.objects_list[0].details["x_position"] * -1
+                for i in objects_list: i.details["x_position"] += self.offset
         else:
             self.objects_list = objects_list
         self.sort()
@@ -147,7 +154,8 @@ class GMD_Level:
             # print(i)
             if i.details["x_distance"] is not None and i.details["x_distance"] > 0:
                 tokens.append("x_reset")
-                tokens.append("x_increment-" + str(get_x_increment(i.details["x_distance"])))
+
+                tokens.append("x_increment-" + str(get_x_increment(i.details["x_distance"]))) # get_increment will need to append multiple tokens for token division.
             if i.details["y_distance"] is not None:
                 if i.details["y_distance"] > 0:
                     tokens.append("y_increment-" + str(get_y_increment(i.details["y_distance"])))
