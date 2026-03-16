@@ -5,13 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5a4e2c22-c5b6-4abb-944e-838f0397918e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/input_levels_short/nine_circles.gmd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/__main__.py" beforeDir="false" afterPath="$PROJECT_DIR$/__main__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/classes/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Level.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/input_levels_short/Dreamland.gmd" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/data_tokenized.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/data_tokenized.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/prepare_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/prepare_data.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
