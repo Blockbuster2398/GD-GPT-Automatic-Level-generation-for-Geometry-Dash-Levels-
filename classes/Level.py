@@ -64,7 +64,7 @@ class GMD_Level:
             # If objects before start of level
             if int(self.objects_list[0].details["x_position"]) < 0:
                 self.offset = self.objects_list[0].details["x_position"] * -1
-                for i in objects_list: i.details["x_position"] += self.offset
+                for i in self.objects_list: i.details["x_position"] += self.offset
         else:
             self.objects_list = objects_list
         self.sort()
@@ -91,22 +91,6 @@ class GMD_Level:
             self.objects_list[i].sequence_order = i
 
     def create_tokens(self):
-        """def get_x_increment(num):
-
-            # Logic for creating dx tokens
-            x_increments = []
-            x_intervals = [.25, .5, 1, 2, 5, 10, 20, 40, 80, 160, 320, 640, 1280, 2560]
-            i = len(x_intervals)-1
-            sum = 0;
-
-            while sum < num and i >= 0:
-                if sum + x_intervals[i] >= num:
-                    i = i - 1
-                else:
-                    sum += x_intervals[i]
-                    x_increments.append("x_increment-" + str(x_intervals[i]))
-            return x_increments"""
-
         def get_x_increment(num):
             x_increments = []
             x_intervals = [2560, 1280, 640, 320, 160, 80, 40, 20, 10, 5, 2, 1, 0.5, 0.25]
@@ -121,12 +105,6 @@ class GMD_Level:
 
 
         def get_y_increment(num):
-            """increments_y = [1, 2, 3, 5, 7, 10, 12, 15, 22, 30, 37, 45, 52, 60, 75, 90, 105, 120, 135, 150, 180, 210, 240, 270, 300, 360, 420, 480]
-            increments_y = range(300)
-            i = 0
-            if num >= increments_y[-1]: return increments_y[-1]
-            while num > increments_y[i]: i += 1
-            return str(increments_y[i])"""
             y_increments = []
             y_intervals = [2560, 1280, 640, 320, 160, 80, 40, 20, 10, 5, 2, 1, 0.5, 0.25]
             remaining = num
@@ -274,6 +252,11 @@ class GMD_Level:
                 tokens.append("slope-" + get_90_rotation_slope(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
             elif int(i.details["object_id"]) in (self.map.category_to_id['slope_long']):
                 tokens.append("slope_long-" + get_90_rotation_slope(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+
+
+            # Deco Blocks
+            elif int(i.details["object_id"]) in (self.map.category_to_id['deco_block']):
+                tokens.append("deco_block")
             else:
                 tokens.append("_")
         tokens.append("end")

@@ -11,8 +11,8 @@ from utils.ObjectMapping import ObjectMap
 # print(level.tokens)
 # level.create_gmd("output_levels/ten_circles.gmd", "ten_circles", "(10/10)")
 
-# level = GMD_Level("input_levels_short/nine_circles.gmd")
-level = GMD_Level("input_levels/iceland.gmd")
+level = GMD_Level("input_levels_short/nine_circles.gmd")
+# level = GMD_Level("input_levels/iceland.gmd")
 level.create_tokens()
 token_string = ";".join(level.tokens)
 with open("resources/data_tokenized.txt", "w") as f:
