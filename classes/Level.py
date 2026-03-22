@@ -152,6 +152,40 @@ class GMD_Level:
 
             return str(rotation)
 
+        def get_90_rotation_slope_long(rotation, vFlip, hFlip):
+            rotation = int(rotation)
+            rotation = rotation % 360
+
+            if (rotation == 0 and vFlip == 0 and hFlip == 0) or (rotation == 180 and vFlip != 0 and hFlip != 0):
+                return "type_1"
+            elif (rotation == 0 and vFlip != 0 and hFlip == 0) or (rotation == 180 and vFlip == 0 and hFlip != 0):
+                return "type_2"
+            elif (rotation == 0 and vFlip == 0 and hFlip != 0) or (rotation == 180 and vFlip != 0 and hFlip == 0):
+                return "type_3"
+            elif (rotation == 0 and vFlip != 0 and hFlip != 0) or (rotation == 180 and vFlip == 0 and hFlip == 0):
+                return "type_4"
+
+            elif (rotation == 90 and vFlip == 0 and hFlip == 0) or (rotation == 270 and vFlip != 0 and hFlip != 0):
+                return "type_5"
+            elif (rotation == 90 and vFlip != 0 and hFlip == 0) or (rotation == 270 and vFlip == 0 and hFlip != 0): # culprits?
+                return "type_6"
+            elif (rotation == 90 and vFlip == 0 and hFlip != 0) or (rotation == 270 and vFlip != 0 and hFlip == 0): # culprits?
+                return "type_7"
+            else:
+                return "type_8"
+
+            """
+            if (vFlip == 0 and hFlip == 0):
+                return str(rotation) + "-no_mirror"
+            elif (vFlip != 0 and hFlip != 0):
+                return str(rotation + 180) + "-no_mirror"
+            elif (vFlip != 0 and hFlip == 0):
+                return str(rotation) + "-mirror"
+            elif (vFlip == 0 and hFlip != 0):
+                return str(rotation) + "-mirror"""
+
+
+
         tokens = []
         current_x_distance = 0
         tokens.append("start")
@@ -251,7 +285,14 @@ class GMD_Level:
             elif int(i.details["object_id"]) in (self.map.category_to_id['slope']):
                 tokens.append("slope-" + get_90_rotation_slope(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
             elif int(i.details["object_id"]) in (self.map.category_to_id['slope_long']):
-                tokens.append("slope_long-" + get_90_rotation_slope(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+                new_token = ("slope_long-" + get_90_rotation_slope_long(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+                """if (int(i.details["flip_vertical"]) + int(i.details["flip_horizontal"]) % 2 == 0):
+                    new_token += "-no_mirror"
+                else:
+                    new_token += "-mirror"
+                tokens.append(new_token)"""
+                tokens.append("slope_long-" + get_90_rotation_slope_long(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+
 
 
             # Deco Blocks
@@ -290,9 +331,46 @@ class GMD_Level:
                 new_object.details["x_position"] = (current_x)
                 new_object.details["y_position"] = (current_y)
                 new_object.details["object_id"] = (map.category_to_id_create[object_category])
-                if len(i.split("-")) > 1:
+                if len(i.split("-")) > 1 and object_category != "slope_long":
                     new_object.details["rotation"] = i.split("-")[1]
+                elif object_category == "slope_long":
+                    type = int(i.split("-")[1][len(i.split("-")[1])-1])
+                    match type:
+                        case 1:
+                            new_object.details["rotation"] = 0
+                            new_object.details["flip_vertical"] = 0
+                            new_object.details["flip_horizontal"] = 0
+                        case 2:
+                            new_object.details["rotation"] = 0
+                            new_object.details["flip_vertical"] = 1
+                            new_object.details["flip_horizontal"] = 0
+                        case 3:
+                            new_object.details["rotation"] = 0
+                            new_object.details["flip_vertical"] = 0
+                            new_object.details["flip_horizontal"] = 1
+                        case 4:
+                            new_object.details["rotation"] = 0
+                            new_object.details["flip_vertical"] = 1
+                            new_object.details["flip_horizontal"] = 1
+                        case 5:
+                            new_object.details["rotation"] = 90
+                            new_object.details["flip_vertical"] = 0
+                            new_object.details["flip_horizontal"] = 0
+                        case 6: # culprits?
+                            new_object.details["rotation"] = 90
+                            new_object.details["flip_vertical"] = 1
+                            new_object.details["flip_horizontal"] = 0
+                        case 7: # culprits?
+                            new_object.details["rotation"] = 90
+                            new_object.details["flip_vertical"] = 0
+                            new_object.details["flip_horizontal"] = 1
+                        case 8:
+                            new_object.details["rotation"] = 90
+                            new_object.details["flip_vertical"] = 1
+                            new_object.details["flip_horizontal"] = 1
+
                 object_array.append(new_object)
+
 
 
         return object_array
