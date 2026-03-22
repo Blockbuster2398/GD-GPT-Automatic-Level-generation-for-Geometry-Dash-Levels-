@@ -167,41 +167,26 @@ class GMD_Level:
 
             elif (rotation == 90 and vFlip == 0 and hFlip == 0) or (rotation == 270 and vFlip != 0 and hFlip != 0):
                 return "type_5"
-            elif (rotation == 90 and vFlip != 0 and hFlip == 0) or (rotation == 270 and vFlip == 0 and hFlip != 0): # culprits?
+            elif (rotation == 90 and vFlip != 0 and hFlip == 0) or (rotation == 270 and vFlip == 0 and hFlip != 0):
                 return "type_6"
-            elif (rotation == 90 and vFlip == 0 and hFlip != 0) or (rotation == 270 and vFlip != 0 and hFlip == 0): # culprits?
+            elif (rotation == 90 and vFlip == 0 and hFlip != 0) or (rotation == 270 and vFlip != 0 and hFlip == 0):
                 return "type_7"
             else:
                 return "type_8"
-
-            """
-            if (vFlip == 0 and hFlip == 0):
-                return str(rotation) + "-no_mirror"
-            elif (vFlip != 0 and hFlip != 0):
-                return str(rotation + 180) + "-no_mirror"
-            elif (vFlip != 0 and hFlip == 0):
-                return str(rotation) + "-mirror"
-            elif (vFlip == 0 and hFlip != 0):
-                return str(rotation) + "-mirror"""
-
 
 
         tokens = []
         current_x_distance = 0
         tokens.append("start")
-        # Fix deco not being added
         for i in self.objects_list:
             # handle dx dy tokens
-            # print(i)
             if i.details["x_distance"] is not None and i.details["x_distance"] > 0:
                 tokens.append("x_reset")
-
-                # tokens.append("x_increment-" + str(get_x_increment(i.details["x_distance"]))) # get_increment will need to return a list with multiple increment tokens.
                 tokens += get_x_increment(i.details["x_distance"])
             if i.details["y_distance"] is not None:
                 if i.details["y_distance"] > 0:
                     tokens += get_y_increment(i.details["y_distance"])
-                    # tokens.append("y_increment-" + str(get_y_increment(i.details["y_distance"])))
+
                 elif i.details["y_distance"] < 0:
                     tokens.append("y_reset")
                     tokens += get_y_increment(i.details["y_position"])
@@ -356,11 +341,11 @@ class GMD_Level:
                             new_object.details["rotation"] = 90
                             new_object.details["flip_vertical"] = 0
                             new_object.details["flip_horizontal"] = 0
-                        case 6: # culprits?
+                        case 6:
                             new_object.details["rotation"] = 90
                             new_object.details["flip_vertical"] = 1
                             new_object.details["flip_horizontal"] = 0
-                        case 7: # culprits?
+                        case 7:
                             new_object.details["rotation"] = 90
                             new_object.details["flip_vertical"] = 0
                             new_object.details["flip_horizontal"] = 1

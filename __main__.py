@@ -24,7 +24,7 @@ with open("./resources/data_tokenized.txt", "r") as f:
     # print(objects)
 
     level_reconstructed = GMD_Level("_", objects)
-    level_reconstructed.create_gmd("output_levels/output3.16.26.gmd", "output31626", "???")
+    level_reconstructed.create_gmd("output_levels/output3.22.26.gmd", "output31626", "???")
     print(f"Level reconstructed: {level_reconstructed}")
 
 
