@@ -11,7 +11,8 @@ from utils.ObjectMapping import ObjectMap
 class GMD_Level:
 
     # raw_string = None
-    def __init__(self, path, objects_list = None):
+    def __init__(self, path, objects_list = None, keepDetail = True):
+        self.keepDetail = keepDetail
         self.objects_list = []
         self.plain_object_data = ""
         self.is_modified = False
@@ -283,7 +284,7 @@ class GMD_Level:
             # Deco Blocks
             elif int(i.details["object_id"]) in (self.map.category_to_id['deco_block']):
                 tokens.append("deco_block")
-            else:
+            elif self.keepDetail == True:
                 tokens.append("_")
         tokens.append("end")
         # print(tokens)
