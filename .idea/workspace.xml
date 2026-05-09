@@ -4,39 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5a4e2c22-c5b6-4abb-944e-838f0397918e" name="Changes" comment="Transformer Start">
-      <change afterPath="$PROJECT_DIR$/model/model.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/notes.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/train_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/data_tokenized.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/data_tokenized.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/1.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Back on Track RM.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Back on Track v2.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Dreamland.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Dry Out RM.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Dynamic On Track.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Easy .gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/GoldenClub.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Hexagon HyperDrive.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/High hill.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Iceland.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Level Easy.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Partition Madness.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Polargeist X.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Polargeist v01.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Polargeist v2.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Sonar.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Stage Mix.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Standard Madness.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/Stereo Madness X.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/polargeist reverse.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/square adventure.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/stage of madness.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data_levels/data_set_1/stereo madness v2.gmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/txt.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/prepare_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/prepare_data.py" afterDir="false" />
-    </list>
+    <list default="true" id="5a4e2c22-c5b6-4abb-944e-838f0397918e" name="Changes" comment="Transformer Start" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
