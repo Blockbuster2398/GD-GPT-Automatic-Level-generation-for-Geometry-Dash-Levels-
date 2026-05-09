@@ -66,7 +66,7 @@ for epoch in range(EPOCHS):
 
 # Save
 
-torch.save(transformer.state_dict(), "transformer.pth")
+# torch.save(transformer.state_dict(), "transformer.pth")
 
 # --- Validation ---
 transformer.eval()
