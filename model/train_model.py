@@ -1,4 +1,6 @@
 from model import Transformer
+import pickle
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -9,7 +11,7 @@ D_MODEL = 512
 NUM_HEADS = 8
 NUM_LAYERS = 6
 D_FF = 2048
-MAX_SEQ_LENGTH = 100
+MAX_SEQ_LENGTH = 50
 DROPOUT = 0.1
 BATCH_SIZE = 32
 EPOCHS = 5
@@ -35,6 +37,7 @@ tgt_data = sequences[1:]    # target sequences shifted by 1
 
 # --- DataLoader ---
 dataset = TensorDataset(src_data, tgt_data)
+print(f"Dataset: {dataset}")
 loader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
 
 # --- Model ---
@@ -49,9 +52,9 @@ optimizer = optim.Adam(transformer.parameters(), lr=LR, betas=(0.9, 0.98), eps=1
 
 # --- Training ---
 transformer.train()
-for epoch in range(EPOCHS):
+for epoch in range(EPOCHS): # Iterates over epochs (entire dataset)
     total_loss = 0
-    for src_batch, tgt_batch in loader:
+    for src_batch, tgt_batch in loader: # Iterates over batches (sets of examples)
         optimizer.zero_grad()
         output = transformer(src_batch, tgt_batch[:, :-1])
         loss = criterion(
@@ -66,7 +69,7 @@ for epoch in range(EPOCHS):
 
 # Save
 
-# torch.save(transformer.state_dict(), "transformer.pth")
+torch.save(transformer.state_dict(), "transformer.pth")
 
 # --- Validation ---
 transformer.eval()
