@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5a4e2c22-c5b6-4abb-944e-838f0397918e" name="Changes" comment="Transformer Start">
-      <change beforePath="$PROJECT_DIR$/.idea/GMDgenerator.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/GMDgenerator.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/train_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/train_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_levels/output3.22.26.gmd" beforeDir="false" afterPath="$PROJECT_DIR$/output_levels/output3.22.26.gmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/data_tokenized.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/data_tokenized.txt" afterDir="false" />
-    </list>
+    <list default="true" id="5a4e2c22-c5b6-4abb-944e-838f0397918e" name="Changes" comment="Transformer Start" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,34 +34,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Python.Level.executor&quot;: &quot;Run&quot;,
-    &quot;Python.LevelClass.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Object.executor&quot;: &quot;Run&quot;,
-    &quot;Python.ObjectDetailMapping.executor&quot;: &quot;Run&quot;,
-    &quot;Python.__main__.executor&quot;: &quot;Run&quot;,
-    &quot;Python.gmd_to_objects.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.model.executor&quot;: &quot;Run&quot;,
-    &quot;Python.objects_to_gmd.executor&quot;: &quot;Run&quot;,
-    &quot;Python.prepare_data.executor&quot;: &quot;Run&quot;,
-    &quot;Python.train_model.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/justi/GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.appearance&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "Python.Level.executor": "Run",
+    "Python.LevelClass.executor": "Run",
+    "Python.Object.executor": "Run",
+    "Python.ObjectDetailMapping.executor": "Run",
+    "Python.__main__.executor": "Run",
+    "Python.gmd_to_objects.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.model.executor": "Run",
+    "Python.objects_to_gmd.executor": "Run",
+    "Python.prepare_data.executor": "Run",
+    "Python.train_model.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/justi/GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "configurable.group.appearance",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\justi\GMDgenerator\input_levels_short" />
@@ -126,7 +120,7 @@
       <workItem from="1778477796753" duration="341000" />
       <workItem from="1778478155111" duration="154000" />
       <workItem from="1778635150111" duration="1000" />
-      <workItem from="1778878953397" duration="2317000" />
+      <workItem from="1778878953397" duration="2639000" />
     </task>
     <task id="LOCAL-00001" summary="Transformer Start">
       <option name="closed" value="true" />
