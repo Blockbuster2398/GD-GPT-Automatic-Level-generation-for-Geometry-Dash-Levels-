@@ -5,10 +5,10 @@ from classes.Level import GMD_Level
 from model import Transformer
 import torch
 
-with open("temp_model/vocab.pkl", "rb") as f:
+with open("models/temp_model/vocab.pkl", "rb") as f:
     vocab = pickle.load(f);
     # print(vocab)
-with open("temp_model/h_params.pkl", "rb") as g:
+with open("models/temp_model/h_params.pkl", "rb") as g:
     h_params = pickle.load(g)
 
 
@@ -20,7 +20,7 @@ transformer = Transformer(
     h_params["D_FF"], h_params["MAX_SEQ_LENGTH"], h_params["DROPOUT"]
 )
 
-transformer.load_state_dict(torch.load("temp_model/transformer.pth"))
+transformer.load_state_dict(torch.load("models/temp_model/transformer.pth"))
 transformer.eval()  # set to inference mode
 
 def encode(text, vocab):

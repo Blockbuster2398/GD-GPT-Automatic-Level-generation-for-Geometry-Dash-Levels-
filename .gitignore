@@ -1,2 +1,4 @@
-model/notes.txt
+notes.txt
 *.pth
+*.pkl
+*.gmd
