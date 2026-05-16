@@ -2,3 +2,5 @@ notes.txt
 *.pth
 *.pkl
 *.gmd
+venv/
+.venv/
