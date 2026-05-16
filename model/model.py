@@ -6,7 +6,7 @@ import math
 import copy
 
 
-class MultiHeadAttention(nn.Module): # Defines a class that inherits from nn.module, the class that defines all models
+class MultiHeadAttention(nn.Module): # Defines a class that inherits from nn.module, the class that defines all model
     def __init__(self, d_model, num_heads):
         super(MultiHeadAttention, self).__init__() # Inits the super class (boilerplate)
         # Ensure that the model dimension (d_model) is divisible by the number of heads
@@ -146,6 +146,7 @@ class Transformer(nn.Module):
         tgt_mask = (tgt != 0).unsqueeze(1).unsqueeze(3)
         seq_length = tgt.size(1)
         nopeak_mask = (1 - torch.triu(torch.ones(1, seq_length, seq_length), diagonal=1)).bool()
+        nopeak_mask = nopeak_mask.to(tgt.device)
         tgt_mask = tgt_mask & nopeak_mask
         return src_mask, tgt_mask
 
