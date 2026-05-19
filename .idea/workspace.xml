@@ -5,15 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5a4e2c22-c5b6-4abb-944e-838f0397918e" name="Changes" comment="Transformer Start">
-      <change afterPath="$PROJECT_DIR$/model/models/model1/details.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/models/model_2/details.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/models/night_model_1/details.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/train_checkpoint.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/models/temp_model/details.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/models/model1/details.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/models/model_2/details.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/models/model_5.15.1/details.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/models/temp_model/details.txt" beforeDir="false" afterPath="$PROJECT_DIR$/model/models/temp_model/details.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/run_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/run_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/train_checkpoint.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/train_checkpoint.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/train_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/train_model.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -69,7 +67,7 @@
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/justi/GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-/model/models&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/justi/GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-/model/checkpoints&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
@@ -77,16 +75,17 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\justi\GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-\model\checkpoints" />
       <recent name="C:\Users\justi\GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-\model\models" />
       <recent name="C:\Users\justi\GMDgenerator\input_levels_short" />
       <recent name="C:\Users\justi\GMDgenerator" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\justi\GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-\model\models" />
+      <recent name="C:\Users\justi\GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-\model\checkpoints" />
+      <recent name="C:\Users\justi\GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-\model" />
       <recent name="C:\Users\justi\GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-" />
       <recent name="C:\Users\justi\GMDgenerator\utils" />
-      <recent name="C:\Users\justi\GMDgenerator\levels" />
-      <recent name="C:\Users\justi\GMDgenerator\classes" />
     </key>
   </component>
   <component name="RunManager">
@@ -138,7 +137,7 @@
       <workItem from="1778899529764" duration="24954000" />
       <workItem from="1779000012208" duration="7409000" />
       <workItem from="1779088367075" duration="2405000" />
-      <workItem from="1779215106489" duration="1147000" />
+      <workItem from="1779215106489" duration="8347000" />
     </task>
     <task id="LOCAL-00001" summary="Transformer Start">
       <option name="closed" value="true" />
@@ -159,9 +158,9 @@
     <option name="LAST_COMMIT_MESSAGE" value="Transformer Start" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/GD_GPT_Automatic_Level_generation_for_Geometry_Dash_Levels_$__main__.coverage" NAME="__main__ Coverage Results" MODIFIED="1779215209827" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/GD_GPT_Automatic_Level_generation_for_Geometry_Dash_Levels_$run_model.coverage" NAME="run_model Coverage Results" MODIFIED="1779215562506" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
-    <SUITE FILE_PATH="coverage/GD_GPT_Automatic_Level_generation_for_Geometry_Dash_Levels_$train_model.coverage" NAME="train_model Coverage Results" MODIFIED="1779215429068" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/GD_GPT_Automatic_Level_generation_for_Geometry_Dash_Levels_$__main__.coverage" NAME="__main__ Coverage Results" MODIFIED="1779230808904" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/GD_GPT_Automatic_Level_generation_for_Geometry_Dash_Levels_$run_model.coverage" NAME="run_model Coverage Results" MODIFIED="1779229055046" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/GD_GPT_Automatic_Level_generation_for_Geometry_Dash_Levels_$train_model.coverage" NAME="train_model Coverage Results" MODIFIED="1779231449649" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
     <SUITE FILE_PATH="coverage/GD_GPT_Automatic_Level_generation_for_Geometry_Dash_Levels_$model.coverage" NAME="model Coverage Results" MODIFIED="1778887645647" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
   </component>
 </project>

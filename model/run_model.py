@@ -9,11 +9,10 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
 model_name = "temp_model"
-with open(f"models/{model_name}/vocab.pkl", "rb") as f:
-    vocab = pickle.load(f);
-    # print(vocab)
-with open(f"models/{model_name}/h_params.pkl", "rb") as g:
-    h_params = pickle.load(g)
+with (open(f"models/{model_name}/vocab.pkl", "rb") as vocab_file,
+      open(f"models/{model_name}/h_params.pkl", "rb") as params_file):
+    vocab = pickle.load(vocab_file);
+    h_params = pickle.load(params_file);
 
 
 vocab_size = len(vocab) + 1
@@ -25,7 +24,7 @@ transformer = Transformer(
 )
 
 transformer.load_state_dict(torch.load(f"models/{model_name}/transformer.pth"))
-transformer.eval()  # set to inference mode
+transformer.eval()
 
 def encode(text, vocab):
     tokens = [obj for obj in text.split(";") if obj.strip()]
@@ -33,7 +32,7 @@ def encode(text, vocab):
     return [vocab.get(token, 0) for token in tokens]  # 0 for unknown tokens
 
 
-def generate(transformer, src_tokens, max_len=10000, max_seq_length=500, temperature=.8):
+def generate(transformer, src_tokens, max_len=10000, max_seq_length=500, temperature=.6):
     transformer.eval()
     with torch.no_grad():
         tgt = torch.tensor([1]).unsqueeze(0)  # start token
