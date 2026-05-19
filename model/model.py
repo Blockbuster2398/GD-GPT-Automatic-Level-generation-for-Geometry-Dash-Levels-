@@ -17,6 +17,8 @@ class MultiHeadAttention(nn.Module): # Defines a class that inherits from nn.mod
         self.num_heads = num_heads  # Number of attention heads
         self.d_k = d_model // num_heads  # Dimension of each head's key, query, and value
 
+        self.temperature = 1 # Custom parameter
+
         # Linear layers for transforming inputs
         self.W_q = nn.Linear(d_model, d_model)  # Query transformation
         self.W_k = nn.Linear(d_model, d_model)  # Key transformation
@@ -25,7 +27,7 @@ class MultiHeadAttention(nn.Module): # Defines a class that inherits from nn.mod
 
     def scaled_dot_product_attention(self, Q, K, V, mask=None):
         # Calculate attention scores
-        attn_scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(self.d_k)
+        attn_scores = torch.matmul(Q, K.transpose(-2, -1)) / (math.sqrt(self.d_k) * self.temperature)
 
         # Apply mask if provided (useful for preventing attention to certain parts like padding)
         if mask is not None:

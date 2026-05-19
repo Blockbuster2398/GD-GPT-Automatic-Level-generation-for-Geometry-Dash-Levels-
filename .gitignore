@@ -4,3 +4,4 @@ notes.txt
 *.gmd
 venv/
 .venv/
+*/details.txt
