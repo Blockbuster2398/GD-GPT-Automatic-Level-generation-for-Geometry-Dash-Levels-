@@ -300,10 +300,10 @@ class GMD_Level:
 
             if "y_increment-" in i:
                 current_y += float(i[len("y_increment-"):]) # current_y += int(i[len("y_increment-"):])
-                print(f"y: {current_y}")
+                ## print(f"y: {current_y}")
             elif "x_increment-" in i:
                 current_x += float(i[len("x_increment-"):]) #current_x += int(i[len("x_increment-"):])
-                print(f"x: {current_x}")
+                ##print(f"x: {current_x}")
             elif i == "x_reset": pass # Do nothing
             elif i == "y_reset": current_y = 0
             elif i == "start": pass # Do nothing
@@ -311,8 +311,8 @@ class GMD_Level:
             # Token must represent an object
             else:
                 object_category = i.split("-")[0]
-                print(i)
-                print(object_category)
+                # print(i)
+                # print(object_category)
                 new_object = GMD_Object()
                 new_object.details["x_position"] = (current_x)
                 new_object.details["y_position"] = (current_y)
@@ -381,5 +381,5 @@ class GMD_Level:
             f.write(xml_template)
         print(f"Created {filename}")
 
-# level = GMD_Level("../input_levels/nine_circles.gmd")
+# level = GMD_Level("../GMD_conversion_test_levels/nine_circles.gmd")
 # level.create_gmd("../output_levels/ten_circles.gmd", "ten_circles", "(10/10)")

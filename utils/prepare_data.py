@@ -3,8 +3,8 @@ from pathlib import Path
 
 all_tokens = []
 # selected_levels = {"a_while.gmd", "nine_circles.gmd"}
-selected_levels = {"the spanish flee.gmd"}
-for file_path in Path("../training_data_levels/data_set_1/levels").iterdir():
+selected_levels = {"stereo madness.gmd"}
+for file_path in Path("../training_data_levels/dataset_3/levels").iterdir():
     if str(file_path).split("\\")[-1] in selected_levels or True:
         print(file_path)
         level = GMD_Level(file_path)

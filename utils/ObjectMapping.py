@@ -199,6 +199,3 @@ class ObjectMap:
         }
 
 
-
-        # Avoid creating variations of tokens based on dx and dy, as changes in position will be encoded by their own tokens
-

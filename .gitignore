@@ -5,3 +5,4 @@ notes.txt
 venv/
 .venv/
 */details.txt
+model/models/*

@@ -1,5 +1,5 @@
 import json
-import time
+from datetime import datetime, timedelta
 
 from model import Transformer
 import pickle
@@ -23,38 +23,44 @@ print(f"Using device: {device}")
 
 if checkpoint_name:
     h_params = pickle.load(open(f"models/{checkpoint_name}/h_params.pkl", "rb"))
+    print(datetime.now())
     print(f"Loading model with...\n{h_params}")
 else:
     h_params = {
-        "D_MODEL": 16,
-        "NUM_HEADS": 8,
-        "NUM_LAYERS": 4,
-        "D_FF": 8,
+        "D_MODEL": 128,
+        "NUM_HEADS": 16,
+        "NUM_LAYERS": 16,
+        "D_FF": 256,
         "MAX_SEQ_LENGTH": 500,
         "DROPOUT": .20,
         "BATCH_SIZE": 4,
-        "EPOCHS": 10,
+        "EPOCHS": 50,
         "LR": 0.0001,
-        "OBJECTS_OF_DATASET": 550}
-    print(f"Training model with...\n{h_params}")
+        "OBJECTS_OF_DATASET": 1000000}
+    print(f"Training model with...\n{h_params}\n")
 
 # Data Loading
-with open("../training_data_levels/data_set_1/dataset_1.txt") as f:
-    content = f.read()
-print(f"Dataset original size: {len([obj for obj in content.split(";") if obj.strip()])}")
+with (
+    open("../training_data_levels/dataset_1/dataset_1.txt") as f,
+    open("../training_data_levels/dataset_2/dataset_2.txt") as g,
+    open("../training_data_levels/dataset_3/dataset_3.txt") as h):
+    content = f.read() + g.read() + h.read()
+
+# print(f"Dataset original size: {len([obj for obj in content.split(";") if obj.strip()])}")
+print(f"Objects available in dataset: {len([obj for obj in content.split(";") if obj.strip()])}")
 objects = [obj for obj in content.split(";") if obj.strip()][:h_params["OBJECTS_OF_DATASET"]]
 
 vocab = {token: idx+1 for idx, token in enumerate(sorted(set(objects)))}  # 0 reserved for padding
 vocab_size = len(vocab) + 1  # +1 for padding token
-print(f"Dataset size: {len(objects)}, Vocab size: {vocab_size}")
+# print(f"Dataset size: {len(objects)}, Vocab size: {vocab_size}")
 
 # Tokenize
 num_seq = torch.tensor([vocab[obj] for obj in objects])
 
 # Build src/tgt pairs (sliding window)
 sequences = num_seq.unfold(0, h_params["MAX_SEQ_LENGTH"], 1)  # (num_samples, MAX_SEQ_LENGTH)
-src_data = sequences[:-1]   # input sequences
-tgt_data = sequences[1:]    # target sequences shifted by 1
+src_data = sequences[:-1].to(device)  # input sequences
+tgt_data = sequences[1:].to(device)    # target sequences shifted by 1
 
 # DataLoader
 dataset = TensorDataset(src_data, tgt_data)
@@ -80,10 +86,16 @@ if checkpoint_name:
 
 # Training
 transformer.train()
+batches_per_epoch = (h_params["OBJECTS_OF_DATASET"]-h_params["MAX_SEQ_LENGTH"])
+time_per_batch = timedelta()
+
+print("Epoch 0/10 - Training Loss: N/A")
 for epoch in range(h_params["EPOCHS"]):
-    print(time.ctime())
     total_loss = 0
+    i = 0
     for src_batch, tgt_batch in loader:
+        batch_start = datetime.now()
+        i = i + 1
         src_batch = src_batch.to(device)  # move here
         tgt_batch = tgt_batch.to(device)  # move here
 
@@ -96,9 +108,36 @@ for epoch in range(h_params["EPOCHS"]):
         loss.backward()
         optimizer.step()
         total_loss += loss.item()
-
+        time_per_batch = (time_per_batch*i + datetime.now() - batch_start)/(i+1)
+        time_per_epoch = time_per_batch * batches_per_epoch / h_params["BATCH_SIZE"]
+        total_completion_time = datetime.now() + time_per_batch * (batches_per_epoch-i*4)
+        print(f"\rEpoch: {(i * 100 * h_params["BATCH_SIZE"] / batches_per_epoch):.2f}%"
+              f" -- Time per Epoch: {time_per_epoch}"
+              f" -- Estimated Epoch Completion: {datetime.now() + time_per_batch * (batches_per_epoch-i*4)}"
+              f" -- Estimated Total Completion: {datetime.now() + time_per_epoch * (h_params["EPOCHS"] - epoch-1)}"
+              # f"- It is currently {datetime.now()}"
+              f"", end='', flush=True)
+    print(f"\n{datetime.now()}")
     print(f"Epoch {epoch + 1}/{h_params["EPOCHS"]} - Training Loss: {total_loss / len(loader):.4f}")
 
+    # Validation
+    """transformer.eval()
+    with torch.no_grad():
+        val_output = transformer(src_data[h_params["OBJECTS_OF_DATASET"]:-1],
+                                 tgt_data[h_params["OBJECTS_OF_DATASET"]:-1])
+        print(src_data.shape)
+        print(tgt_data.shape)
+        print(f"srclen{len(src_data[h_params["OBJECTS_OF_DATASET"]:-1])}")
+        print(f"tgtlen{len(tgt_data[h_params["OBJECTS_OF_DATASET"]:-1])}")
+        print(val_output)
+        val_loss = criterion(
+            val_output.contiguous().view(-1, vocab_size),
+            tgt_data[:h_params["OBJECTS_OF_DATASET"], 1:].contiguous().view(-1)
+        )
+        print(f"Validation Loss: {val_loss.item():.4f}")
+
+    print(f"Epoch {epoch + 1}/{h_params["EPOCHS"]} - Training Loss: {total_loss / len(loader):.4f} - Validation Loss: {val_loss:.4f}")
+    """
     # Save checkpoint for further use
     Path(f"models/{new_model_name}").mkdir(parents=False, exist_ok=True)
     with (
@@ -119,16 +158,4 @@ for epoch in range(h_params["EPOCHS"]):
         torch.save(transformer.state_dict(), model_file)
 
 
-
-
-# --- Validation ---
-"""transformer.eval()
-with torch.no_grad():
-    val_output = transformer(src_data[:BATCH_SIZE], tgt_data[:BATCH_SIZE, :-1])
-    val_loss = criterion(
-        val_output.contiguous().view(-1, vocab_size),
-        tgt_data[:BATCH_SIZE, 1:].contiguous().view(-1)
-    )
-    print(f"Validation Loss: {val_loss.item():.4f}")
-"""
-
+        # expanse_series_1.4 loss: .026

@@ -4,15 +4,15 @@ from collections import defaultdict
 from utils.ObjectMapping import ObjectMap
 
 
-# level = GMD_Level("input_levels/color_test.gmd")
+# level = GMD_Level("GMD_conversion_test_levels/color_test.gmd")
 
-# level = GMD_Level("input_levels/nine_circles.gmd")
+# level = GMD_Level("GMD_conversion_test_levels/nine_circles.gmd")
 # print(level)
 # print(level.tokens)
 # level.create_gmd("output_levels/ten_circles.gmd", "ten_circles", "(10/10)")
 
-level = GMD_Level("input_levels_short/Galaxium.gmd", keepDetail=False)
-# level = GMD_Level("input_levels/iceland.gmd")
+level = GMD_Level("GMD_conversion_test_levels/the_nightmare.gmd", keepDetail=False)
+# level = GMD_Level("GMD_conversion_test_levels/iceland.gmd")
 level.create_tokens()
 token_string = ";".join(level.tokens)
 with open("resources/data_tokenized.txt", "w") as f:
@@ -24,9 +24,9 @@ with open("./resources/data_tokenized.txt", "r") as f:
     # print(objects)
 
     level_reconstructed = GMD_Level("_", objects)
-    level_reconstructed.create_gmd("output_levels/output3.22.26.gmd", "output31626", "???")
+    level_reconstructed.create_gmd("conversion_output/output.gmd", "conversion_level", "???")
     print(f"Level reconstructed: {level_reconstructed}")
 
 
-    # level = GMD_Level("input_levels/the spanish flee.gmd")
+    # level = GMD_Level("GMD_conversion_test_levels/the Spanish flee.gmd")
     # print(f"Level: {level}")
