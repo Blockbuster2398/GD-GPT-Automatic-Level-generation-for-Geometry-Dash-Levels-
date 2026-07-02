@@ -3,6 +3,8 @@ from pathlib import Path
 from collections import defaultdict
 from utils.ObjectMapping import ObjectMap
 
+# source venv/bin/activate
+# pip install torch torchvision
 
 # level = GMD_Level("GMD_conversion_test_levels/color_test.gmd")
 
@@ -10,7 +12,7 @@ from utils.ObjectMapping import ObjectMap
 # print(level)
 # print(level.tokens)
 # level.create_gmd("output_levels/ten_circles.gmd", "ten_circles", "(10/10)")
-
+"""
 level = GMD_Level("GMD_conversion_test_levels/the_nightmare.gmd", keepDetail=False)
 # level = GMD_Level("GMD_conversion_test_levels/iceland.gmd")
 level.create_tokens()
@@ -30,3 +32,4 @@ with open("./resources/data_tokenized.txt", "r") as f:
 
     # level = GMD_Level("GMD_conversion_test_levels/the Spanish flee.gmd")
     # print(f"Level: {level}")
+"""

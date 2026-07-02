@@ -2,7 +2,13 @@ import pickle
 import time
 from pathlib import Path
 
-from classes import Level
+import sys
+from pathlib import Path
+
+root = str(Path(__file__).resolve().parent.parent)
+if root not in sys.path:
+    sys.path.insert(0, root)
+
 from classes.Level import GMD_Level
 from model import Transformer
 import torch
@@ -10,10 +16,10 @@ import torch
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
-model_name = "expanse_series_1.6"
-with (open(f"models/{model_name}/vocab.pkl", "rb") as vocab_file,
-      open(f"models/{model_name}/h_params.pkl", "rb") as params_file):
-    vocab = pickle.load(vocab_file);
+model_name = "labtest"
+with (open(f"model/models/{model_name}/vocab.pkl", "rb") as vocab_file,
+      open(f"model/models/{model_name}/h_params.pkl", "rb") as params_file):
+    vocab = pickle.load(vocab_file)
     h_params = pickle.load(params_file)
 
 
@@ -25,7 +31,7 @@ transformer = Transformer(
     h_params["D_FF"], h_params["MAX_SEQ_LENGTH"], h_params["DROPOUT"]
 )
 
-transformer.load_state_dict(torch.load(f"models/{model_name}/transformer.pth", map_location=device))
+transformer.load_state_dict(torch.load(f"model/models/{model_name}/transformer.pth", map_location=device))
 transformer.to(device)
 
 

@@ -27,13 +27,13 @@ if checkpoint_name:
     print(f"Loading model with...\n{h_params}")
 else:
     h_params = {
-        "D_MODEL": 128,
-        "NUM_HEADS": 16,
-        "NUM_LAYERS": 16,
-        "D_FF": 256,
-        "MAX_SEQ_LENGTH": 500,
+        "D_MODEL": 512,
+        "NUM_HEADS": 8,
+        "NUM_LAYERS": 8,
+        "D_FF": 2048,
+        "MAX_SEQ_LENGTH": 600,
         "DROPOUT": .20,
-        "BATCH_SIZE": 4,
+        "BATCH_SIZE": 1,
         "EPOCHS": 50,
         "LR": 0.0001,
         "OBJECTS_OF_DATASET": 1000000}
@@ -41,9 +41,9 @@ else:
 
 # Data Loading
 with (
-    open("../training_data_levels/dataset_1/dataset_1.txt") as f,
-    open("../training_data_levels/dataset_2/dataset_2.txt") as g,
-    open("../training_data_levels/dataset_3/dataset_3.txt") as h):
+    open("./training_data_levels/dataset_1/dataset_1.txt") as f,
+    open("./training_data_levels/dataset_2/dataset_2.txt") as g,
+    open("./training_data_levels/dataset_3/dataset_3.txt") as h):
     content = f.read() + g.read() + h.read()
 
 # print(f"Dataset original size: {len([obj for obj in content.split(";") if obj.strip()])}")
@@ -88,16 +88,17 @@ if checkpoint_name:
 transformer.train()
 batches_per_epoch = (h_params["OBJECTS_OF_DATASET"]-h_params["MAX_SEQ_LENGTH"])
 time_per_batch = timedelta()
+start_time = datetime.now()
 
-print("Epoch 0/10 - Training Loss: N/A")
+print(f"Epoch 0/{h_params['EPOCHS']} - Training Loss: N/A")
 for epoch in range(h_params["EPOCHS"]):
     total_loss = 0
     i = 0
     for src_batch, tgt_batch in loader:
         batch_start = datetime.now()
         i = i + 1
-        src_batch = src_batch.to(device)  # move here
-        tgt_batch = tgt_batch.to(device)  # move here
+        src_batch = src_batch.to(device)
+        tgt_batch = tgt_batch.to(device)
 
         optimizer.zero_grad()
         output = transformer(src_batch, tgt_batch[:, :-1])
@@ -112,9 +113,10 @@ for epoch in range(h_params["EPOCHS"]):
         time_per_epoch = time_per_batch * batches_per_epoch / h_params["BATCH_SIZE"]
         total_completion_time = datetime.now() + time_per_batch * (batches_per_epoch-i*4)
         print(f"\rEpoch: {(i * 100 * h_params["BATCH_SIZE"] / batches_per_epoch):.2f}%"
+              f" -- Start time: {start_time}"
               f" -- Time per Epoch: {time_per_epoch}"
-              f" -- Estimated Epoch Completion: {datetime.now() + time_per_batch * (batches_per_epoch-i*4)}"
-              f" -- Estimated Total Completion: {datetime.now() + time_per_epoch * (h_params["EPOCHS"] - epoch-1)}"
+              #f" -- Estimated Epoch Completion: {datetime.now() + time_per_batch * (batches_per_epoch-i*4)}"
+              #f" -- Estimated Total Completion: {datetime.now() + time_per_epoch * (h_params["EPOCHS"] - epoch-1)}"
               # f"- It is currently {datetime.now()}"
               f"", end='', flush=True)
     print(f"\n{datetime.now()}")
@@ -139,13 +141,13 @@ for epoch in range(h_params["EPOCHS"]):
     print(f"Epoch {epoch + 1}/{h_params["EPOCHS"]} - Training Loss: {total_loss / len(loader):.4f} - Validation Loss: {val_loss:.4f}")
     """
     # Save checkpoint for further use
-    Path(f"models/{new_model_name}").mkdir(parents=False, exist_ok=True)
+    Path(f"model/models/{new_model_name}").mkdir(parents=False, exist_ok=True)
     with (
-            open(f"models/{new_model_name}/transformer.pth", "wb") as model_file,
-            open(f"models/{new_model_name}/transformer_checkpoint.pth", "wb") as checkpoint_file,
-            open(f"models/{new_model_name}/vocab.pkl", "wb") as vocab_file,
-            open(f"models/{new_model_name}/h_params.pkl", "wb") as params_file,
-            open(f"models/{new_model_name}/details.txt", "w") as details_file):
+            open(f"model/models/{new_model_name}/transformer.pth", "wb") as model_file,
+            open(f"model/models/{new_model_name}/transformer_checkpoint.pth", "wb") as checkpoint_file,
+            open(f"model/models/{new_model_name}/vocab.pkl", "wb") as vocab_file,
+            open(f"model/models/{new_model_name}/h_params.pkl", "wb") as params_file,
+            open(f"model/models/{new_model_name}/details.txt", "w") as details_file):
         checkpoint = {"epoch" : epoch,
                       "model_state_dict" : transformer.state_dict(),
                       "optimizer_state_dict" : optimizer.state_dict()}
