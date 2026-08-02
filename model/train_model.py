@@ -27,16 +27,16 @@ if checkpoint_name:
     print(f"Loading model with...\n{h_params}")
 else:
     h_params = {
-        "D_MODEL": 128,
-        "NUM_HEADS": 16,
-        "NUM_LAYERS": 16,
-        "D_FF": 256,
-        "MAX_SEQ_LENGTH": 500,
+        "D_MODEL": 512,
+        "NUM_HEADS": 8,
+        "NUM_LAYERS": 12,
+        "D_FF": 2048,
+        "MAX_SEQ_LENGTH": 600,
         "DROPOUT": .20,
-        "BATCH_SIZE": 4,
-        "EPOCHS": 50,
-        "LR": 0.0001,
-        "OBJECTS_OF_DATASET": 1000000}
+        "BATCH_SIZE": 50,
+        "EPOCHS": 2,
+        "LR": 0.0002,
+        "OBJECTS_OF_DATASET": 601}
     print(f"Training model with...\n{h_params}\n")
 
 # Data Loading

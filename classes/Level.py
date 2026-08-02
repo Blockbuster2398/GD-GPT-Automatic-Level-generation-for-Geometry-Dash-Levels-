@@ -182,7 +182,7 @@ class GMD_Level:
         for i in self.objects_list:
             # handle dx dy tokens
             if i.details["x_distance"] is not None and i.details["x_distance"] > 0:
-                tokens.append("x_reset")
+                #tokens.append("x_reset")
                 tokens += get_x_increment(i.details["x_distance"])
             if i.details["y_distance"] is not None:
                 if i.details["y_distance"] > 0:
@@ -304,7 +304,7 @@ class GMD_Level:
             elif "x_increment-" in i:
                 current_x += float(i[len("x_increment-"):]) #current_x += int(i[len("x_increment-"):])
                 ##print(f"x: {current_x}")
-            elif i == "x_reset": pass # Do nothing
+            # X reset used to be here, not deprecated
             elif i == "y_reset": current_y = 0
             elif i == "start": pass # Do nothing
             elif i == "end": pass #break # Does this make sense?

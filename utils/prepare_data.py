@@ -3,11 +3,12 @@ from pathlib import Path
 
 all_tokens = []
 # selected_levels = {"a_while.gmd", "nine_circles.gmd"}
-selected_levels = {"stereo madness.gmd"}
-for file_path in Path("../training_data_levels/dataset_3/levels").iterdir():
-    if str(file_path).split("\\")[-1] in selected_levels or True:
+total_datasets = 3
+
+for i in range(total_datasets):
+    for file_path in Path(f"../training_data_levels/dataset_{i+1}/levels").iterdir():
         print(file_path)
-        level = GMD_Level(file_path)
+        level = GMD_Level(file_path, keepDetail=False)
         all_tokens += level.tokens
         print(f"Running object total = {len(all_tokens)}")
 

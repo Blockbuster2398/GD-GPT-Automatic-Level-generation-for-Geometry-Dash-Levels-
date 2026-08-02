@@ -4,15 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5a4e2c22-c5b6-4abb-944e-838f0397918e" name="Changes" comment="Transformer Start">
+    <list default="true" id="5a4e2c22-c5b6-4abb-944e-838f0397918e" name="Changes" comment="s">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/models/model1/details.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/models/model_2/details.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/models/model_5.15.1/details.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/models/temp_model/details.txt" beforeDir="false" afterPath="$PROJECT_DIR$/model/models/temp_model/details.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Level.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/models/temp_model/details.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/model/run_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/run_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/train_checkpoint.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/train_checkpoint.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/train_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/train_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/data_tokenized.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/data_tokenized.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/prepare_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/prepare_data.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +66,7 @@
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/justi/GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-/model/checkpoints&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/justi/Coding/GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-/model/models/lab-series-2.08&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
@@ -75,17 +74,18 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\justi\Coding\GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-\model\models\lab-series-2.08" />
+      <recent name="C:\Users\justi\Coding\GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-\model\models" />
       <recent name="C:\Users\justi\GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-\model\checkpoints" />
       <recent name="C:\Users\justi\GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-\model\models" />
       <recent name="C:\Users\justi\GMDgenerator\input_levels_short" />
-      <recent name="C:\Users\justi\GMDgenerator" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\justi\Coding\GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-\model\models" />
       <recent name="C:\Users\justi\GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-\model\models" />
       <recent name="C:\Users\justi\GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-\model\checkpoints" />
       <recent name="C:\Users\justi\GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-\model" />
       <recent name="C:\Users\justi\GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-" />
-      <recent name="C:\Users\justi\GMDgenerator\utils" />
     </key>
   </component>
   <component name="RunManager">
