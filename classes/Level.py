@@ -304,7 +304,7 @@ class GMD_Level:
             elif "x_increment-" in i:
                 current_x += float(i[len("x_increment-"):]) #current_x += int(i[len("x_increment-"):])
                 ##print(f"x: {current_x}")
-            # X reset used to be here, not deprecated
+            elif i == "x_reset": pass # Do nothing
             elif i == "y_reset": current_y = 0
             elif i == "start": pass # Do nothing
             elif i == "end": pass #break # Does this make sense?

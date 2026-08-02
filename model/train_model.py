@@ -21,22 +21,25 @@ new_model_name = input("New model name?: ")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
+save_all_epochs = True
+
 if checkpoint_name:
     h_params = pickle.load(open(f"models/{checkpoint_name}/h_params.pkl", "rb"))
     print(datetime.now())
     print(f"Loading model with...\n{h_params}")
 else:
     h_params = {
-        "D_MODEL": 512,
-        "NUM_HEADS": 8,
-        "NUM_LAYERS": 12,
-        "D_FF": 2048,
-        "MAX_SEQ_LENGTH": 600,
-        "DROPOUT": .20,
-        "BATCH_SIZE": 50,
-        "EPOCHS": 2,
-        "LR": 0.0002,
-        "OBJECTS_OF_DATASET": 601}
+        "D_MODEL": 256,
+        "NUM_HEADS": 16,
+        "NUM_LAYERS": 16,
+        "D_FF": 512,
+        "MAX_SEQ_LENGTH": 500,
+        "DROPOUT": .5,
+        "BATCH_SIZE": 8,
+        "EPOCHS": 500,
+        "COMPLETED_EPOCHS": 0,
+        "LR": 0.0001,
+        "OBJECTS_OF_DATASET": 250000}
     print(f"Training model with...\n{h_params}\n")
 
 # Data Loading
@@ -44,6 +47,8 @@ with (
     open("../training_data_levels/dataset_1/dataset_1.txt") as f,
     open("../training_data_levels/dataset_2/dataset_2.txt") as g,
     open("../training_data_levels/dataset_3/dataset_3.txt") as h):
+    #open("../training_data_levels/full_dataset_retokenized/full_dataset_retokenized.txt") as d):
+    #content = d.read()
     content = f.read() + g.read() + h.read()
 
 # print(f"Dataset original size: {len([obj for obj in content.split(";") if obj.strip()])}")
@@ -89,7 +94,7 @@ transformer.train()
 batches_per_epoch = (h_params["OBJECTS_OF_DATASET"]-h_params["MAX_SEQ_LENGTH"])
 time_per_batch = timedelta()
 
-print("Epoch 0/10 - Training Loss: N/A")
+print(f"Epoch 0/{h_params["EPOCHS"]} - Training Loss: N/A")
 for epoch in range(h_params["EPOCHS"]):
     total_loss = 0
     i = 0
@@ -139,13 +144,25 @@ for epoch in range(h_params["EPOCHS"]):
     print(f"Epoch {epoch + 1}/{h_params["EPOCHS"]} - Training Loss: {total_loss / len(loader):.4f} - Validation Loss: {val_loss:.4f}")
     """
     # Save checkpoint for further use
-    Path(f"models/{new_model_name}").mkdir(parents=False, exist_ok=True)
+    model_save_name = new_model_name
+    if "COMPLETED_EPOCHS" in h_params:
+        h_params["COMPLETED_EPOCHS"] += 1
+        # Custom naming for saving all epochs of a model
+        if save_all_epochs:
+            model_save_name = new_model_name
+            if ":epoch" in model_save_name:
+                model_save_name = model_save_name[:model_save_name.index("-epoch")+1]
+            model_save_name += f":epoch={h_params["COMPLETED_EPOCHS"]}"
+
+
+
+    Path(f"models/{model_save_name}").mkdir(parents=False, exist_ok=True)
     with (
-            open(f"models/{new_model_name}/transformer.pth", "wb") as model_file,
-            open(f"models/{new_model_name}/transformer_checkpoint.pth", "wb") as checkpoint_file,
-            open(f"models/{new_model_name}/vocab.pkl", "wb") as vocab_file,
-            open(f"models/{new_model_name}/h_params.pkl", "wb") as params_file,
-            open(f"models/{new_model_name}/details.txt", "w") as details_file):
+            open(f"models/{model_save_name}/transformer.pth", "wb") as model_file,
+            open(f"models/{model_save_name}/transformer_checkpoint.pth", "wb") as checkpoint_file,
+            open(f"models/{model_save_name}/vocab.pkl", "wb") as vocab_file,
+            open(f"models/{model_save_name}/h_params.pkl", "wb") as params_file,
+            open(f"models/{model_save_name}/details.txt", "w") as details_file):
         checkpoint = {"epoch" : epoch,
                       "model_state_dict" : transformer.state_dict(),
                       "optimizer_state_dict" : optimizer.state_dict()}
