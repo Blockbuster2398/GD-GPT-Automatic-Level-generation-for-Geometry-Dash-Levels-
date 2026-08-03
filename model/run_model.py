@@ -10,7 +10,7 @@ import torch
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
-model_name = "trash3"
+model_name = "video-1.0@epoch=1"
 with (open(f"models/{model_name}/vocab.pkl", "rb") as vocab_file,
       open(f"models/{model_name}/h_params.pkl", "rb") as params_file):
     vocab = pickle.load(vocab_file)
@@ -38,7 +38,7 @@ def encode(text, vocab):
     return [vocab.get(token, 0) for token in tokens]  # 0 for unknown tokens
 
 
-def generate(transformer, src_tokens, max_len=5000, max_seq_length=75, temperature=.85):
+def generate(transformer, src_tokens, max_len=5000, max_seq_length=250, temperature=.85):
     transformer.eval()
     with torch.no_grad():
         tgt = torch.tensor([1]).unsqueeze(0).to(device)  # start token

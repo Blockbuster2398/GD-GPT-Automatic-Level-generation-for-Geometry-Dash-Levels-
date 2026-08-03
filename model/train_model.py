@@ -150,9 +150,9 @@ for epoch in range(h_params["EPOCHS"]):
         # Custom naming for saving all epochs of a model
         if save_all_epochs:
             model_save_name = new_model_name
-            if ":epoch" in model_save_name:
+            if "@epoch" in model_save_name:
                 model_save_name = model_save_name[:model_save_name.index("-epoch")+1]
-            model_save_name += f":epoch={h_params["COMPLETED_EPOCHS"]}"
+            model_save_name += f"@epoch={h_params["COMPLETED_EPOCHS"]}"
 
 
 

@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5a4e2c22-c5b6-4abb-944e-838f0397918e" name="Changes" comment="s">
-      <change afterPath="$PROJECT_DIR$/training_data_levels/full_dataset_retokenized/full_dataset_retokenized.txt" afterDir="false" />
+    <list default="true" id="5a4e2c22-c5b6-4abb-944e-838f0397918e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Level.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/run_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/run_model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/train_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/train_model.py" afterDir="false" />
     </list>
@@ -40,36 +38,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "Python.Level.executor": "Run",
-    "Python.LevelClass.executor": "Run",
-    "Python.Object.executor": "Run",
-    "Python.ObjectDetailMapping.executor": "Run",
-    "Python.__main__.executor": "Run",
-    "Python.gmd_to_objects.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.model.executor": "Run",
-    "Python.objects_to_gmd.executor": "Run",
-    "Python.prepare_data.executor": "Run",
-    "Python.run_model.executor": "Run",
-    "Python.train_model.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/justi/Coding/GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-/training_data_levels/full_dataset_retokenized",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;Python.Level.executor&quot;: &quot;Run&quot;,
+    &quot;Python.LevelClass.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Object.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ObjectDetailMapping.executor&quot;: &quot;Run&quot;,
+    &quot;Python.__main__.executor&quot;: &quot;Run&quot;,
+    &quot;Python.gmd_to_objects.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.model.executor&quot;: &quot;Run&quot;,
+    &quot;Python.objects_to_gmd.executor&quot;: &quot;Run&quot;,
+    &quot;Python.prepare_data.executor&quot;: &quot;Run&quot;,
+    &quot;Python.run_model.executor&quot;: &quot;Run&quot;,
+    &quot;Python.train_model.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/justi/Coding/GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-/training_data_levels/full_dataset_retokenized&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\justi\Coding\GD-GPT-Automatic-Level-generation-for-Geometry-Dash-Levels-\training_data_levels\full_dataset_retokenized" />
