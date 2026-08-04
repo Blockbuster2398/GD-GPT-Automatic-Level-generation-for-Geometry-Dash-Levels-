@@ -11,7 +11,8 @@ from utils.ObjectMapping import ObjectMap
 class GMD_Level:
 
     # raw_string = None
-    def __init__(self, path, objects_list = None, keepDetail = True):
+    def __init__(self, path=None, objects_list = None, keepDetail = True, keepDeco=False):
+        self.keepDeco = keepDeco
         self.keepDetail = keepDetail
         self.objects_list = []
         self.plain_object_data = ""
@@ -116,44 +117,36 @@ class GMD_Level:
             return y_increments
 
         def get_90_rotation_spike(rotation, vFlip, hFlip):
-            # Watch out for stupid infinite negative edge case
-            rotation = int(rotation)
+            # Normalize into [0, 360) with modulo (handles negatives directly,
+            # e.g. -90 % 360 == 270) instead of the old single-wrap hack.
+            rotation = int(rotation) % 360
             vFlip = int(vFlip)
             hFlip = int(hFlip)
-            # print(rotation)
-            # print(f"hFlip: {hFlip}")
-            # print(f"vFlip: {vFlip}")
-            if rotation < 0: rotation = 360 + rotation
-            # print(rotation)
             rotation = rotation - rotation % 90
-            # print(rotation)
             if (rotation == 90 or rotation == 270):
                 rotation += 180 * hFlip
             elif (rotation == 0 or rotation == 180):
                 rotation += 180 * vFlip
-            rotation = rotation - rotation % 90
-            # print(rotation)
+            # Wrap again with modulo (not "- rotation % 90", which is a no-op
+            # once rotation is already a multiple of 90 and previously let
+            # 180+180=360 and 270+180=450 leak out as invalid tokens).
+            rotation = rotation % 360
             return str(rotation)
         def get_180_rotation(rotation, vFlip):
-            rotation = int(rotation)
-            if rotation < 0: rotation = 360 + rotation
+            # Same fix as get_90_rotation_spike above: modulo-wrap both times
+            # so e.g. rotation=180, vFlip=1 resolves to 0 instead of 360.
+            rotation = int(rotation) % 360
             rotation = rotation - rotation % 180
-            rotation += 180 * int(vFlip)
+            rotation = (rotation + 180 * int(vFlip)) % 360
             return str(rotation)
 
-        def get_90_rotation_slope(rotation, vFlip, hFlip):
-            rot = 0
-            if (hFlip != 0 and vFlip == 0): rot += 90
-            if (vFlip != 0 and hFlip == 0): rot += 270
-            if (hFlip != 0 and vFlip != 0): rot += 180
-            rotation = int(rotation)
-            rotation = rotation - rotation % 90
-            rotation += rot
-            rotation = rotation % 360
-
-            return str(rotation)
-
-        def get_90_rotation_slope_long(rotation, vFlip, hFlip):
+        def get_90_rotation_slope_type(rotation, vFlip, hFlip):
+            # Shared by both "slope" and "slope_long": neither shape has any
+            # mirror symmetry, so all 8 combinations of a 90-degree rotation
+            # x flip_vertical x flip_horizontal are visually distinct and each
+            # needs its own token. (This used to be slope_long-only logic;
+            # "slope" previously used a 4-state function that silently
+            # collapsed 3 out of every 4 placements onto the wrong token.)
             rotation = int(rotation)
             rotation = rotation % 360
 
@@ -267,24 +260,19 @@ class GMD_Level:
             elif int(i.details["object_id"]) in (self.map.category_to_id['spike_mini']):
                 tokens.append("spike_mini-" + get_90_rotation_spike(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
 
-            # Slopes
+            # Slopes (both categories are the same asymmetric ramp shape at
+            # different sizes, so both need the full 8-state rotation+flip encoding)
             elif int(i.details["object_id"]) in (self.map.category_to_id['slope']):
-                tokens.append("slope-" + get_90_rotation_slope(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+                tokens.append("slope-" + get_90_rotation_slope_type(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
             elif int(i.details["object_id"]) in (self.map.category_to_id['slope_long']):
-                new_token = ("slope_long-" + get_90_rotation_slope_long(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
-                """if (int(i.details["flip_vertical"]) + int(i.details["flip_horizontal"]) % 2 == 0):
-                    new_token += "-no_mirror"
-                else:
-                    new_token += "-mirror"
-                tokens.append(new_token)"""
-                tokens.append("slope_long-" + get_90_rotation_slope_long(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+                tokens.append("slope_long-" + get_90_rotation_slope_type(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
 
 
 
             # Deco Blocks
-            elif int(i.details["object_id"]) in (self.map.category_to_id['deco_block']):
+            elif int(i.details["object_id"]) in (self.map.category_to_id['deco_block']) and self.keepDeco == True:
                 tokens.append("deco_block")
-            elif self.keepDetail == True:
+            elif self.keepDetail:
                 tokens.append("_")
         tokens.append("end")
         # print(tokens)
@@ -310,17 +298,19 @@ class GMD_Level:
             elif i == "end": pass #break # Does this make sense?
             # Token must represent an object
             else:
-                object_category = i.split("-")[0]
+                parts = i.split("-")
+                object_category = parts[0]
                 # print(i)
                 # print(object_category)
                 new_object = GMD_Object()
                 new_object.details["x_position"] = (current_x)
                 new_object.details["y_position"] = (current_y)
                 new_object.details["object_id"] = (map.category_to_id_create[object_category])
-                if len(i.split("-")) > 1 and object_category != "slope_long":
-                    new_object.details["rotation"] = i.split("-")[1]
-                elif object_category == "slope_long":
-                    type = int(i.split("-")[1][len(i.split("-")[1])-1])
+                # "slope" and "slope_long" both encode a type_1..type_8 token
+                # (see get_90_rotation_slope_type); everything else encodes a
+                # plain rotation number.
+                if object_category in ("slope", "slope_long"):
+                    type = int(parts[1].split("_")[1])
                     match type:
                         case 1:
                             new_object.details["rotation"] = 0
@@ -354,6 +344,8 @@ class GMD_Level:
                             new_object.details["rotation"] = 90
                             new_object.details["flip_vertical"] = 1
                             new_object.details["flip_horizontal"] = 1
+                elif len(parts) > 1:
+                    new_object.details["rotation"] = parts[1]
 
                 object_array.append(new_object)
 

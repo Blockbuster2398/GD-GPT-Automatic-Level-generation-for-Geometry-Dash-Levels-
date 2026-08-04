@@ -8,7 +8,7 @@ total_datasets = 3
 for i in range(total_datasets):
     for file_path in Path(f"../training_data_levels/dataset_{i+1}/levels").iterdir():
         print(file_path)
-        level = GMD_Level(file_path, keepDetail=False)
+        level = GMD_Level(file_path, keepDetail=False, keepDeco=False)
         all_tokens += level.tokens
         print(f"Running object total = {len(all_tokens)}")
 

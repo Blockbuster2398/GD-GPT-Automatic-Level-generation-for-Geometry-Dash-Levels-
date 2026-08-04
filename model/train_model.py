@@ -44,12 +44,12 @@ else:
 
 # Data Loading
 with (
-    open("../training_data_levels/dataset_1/dataset_1.txt") as f,
-    open("../training_data_levels/dataset_2/dataset_2.txt") as g,
-    open("../training_data_levels/dataset_3/dataset_3.txt") as h):
-    #open("../training_data_levels/full_dataset_retokenized/full_dataset_retokenized.txt") as d):
-    #content = d.read()
-    content = f.read() + g.read() + h.read()
+    #open("../training_data_levels/dataset_1/dataset_1.txt") as f,
+    #open("../training_data_levels/dataset_2/dataset_2.txt") as g,
+    #open("../training_data_levels/dataset_3/dataset_3.txt") as h),
+    open("../training_data_levels/full_dataset_retokenized/full_dataset_retokenized.txt") as d):
+    content = d.read()
+    #content = f.read() + g.read() + h.read()
 
 # print(f"Dataset original size: {len([obj for obj in content.split(";") if obj.strip()])}")
 print(f"Objects available in dataset: {len([obj for obj in content.split(";") if obj.strip()])}")
