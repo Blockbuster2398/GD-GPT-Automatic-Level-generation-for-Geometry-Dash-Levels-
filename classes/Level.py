@@ -61,8 +61,8 @@ class GMD_Level:
                         self.is_modified = True
                 new_object.details["x_position"] = int(float(new_object.details["x_position"]))
                 new_object.details["y_position"] = int(float(new_object.details["y_position"]))
-
-                self.objects_list.append((new_object))
+                if keepDeco or any(int(new_object.details["object_id"]) in sublist for sublist in self.map.category_to_id.values()):
+                    self.objects_list.append(new_object)
             # If objects before start of level
             if int(self.objects_list[0].details["x_position"]) < 0:
                 self.offset = self.objects_list[0].details["x_position"] * -1
@@ -116,37 +116,38 @@ class GMD_Level:
                     y_increments.append("y_increment-" + str(interval))
             return y_increments
 
-        def get_90_rotation_spike(rotation, vFlip, hFlip):
-            # Normalize into [0, 360) with modulo (handles negatives directly,
-            # e.g. -90 % 360 == 270) instead of the old single-wrap hack.
-            rotation = int(rotation) % 360
-            vFlip = int(vFlip)
-            hFlip = int(hFlip)
-            rotation = rotation - rotation % 90
-            if (rotation == 90 or rotation == 270):
-                rotation += 180 * hFlip
-            elif (rotation == 0 or rotation == 180):
-                rotation += 180 * vFlip
-            # Wrap again with modulo (not "- rotation % 90", which is a no-op
-            # once rotation is already a multiple of 90 and previously let
-            # 180+180=360 and 270+180=450 leak out as invalid tokens).
+        def get_90_rotation_reflectable(rotation, vFlip, hFlip):
+            rotation = int(rotation)
             rotation = rotation % 360
-            return str(rotation)
+
+            if (rotation == 0 and vFlip == 0 and hFlip == 0) or (rotation == 180 and vFlip != 0 and hFlip != 0):
+                return "0"
+            elif (rotation == 0 and vFlip != 0 and hFlip == 0) or (rotation == 180 and vFlip == 0 and hFlip != 0):
+                return "180"
+            elif (rotation == 0 and vFlip == 0 and hFlip != 0) or (rotation == 180 and vFlip != 0 and hFlip == 0):
+                return "0"
+            elif (rotation == 0 and vFlip != 0 and hFlip != 0) or (rotation == 180 and vFlip == 0 and hFlip == 0):
+                return "180"
+
+            elif (rotation == 90 and vFlip == 0 and hFlip == 0) or (rotation == 270 and vFlip != 0 and hFlip != 0):
+                return "90"
+            elif (rotation == 90 and vFlip != 0 and hFlip == 0) or (rotation == 270 and vFlip == 0 and hFlip != 0):
+                return "270"
+            elif (rotation == 90 and vFlip == 0 and hFlip != 0) or (rotation == 270 and vFlip != 0 and hFlip == 0):
+                return "90"
+            else:
+                return "270"
+        # No longer needed
         def get_180_rotation(rotation, vFlip):
-            # Same fix as get_90_rotation_spike above: modulo-wrap both times
+            # Same fix as get_90_rotation_reflectable above: modulo-wrap both times
             # so e.g. rotation=180, vFlip=1 resolves to 0 instead of 360.
             rotation = int(rotation) % 360
             rotation = rotation - rotation % 180
             rotation = (rotation + 180 * int(vFlip)) % 360
             return str(rotation)
 
-        def get_90_rotation_slope_type(rotation, vFlip, hFlip):
-            # Shared by both "slope" and "slope_long": neither shape has any
-            # mirror symmetry, so all 8 combinations of a 90-degree rotation
-            # x flip_vertical x flip_horizontal are visually distinct and each
-            # needs its own token. (This used to be slope_long-only logic;
-            # "slope" previously used a 4-state function that silently
-            # collapsed 3 out of every 4 placements onto the wrong token.)
+        def get_90_rotation_non_reflectable(rotation, vFlip, hFlip):
+            #print(f"rotation is {rotation}")
             rotation = int(rotation)
             rotation = rotation % 360
 
@@ -237,35 +238,35 @@ class GMD_Level:
             elif int(i.details["object_id"]) in (self.map.category_to_id['orange_reflect']):tokens.append("orange_reflect")
             elif int(i.details["object_id"]) in (self.map.category_to_id['blue_reflect']):tokens.append("blue_reflect")
 
-            # Require special logic
+            # Require special rotation logic
 
             # Half Blocks
             elif int(i.details["object_id"]) in (self.map.category_to_id['half_block']):
-                tokens.append("half_block-" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
+                tokens.append("half_block-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
             # Pads
             elif int(i.details["object_id"]) in (self.map.category_to_id['red_pad']):
-                tokens.append("red_pad-" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
+                tokens.append("red_pad-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
             elif int(i.details["object_id"]) in (self.map.category_to_id['yellow_pad']):
-                tokens.append("yellow_pad-" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
+                tokens.append("yellow_pad-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
             elif int(i.details["object_id"]) in (self.map.category_to_id['blue_pad']):
-                tokens.append("blue_pad-" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
+                tokens.append("blue_pad-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
             elif int(i.details["object_id"]) in (self.map.category_to_id['purple_pad']):
-                tokens.append("purple_pad-" + get_180_rotation(i.details["rotation"], i.details["flip_vertical"]))
+                tokens.append("purple_pad-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
 
             # Spikes
             elif int(i.details["object_id"]) in (self.map.category_to_id['spike']):
-                tokens.append("spike-" + get_90_rotation_spike(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+                tokens.append("spike-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
             elif int(i.details["object_id"]) in (self.map.category_to_id['spike_short']):
-                tokens.append("spike_short-" + get_90_rotation_spike(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+                tokens.append("spike_short-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
             elif int(i.details["object_id"]) in (self.map.category_to_id['spike_mini']):
-                tokens.append("spike_mini-" + get_90_rotation_spike(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+                tokens.append("spike_mini-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
 
             # Slopes (both categories are the same asymmetric ramp shape at
             # different sizes, so both need the full 8-state rotation+flip encoding)
             elif int(i.details["object_id"]) in (self.map.category_to_id['slope']):
-                tokens.append("slope-" + get_90_rotation_slope_type(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+                tokens.append("slope-" + get_90_rotation_non_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
             elif int(i.details["object_id"]) in (self.map.category_to_id['slope_long']):
-                tokens.append("slope_long-" + get_90_rotation_slope_type(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+                tokens.append("slope_long-" + get_90_rotation_non_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
 
 
 
@@ -344,6 +345,7 @@ class GMD_Level:
                             new_object.details["rotation"] = 90
                             new_object.details["flip_vertical"] = 1
                             new_object.details["flip_horizontal"] = 1
+                # Handle 180 rotations
                 elif len(parts) > 1:
                     new_object.details["rotation"] = parts[1]
 
