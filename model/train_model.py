@@ -39,7 +39,9 @@ else:
         "EPOCHS": 500,
         "COMPLETED_EPOCHS": 0,
         "LR": 0.0001,
-        "OBJECTS_OF_DATASET": 250000}
+        "OBJECTS_OF_DATASET": 850000,
+        "TRAINING_LOSS": None
+    }
     print(f"Training model with...\n{h_params}\n")
 
 # Data Loading
@@ -54,6 +56,9 @@ with (
 # print(f"Dataset original size: {len([obj for obj in content.split(";") if obj.strip()])}")
 print(f"Objects available in dataset: {len([obj for obj in content.split(";") if obj.strip()])}")
 objects = [obj for obj in content.split(";") if obj.strip()][:h_params["OBJECTS_OF_DATASET"]]
+#print(len(objects))
+#objects = objects[250000:]
+#print(len(objects))
 
 vocab = {token: idx+1 for idx, token in enumerate(sorted(set(objects)))}  # 0 reserved for padding
 vocab_size = len(vocab) + 1  # +1 for padding token
@@ -123,7 +128,8 @@ for epoch in range(h_params["EPOCHS"]):
               # f"- It is currently {datetime.now()}"
               f"", end='', flush=True)
     print(f"\n{datetime.now()}")
-    print(f"Epoch {epoch + 1}/{h_params["EPOCHS"]} - Training Loss: {total_loss / len(loader):.4f}")
+    h_params["TRAINING_LOSS"] = total_loss / len(loader)
+    print(f"Epoch {epoch + 1}/{h_params["EPOCHS"]} - Training Loss: {h_params["TRAINING_LOSS"]:.4f}")
 
     # Validation
     """transformer.eval()
