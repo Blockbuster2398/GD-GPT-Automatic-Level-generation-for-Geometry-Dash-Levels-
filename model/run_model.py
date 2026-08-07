@@ -1,21 +1,36 @@
+import os
 import pickle
+import sys
 import time
 from pathlib import Path
 
-from classes import Level
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 from classes.Level import GMD_Level
-from model.model import Transformer
+import importlib.util
 import torch
 
+MODEL_MODULE_PATH = PROJECT_ROOT / "model" / "model.py"
+MODEL_SPEC = importlib.util.spec_from_file_location("gd_model_module", MODEL_MODULE_PATH)
+if MODEL_SPEC is None or MODEL_SPEC.loader is None:
+    raise ImportError(f"Could not load model module from {MODEL_MODULE_PATH}")
 
-def generate_level(model : str, prompt : str, level_length : int, seq_length, temperature : int, level_name=None):
+model_module = importlib.util.module_from_spec(MODEL_SPEC)
+MODEL_SPEC.loader.exec_module(model_module)
+Transformer = model_module.Transformer
+
+
+def generate_level(model : str, prompt : str, level_length : int, seq_length, temperature : float, level_name=None):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
     model_name = model
-    with (open(f"models/{model_name}/vocab.pkl", "rb") as vocab_file,
-          open(f"models/{model_name}/h_params.pkl", "rb") as params_file):
+    model_dir = PROJECT_ROOT / "model" / "models" / model_name
+    with (open(model_dir / "vocab.pkl", "rb") as vocab_file,
+          open(model_dir / "h_params.pkl", "rb") as params_file):
         vocab = pickle.load(vocab_file)
         h_params = pickle.load(params_file)
 
@@ -27,7 +42,7 @@ def generate_level(model : str, prompt : str, level_length : int, seq_length, te
         h_params["D_FF"], h_params["MAX_SEQ_LENGTH"], h_params["DROPOUT"]
     )
 
-    transformer.load_state_dict(torch.load(f"models/{model_name}/transformer.pth", map_location=device))
+    transformer.load_state_dict(torch.load(model_dir / "transformer.pth", map_location=device))
     transformer.to(device)
 
 
@@ -85,17 +100,17 @@ def generate_level(model : str, prompt : str, level_length : int, seq_length, te
     output_tokens = generate(transformer, src_tokens)
     output_text = decode(output_tokens, vocab)
 
-    objects = GMD_Level.decode_tokens("x_increment-50;" + input_text + output_text)
-    output_folder = Path(f"../generated_levels/{model_name}/")
+    objects = GMD_Level.decode_tokens("x_increment-50;" + input_text + ";" + output_text)
+    output_folder = PROJECT_ROOT / "generated_levels" / model_name
     if not output_folder.exists(): output_folder.mkdir(parents=True, exist_ok=True)
     file_count = sum(1 for item in output_folder.iterdir() if item.is_file())
     level = GMD_Level("_", objects)
 
 
     if level_name:
-        level.create_gmd(f"../generated_levels/{model_name}/{level_name}@temperature={temperature}_{file_count}.gmd", f"{model_name}/{level_name}_{file_count}", "AI Generated")
+        level.create_gmd(output_folder / f"{level_name}@temperature={temperature}_{file_count}.gmd", f"{model_name}/{level_name}_{file_count}", "AI Generated")
     else:
-        level.create_gmd(f"../generated_levels/{model_name}/{model_name}@temperature={temperature}_{file_count}.gmd", f"{model_name}/{model_name}_{file_count}", "AI Generated")
+        level.create_gmd(output_folder / f"{model_name}@temperature={temperature}_{file_count}.gmd", f"{model_name}/{model_name}_{file_count}", "AI Generated")
 
 
 spike_cap = "start;spike-0;x_reset;x_increment-80;x_increment-40;x_increment-20;x_increment-10;spike-0;x_reset;x_increment-80;x_increment-40;x_increment-20;x_increment-10;spike-0;x_reset;x_increment-160;x_increment-80;spike-0;x_reset;x_increment-20;x_increment-10;spike-0;x_reset;x_increment-20;x_increment-10;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;x_reset;x_increment-20;x_increment-10;spike_short-0;x_reset;x_increment-5;x_increment-2;x_increment-1;y_increment-10;y_increment-5;y_increment-2;_;x_reset;x_increment-20;x_increment-2;y_reset;y_increment-2;spike_short-0;x_reset;x_increment-20;x_increment-10;spike_short-0;y_increment-10;y_increment-2;y_increment-1;full_block;y_increment-20;y_increment-10;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;x_reset;x_increment-20;x_increment-10;spike_short-0;y_increment-10;y_increment-1;_;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;x_reset;x_increment-20;x_increment-10;spike_short-0;y_increment-10;y_increment-2;y_increment-1;full_block;y_increment-20;y_increment-10;full_block;y_increment-20;y_increment-10;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;y_increment-40;y_increment-20;y_increment-10;y_increment-2;y_increment-1;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;y_increment-40;y_increment-20;y_increment-10;y_increment-2;y_increment-1;full_block;y_increment-20;y_increment-10;spike-0;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;y_increment-10;y_increment-5;y_increment-2;_;y_increment-40;y_increment-10;y_increment-5;y_increment-1;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;y_increment-40;y_increment-20;y_increment-10;y_increment-2;y_increment-1;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;y_increment-40;y_increment-20;y_increment-10;y_increment-2;y_increment-1;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;y_increment-40;y_increment-20;y_increment-10;y_increment-2;y_increment-1;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;y_increment-40;y_increment-20;y_increment-10;y_increment-2;y_increment-1;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;y_increment-10;y_increment-5;y_increment-2;_;y_increment-40;y_increment-10;y_increment-5;y_increment-1;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;y_increment-40;y_increment-20;y_increment-10;y_increment-2;y_increment-1;full_block;y_increment-20;y_increment-10;spike-0;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;y_increment-40;y_increment-20;y_increment-10;y_increment-2;y_increment-1;full_block;y_increment-20;y_increment-10;spike-0;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;y_increment-10;y_increment-2;y_increment-1;full_block;y_increment-20;y_increment-10;full_block;y_increment-20;y_increment-10;full_block;y_increment-20;y_increment-10;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;x_reset;x_increment-10;x_increment-2;x_increment-2;y_increment-5;y_increment-2;y_increment-2;_;x_reset;x_increment-10;x_increment-5;x_increment-1;y_reset;y_increment-2;spike_short-0;y_increment-160;y_increment-20;"

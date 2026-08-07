@@ -1,12 +1,19 @@
-from classes.Level import GMD_Level
+import sys
 from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from classes.Level import GMD_Level
 
 all_tokens = []
 # selected_levels = {"a_while.gmd", "nine_circles.gmd"}
-total_datasets = 3
+total_datasets = 6
 
 for i in range(total_datasets):
-    for file_path in Path(f"../training_data_levels/dataset_{i+1}/levels").iterdir():
+    dataset_dir = PROJECT_ROOT / "training_data_levels" / f"dataset_{i + 1}" / "levels"
+    for file_path in dataset_dir.iterdir():
         print(file_path)
         level = GMD_Level(file_path, keepDetail=False, keepDeco=False)
         all_tokens += level.tokens
@@ -22,5 +29,5 @@ for token, freq in sorted_tokens:
 
 token_string = ";".join(all_tokens)
 
-with open("../resources/data_tokenized.txt", "w") as f:
+with open(PROJECT_ROOT / "resources" / "data_tokenized.txt", "w") as f:
     f.write(token_string)

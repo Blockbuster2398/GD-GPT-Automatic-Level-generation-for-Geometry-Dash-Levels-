@@ -1,11 +1,15 @@
 import base64
 import gzip
+import random
 import zlib
 import math
 from operator import attrgetter
+from pathlib import Path
 
 from classes.Object import GMD_Object
 from utils.ObjectMapping import ObjectMap
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 class GMD_Level:
@@ -22,8 +26,19 @@ class GMD_Level:
         self.map = ObjectMap()
         self.offset = 0
         if not objects_list:
+            resolved_path = None
+            if path is not None:
+                path_obj = Path(path)
+                if not path_obj.is_absolute():
+                    candidate = PROJECT_ROOT / path_obj
+                    if candidate.exists():
+                        resolved_path = candidate
+                    else:
+                        resolved_path = Path.cwd() / path_obj
+                else:
+                    resolved_path = path_obj
             try:
-                with open(path, "r") as file:
+                with open(resolved_path, "r") as file: # type: ignore
                     content = file.read()
                     # print(content)
             except FileNotFoundError:
@@ -34,7 +49,7 @@ class GMD_Level:
             try:
                 # Attempts to extract level object data from file contents
                 # k4 = content.split("</s><k>k4</k><s>")[1].split("==")[0]
-                k4 = content.split("</s><k>k4</k><s>")[1].split("</s>")[0]
+                k4 = content.split("</s><k>k4</k><s>")[1].split("</s>")[0] # type: ignore
             except IndexError:
                 print("GMD file likely improperly formatted.")
             except Exception as e:
@@ -52,7 +67,7 @@ class GMD_Level:
                 object = self.plain_object_data[i]
                 object_segmented = object.split(",")
                 new_object = GMD_Object()
-                new_object.sequence_order = i-1
+                new_object.sequence_order = i-1 # type: ignore
                 for j in range(int(len(object_segmented)/2)):
                     # Initializes all normal attributes of the new object
                     if int(object_segmented[j*2]) in self.map.key_to_attribute.keys():
@@ -95,7 +110,7 @@ class GMD_Level:
     def create_tokens(self):
         def get_x_increment(num):
             x_increments = []
-            x_intervals = [2560, 1280, 640, 320, 160, 80, 40, 20, 10, 5, 2, 1, 0.5, 0.25]
+            x_intervals = [2560, 1280, 640, 320, 160, 120, 80, 60, 40, 35, 30, 25, 20, 15, 10, 5, 4, 3, 2, 1]
             # Sort largest-first so we greedily take the biggest chunk each time
             remaining = num
             for interval in x_intervals:
@@ -108,7 +123,7 @@ class GMD_Level:
 
         def get_y_increment(num):
             y_increments = []
-            y_intervals = [2560, 1280, 640, 320, 160, 80, 40, 20, 10, 5, 2, 1, 0.5, 0.25]
+            y_intervals = [2560, 1280, 640, 320, 160, 120, 80, 60, 40, 35, 30, 25, 20, 15, 10, 5, 4, 3, 2, 1]
             remaining = num
             for interval in y_intervals:
                 while remaining >= interval:
@@ -192,14 +207,22 @@ class GMD_Level:
             # No rotational details
             if int(i.details["object_id"]) in (self.map.category_to_id['full_block']):
                 tokens.append("full_block")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['full_block_variation_1']):
+                            tokens.append("full_block_variation_1")
             elif int(i.details["object_id"]) in (self.map.category_to_id['mini_block']):
                 tokens.append("mini_block")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['breakable_block']):
+                tokens.append("breakable_block")
+            
             elif int(i.details["object_id"]) in (self.map.category_to_id['saw_mini']):
                 tokens.append("saw_mini")
+                i.details["scale"] = .75 + random.random()/4
             elif int(i.details["object_id"]) in (self.map.category_to_id['saw_med']):
                 tokens.append("saw_med")
+                i.details["scale"] = .75 + random.random()/4
             elif int(i.details["object_id"]) in (self.map.category_to_id['saw_large']):
                 tokens.append("saw_large")
+                i.details["scale"] = .75 + random.random()/4
 
             elif int(i.details["object_id"]) in (self.map.category_to_id['x1_speed']):
                 tokens.append("x1_speed")
@@ -210,6 +233,12 @@ class GMD_Level:
             elif int(i.details["object_id"]) in (self.map.category_to_id['x4_speed']):
                 tokens.append("x4_speed")
 
+            elif int(i.details["object_id"]) in (self.map.category_to_id['pulse_deco']):
+                            tokens.append("pulse_deco")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['gear_deco']):
+                            tokens.append("gear_deco")
+                            i.details["scale"] = .5 + random.random()/2
+
             elif int(i.details["object_id"]) in (self.map.category_to_id['green_orb']): tokens.append("green_orb")
             elif int(i.details["object_id"]) in (self.map.category_to_id['red_orb']):tokens.append("red_orb")
             elif int(i.details["object_id"]) in (self.map.category_to_id['black_orb']):tokens.append("black_orb")
@@ -217,8 +246,6 @@ class GMD_Level:
             elif int(i.details["object_id"]) in (self.map.category_to_id['yellow_orb']):tokens.append("yellow_orb")
             elif int(i.details["object_id"]) in (self.map.category_to_id['blue_orb']):tokens.append("blue_orb")
 
-            elif int(i.details["object_id"]) in (self.map.category_to_id['blue_gravity']):tokens.append("blue_gravity")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['yellow_gravity']):tokens.append("yellow_gravity")
             elif int(i.details["object_id"]) in (self.map.category_to_id['cube_portal']):tokens.append("cube_portal")
             elif int(i.details["object_id"]) in (self.map.category_to_id['ship_portal']):tokens.append("ship_portal")
             elif int(i.details["object_id"]) in (self.map.category_to_id['ball_portal']):tokens.append("ball_portal")
@@ -239,6 +266,12 @@ class GMD_Level:
             elif int(i.details["object_id"]) in (self.map.category_to_id['blue_reflect']):tokens.append("blue_reflect")
 
             # Require special rotation logic
+            
+            # Rotated Portals
+            elif int(i.details["object_id"]) in (self.map.category_to_id['blue_gravity']):
+                            tokens.append("blue_gravity-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
+            elif int(i.details["object_id"]) in (self.map.category_to_id['yellow_gravity']):
+                            tokens.append("yellow_gravity-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
 
             # Half Blocks
             elif int(i.details["object_id"]) in (self.map.category_to_id['half_block']):
@@ -260,6 +293,11 @@ class GMD_Level:
                 tokens.append("spike_short-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
             elif int(i.details["object_id"]) in (self.map.category_to_id['spike_mini']):
                 tokens.append("spike_mini-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+            elif int(i.details["object_id"]) in (self.map.category_to_id['continuous_spikes']):
+                            tokens.append("continuous_spikes-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+            elif int(i.details["object_id"]) in (self.map.category_to_id['decorative_continuous_spikes']):
+                            tokens.append("decorative_continuous_spikes-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
+                            i.details["scale"] = .5 + random.random()/2
 
             # Slopes (both categories are the same asymmetric ramp shape at
             # different sizes, so both need the full 8-state rotation+flip encoding)
@@ -271,7 +309,7 @@ class GMD_Level:
 
 
             # Deco Blocks
-            elif int(i.details["object_id"]) in (self.map.category_to_id['deco_block']) and self.keepDeco == True:
+            elif int(i.details["object_id"]) in (self.map.category_to_id['deco_block']): #and self.keepDeco == True:
                 tokens.append("deco_block")
             elif self.keepDetail:
                 tokens.append("_")
@@ -279,6 +317,7 @@ class GMD_Level:
         # print(tokens)
         self.tokens = tokens
 
+    @staticmethod
     def decode_tokens(tokens : str):
         map = ObjectMap()
         token_array = tokens.split(";")
@@ -371,9 +410,13 @@ class GMD_Level:
         # print(gd_encoded_final)
         xml_template = f"""<?xml version="1.0"?><plist version="1.0" gjver="2.0"><dict><k>kCEK</k><i>4</i><k>k1</k><i>11940</i><k>k18</k><i>13</i><k>k36</k><i>400</i><k>k85</k><i>128</i><k>k86</k><i>85</i><k>k87</k><i>2184369</i><k>k88</k><s>43,52,5</s><k>k89</k><t /><k>k23</k><i>3</i><k>k19</k><i>100</i><k>k71</k><i>100</i><k>k90</k><i>100</i><k>k26</k><i>3</i><k>k2</k><s>{level_name}</s><k>k3</k><s>{base64.b64encode(level_description.encode()).decode()}</s><k>k4</k><s>{gd_encoded_final}</s><k>k6</k><i>2565</i><k>k9</k><i>10</i><k>k10</k><i>20</i><k>k11</k><i>96949825</i><k>k22</k><i>4436974</i><k>k21</k><i>3</i><k>k16</k><i>1</i><k>k17</k><i>7</i><k>k83</k><i>823</i><k>k27</k><i>47</i><k>k50</k><i>45</i></dict></plist>"""
         # print(xml_template)
-        with open(filename, "w") as f:
+        output_path = Path(filename)
+        if not output_path.is_absolute():
+            output_path = PROJECT_ROOT / output_path
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(output_path, "w") as f:
             f.write(xml_template)
-        print(f"Created {filename}")
+        print(f"Created {output_path}")
 
 # level = GMD_Level("../GMD_conversion_test_levels/nine_circles.gmd")
 # level.create_gmd("../output_levels/ten_circles.gmd", "ten_circles", "(10/10)")
