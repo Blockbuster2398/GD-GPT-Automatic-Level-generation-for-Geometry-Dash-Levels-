@@ -34,9 +34,9 @@ def run_benchmark(model_name : str, prompt_cutoff = 500, temperature = 1.0, prom
                        level_name=key)
 
 if __name__ == "__main__":
-    run_benchmark(model_name="video-6.0@epoch=1",
+    run_benchmark(model_name="modetech@epoch=2",
                   prompt_cutoff=500,
                   temperature=1)
-    run_benchmark(model_name="video-6.0@epoch=1",
+    """run_benchmark(model_name="setback@epoch=1",
                       prompt_cutoff=500,
-                      temperature=2)
+                      temperature=2)"""

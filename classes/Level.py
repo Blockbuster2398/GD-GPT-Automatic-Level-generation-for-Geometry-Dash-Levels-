@@ -110,7 +110,7 @@ class GMD_Level:
     def create_tokens(self):
         def get_x_increment(num):
             x_increments = []
-            x_intervals = [2560, 1280, 640, 320, 160, 120, 80, 60, 40, 35, 30, 25, 20, 15, 10, 5, 4, 3, 2, 1]
+            x_intervals = [2560, 1280, 640, 320, 160, 120, 80, 40, 30, 20, 10, 5, 2, 1]
             # Sort largest-first so we greedily take the biggest chunk each time
             remaining = num
             for interval in x_intervals:
@@ -123,7 +123,7 @@ class GMD_Level:
 
         def get_y_increment(num):
             y_increments = []
-            y_intervals = [2560, 1280, 640, 320, 160, 120, 80, 60, 40, 35, 30, 25, 20, 15, 10, 5, 4, 3, 2, 1]
+            y_intervals = [2560, 1280, 640, 320, 160, 120, 80, 40, 30, 20, 10, 5, 2, 1]
             remaining = num
             for interval in y_intervals:
                 while remaining >= interval:
@@ -187,6 +187,10 @@ class GMD_Level:
 
         tokens = []
         current_x_distance = 0
+
+        # Setup gamemode tracking
+        game_mode = "cube_mode"
+
         tokens.append("start")
         for i in self.objects_list:
             # handle dx dy tokens
@@ -199,7 +203,12 @@ class GMD_Level:
 
                 elif i.details["y_distance"] < 0:
                     tokens.append("y_reset")
+                    tokens.append(game_mode)
                     tokens += get_y_increment(i.details["y_position"])
+                    
+
+        
+
 
 
             # Handle object categorization
@@ -246,13 +255,13 @@ class GMD_Level:
             elif int(i.details["object_id"]) in (self.map.category_to_id['yellow_orb']):tokens.append("yellow_orb")
             elif int(i.details["object_id"]) in (self.map.category_to_id['blue_orb']):tokens.append("blue_orb")
 
-            elif int(i.details["object_id"]) in (self.map.category_to_id['cube_portal']):tokens.append("cube_portal")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['ship_portal']):tokens.append("ship_portal")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['ball_portal']):tokens.append("ball_portal")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['ufo_portal']):tokens.append("ufo_portal")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['wave_portal']):tokens.append("wave_portal")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['robot_portal']):tokens.append("robot_portal")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['spider_portal']):tokens.append("spider_portal")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['cube_portal']):tokens.append(["cube_portal"] * 3); game_mode = "cube_mode"
+            elif int(i.details["object_id"]) in (self.map.category_to_id['ship_portal']):tokens.append(["ship_portal"] * 3); game_mode = "ship_mode"
+            elif int(i.details["object_id"]) in (self.map.category_to_id['ball_portal']):tokens.append(["ball_portal"] * 3); game_mode = "ball_mode"
+            elif int(i.details["object_id"]) in (self.map.category_to_id['ufo_portal']):tokens.append(["ufo_portal"] * 3); game_mode = "ufo_mode"
+            elif int(i.details["object_id"]) in (self.map.category_to_id['wave_portal']):tokens.append(["wave_portal"] * 3); game_mode = "wave_mode"
+            elif int(i.details["object_id"]) in (self.map.category_to_id['robot_portal']):tokens.append(["robot_portal"] * 3); game_mode = "robot_mode"
+            elif int(i.details["object_id"]) in (self.map.category_to_id['spider_portal']):tokens.append(["spider_portal"] * 3); game_mode = "spider_mode"
 
             elif int(i.details["object_id"]) in (self.map.category_to_id['teleport_portal']):tokens.append("teleport_portal")
 
@@ -325,13 +334,15 @@ class GMD_Level:
         current_y = 0
         object_array = []
         for i in token_array:
-
             if "y_increment-" in i:
                 current_y += float(i[len("y_increment-"):]) # current_y += int(i[len("y_increment-"):])
                 ## print(f"y: {current_y}")
             elif "x_increment-" in i:
                 current_x += float(i[len("x_increment-"):]) #current_x += int(i[len("x_increment-"):])
                 ##print(f"x: {current_x}")
+            elif "mode" in i:
+                pass # Do nothing
+            elif i == "": pass # Do nothing
             elif i == "x_reset": pass # Do nothing
             elif i == "y_reset": current_y = 0
             elif i == "start": pass # Do nothing

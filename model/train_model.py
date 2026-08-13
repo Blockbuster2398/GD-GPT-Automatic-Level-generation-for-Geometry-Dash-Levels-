@@ -60,22 +60,24 @@ else:
         "TRAINING_LOSS": None
     }"""
     h_params = {
-            "D_MODEL": 384,
-            "NUM_HEADS": 16,
+            "D_MODEL": 400,
+            "NUM_HEADS": 25,
             "NUM_LAYERS": 16,
             "D_FF": 1536,
             "MAX_SEQ_LENGTH": 400,
             "DROPOUT": .2,
-            "BATCH_SIZE": 2,
-            "ACCUMULATION_STEPS": 8,
+            "BATCH_SIZE": 1,
+            "ACCUMULATION_STEPS": 16,
             "EPOCHS": 500,
             "COMPLETED_EPOCHS": 0,
             "LR": 0.0001,
-            "OBJECTS_OF_DATASET": 2000000,
+            "OBJECTS_OF_DATASET": 20000,
             "TRAINING_LOSS": None
         }
     print(f"Training model with...\n{h_params}\n")
 
+
+    
 # Data Loading
 with open(DATASET_PATH) as d:
     content = d.read()
@@ -84,9 +86,6 @@ with open(DATASET_PATH) as d:
 # print(f"Dataset original size: {len([obj for obj in content.split(";") if obj.strip()])}")
 print(f"Objects available in dataset: {len([obj for obj in content.split(";") if obj.strip()])}")
 objects = [obj for obj in content.split(";") if obj.strip()][:h_params["OBJECTS_OF_DATASET"]]
-#print(len(objects))
-#objects = objects[250000:]
-#print(len(objects))
 
 vocab = {token: idx+1 for idx, token in enumerate(sorted(set(objects)))}  # 0 reserved for padding
 vocab_size = len(vocab) + 1  # +1 for padding token
@@ -124,40 +123,94 @@ if checkpoint_name:
 
 # Training
 transformer.train()
-batches_per_epoch = (h_params["OBJECTS_OF_DATASET"]-h_params["MAX_SEQ_LENGTH"])
+
+batches_per_epoch = (
+    h_params["OBJECTS_OF_DATASET"] - h_params["MAX_SEQ_LENGTH"]
+)
+
 time_per_batch = timedelta()
 
-print(f"Epoch 0/{h_params["EPOCHS"]} - Training Loss: N/A")
+print(f"Training with {h_params['OBJECTS_OF_DATASET']} objects, {len(vocab)} unique tokens, {batches_per_epoch} batches per epoch.")
+print(f"Epoch 0/{h_params['EPOCHS']} - Training Loss: N/A")
+
 for epoch in range(h_params["EPOCHS"]):
+
     total_loss = 0
     i = 0
-    for src_batch, tgt_batch in loader:
-        batch_start = datetime.now()
-        i = i + 1
-        src_batch = src_batch.to(device)  # move here
-        tgt_batch = tgt_batch.to(device)  # move here
 
-        optimizer.zero_grad()
-        output = transformer(src_batch, tgt_batch[:, :-1])
+    # Make sure there are no leftover gradients from the previous epoch
+    optimizer.zero_grad()
+
+    for batch_idx, (src_batch, tgt_batch) in enumerate(loader):
+
+        batch_start = datetime.now()
+        i += 1
+
+        src_batch = src_batch.to(device)
+        tgt_batch = tgt_batch.to(device)
+
+        # Forward pass
+        output = transformer(
+            src_batch,
+            tgt_batch[:, :-1]
+        )
+
+        # Calculate the normal loss
         loss = criterion(
             output.contiguous().view(-1, vocab_size),
             tgt_batch[:, 1:].contiguous().view(-1)
         )
-        loss.backward()
-        optimizer.step()
+
+        # Keep the ORIGINAL loss for reporting
         total_loss += loss.item()
-        time_per_batch = (time_per_batch*i + datetime.now() - batch_start)/(i+1)
-        time_per_epoch = time_per_batch * batches_per_epoch / h_params["BATCH_SIZE"]
-        total_completion_time = datetime.now() + time_per_batch * (batches_per_epoch-i*4)
-        print(f"\rEpoch: {(i * 100 * h_params["BATCH_SIZE"] / batches_per_epoch):.2f}%"
-              f" -- Time per Epoch: {time_per_epoch}"
-              f" -- Estimated Epoch Completion: {datetime.now() + time_per_batch * (batches_per_epoch-i*4)}"
-              f" -- Estimated Total Completion: {datetime.now() + time_per_epoch * (h_params["EPOCHS"] - epoch-1)}"
-              # f"- It is currently {datetime.now()}"
-              f"", end='', flush=True)
+
+        # Divide ONLY for gradient accumulation
+        loss = loss / h_params["ACCUMULATION_STEPS"]
+
+        # Accumulate gradients
+        loss.backward()
+
+        # Update model weights every ACCUMULATION_STEPS batches
+        if (
+            (batch_idx + 1) % h_params["ACCUMULATION_STEPS"] == 0
+            or (batch_idx + 1) == len(loader)
+        ):
+            optimizer.step()
+            optimizer.zero_grad()
+
+        # Timing
+        time_per_batch = (
+            time_per_batch * (i - 1)
+            + (datetime.now() - batch_start)
+        ) / i
+
+        time_per_epoch = (
+            time_per_batch
+            * batches_per_epoch
+            / h_params["BATCH_SIZE"]
+        )
+
+        print(
+            f"\rEpoch: "
+            f"{(i * 100 * h_params['BATCH_SIZE'] / batches_per_epoch):.2f}%"
+            f" -- Time per Epoch: {time_per_epoch}"
+            f" -- Estimated Epoch Completion: "
+            f"{datetime.now() + time_per_batch * (len(loader) - i)}"
+            f" -- Estimated Total Completion: "
+            f"{datetime.now() + time_per_epoch * (h_params['EPOCHS'] - epoch - 1)}",
+            end="",
+            flush=True
+        )
+
     print(f"\n{datetime.now()}")
+
+    # Calculate average loss using the ORIGINAL, unscaled losses
     h_params["TRAINING_LOSS"] = total_loss / len(loader)
-    print(f"Epoch {epoch + 1}/{h_params["EPOCHS"]} - Training Loss: {h_params["TRAINING_LOSS"]:.4f}")
+
+    print(
+        f"Epoch {epoch + 1}/{h_params['EPOCHS']} "
+        f"- Training Loss: {h_params['TRAINING_LOSS']:.4f}"
+    )
 
     # Validation
     """transformer.eval()
