@@ -22,7 +22,7 @@ MODEL_SPEC.loader.exec_module(model_module)
 Transformer = model_module.Transformer
 
 
-def generate_level(model : str, prompt : str, level_length : int, seq_length, temperature : float, level_name=None):
+def generate_level(model : str, prompt : str, level_length : int, seq_length, temperature : float, level_name=None, boost_portals=True, dynamic_temperature=True):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
@@ -34,6 +34,8 @@ def generate_level(model : str, prompt : str, level_length : int, seq_length, te
         vocab = pickle.load(vocab_file)
         h_params = pickle.load(params_file)
 
+    if __name__ == "__main__":
+        print(f"Vocab is the following: {vocab}")
 
     vocab_size = len(vocab) + 1
     transformer = Transformer(
@@ -58,12 +60,13 @@ def generate_level(model : str, prompt : str, level_length : int, seq_length, te
         return [vocab.get(token, 0) for token in tokens]  # 0 for unknown tokens
 
 
-    def generate(transformer, src_tokens, max_len=level_length, max_seq_length=seq_length, temp=temperature):
+    def generate(transformer, src_tokens, max_len=level_length, max_seq_length=seq_length, temp=temperature, boost_portals=True, dynamic_temperature=True):
         transformer.eval()
         with torch.no_grad():
             # initialize tgt with the proper start token index
             tgt = torch.tensor([start_idx]).unsqueeze(0).to(device)
-
+            original_temp = temp
+            portal_logger = ["cube_mode"]
             for i in range(max_len):
                 # Slide both windows to stay within max_seq_length
                 src = torch.tensor(src_tokens[-max_seq_length:]).unsqueeze(0).to(device)
@@ -72,19 +75,42 @@ def generate_level(model : str, prompt : str, level_length : int, seq_length, te
                 output = transformer(src, tgt_window)
 
                 logits = output[0, -1, :]
+                #print(f"\rLogits for token {i}: {logits}", end='', flush=True)
+                # Implement portal token bias
+                if boost_portals:
+                    logits[vocab.get("ship_portal", 0)] *= 1.25
+                    #logits[vocab.get("cube_portal", 0)] *= 1.5
+                    logits[vocab.get("ball_portal", 0)] *= 1.25
+                    logits[vocab.get("wave_portal", 0)] *= 1.25
+                    logits[vocab.get("ufo_portal", 0)] *= 1.25
+                    logits[vocab.get("robot_portal", 0)] *= 1.25
+                    logits[vocab.get("spider_portal", 0)] *= 1.25
+                logits[vocab.get("end", 0)] *= 0.1  # Decrease probability of end token
                 probs = torch.softmax(logits / temp, dim=-1)
                 next_token = torch.multinomial(probs, 1).item()
+                next_token_readable = decode([next_token], vocab)
+                #print(f"Next obj type:{next_token_readable}", flush=True)
+                if "portal" in next_token_readable or "mode" in next_token_readable:
+                    #print(f"Next portal type:{next_token_readable}", flush=True)
+                    if next_token_readable != portal_logger[-1]:
+                        portal_logger.append(next_token_readable)
 
-                if next_token == 0:
-                    break
 
                 # Append to the full tgt sequence (not just the window)
                 tgt = torch.cat([tgt, torch.tensor([[next_token]], device=device)], dim=1)
                 # Also grow src_tokens so the src window slides forward too
                 src_tokens = src_tokens + [next_token]
-                print(f"\r{i}/{max_len} tokens generated: {i / max_len * 100:.2f}% Complete!", end='', flush=True)
+                # Audit token diversity
+                last_n_tokens = set(src_tokens[-100:])
+                if dynamic_temperature:
+                    if len(last_n_tokens) <= 10:
+                        temp *= 1.001  # Increase temperature to encourage diversity
+                    elif len(last_n_tokens) > 15:
+                        temp = (temp + original_temp)/2  # Decrease temperature to encourage convergence
+                print(f"\r{i}/{max_len} tokens generated: {i / max_len * 100:.2f}% Complete! 100 token diversity: {len(last_n_tokens)} unique tokens with temperature: {temp:.4f}", end='', flush=True)
 
         result = tgt[0].tolist()
+        print(f"\nPortal logger is {portal_logger}")
         # strip the leading start token so it doesn't become a real object in output
         if len(result) > 0 and result[0] == start_idx:
             result = result[1:]
@@ -97,8 +123,8 @@ def generate_level(model : str, prompt : str, level_length : int, seq_length, te
     input_text = prompt
 
     src_tokens = encode(input_text, vocab)
-    print(src_tokens)
-    output_tokens = generate(transformer, src_tokens)
+    #print(src_tokens)
+    output_tokens = generate(transformer, src_tokens, boost_portals=boost_portals, dynamic_temperature=dynamic_temperature)
     output_text = decode(output_tokens, vocab)
 
 
@@ -110,7 +136,7 @@ def generate_level(model : str, prompt : str, level_length : int, seq_length, te
     file_count = sum(1 for item in output_folder.iterdir() if item.is_file())
     level = GMD_Level("_", objects)
 
-    print(output_text)
+    #print(output_text)
 
     if level_name:
         level.create_gmd(output_folder / f"{level_name}@temperature={temperature}_{file_count}.gmd", f"{model_name}/{level_name}_{file_count}", "AI Generated")

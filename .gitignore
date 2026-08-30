@@ -2,6 +2,7 @@ notes.txt
 *.pth
 *.pkl
 *.gmd
+*.pyc
 venv/
 .venv/
 */details.txt

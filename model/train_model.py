@@ -36,7 +36,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
 MODEL_ROOT = PROJECT_ROOT / "model" / "models"
-DATASET_PATH = PROJECT_ROOT / "training_data_levels" / "full_dataset_retokenized" / "full_dataset_retokenized.txt"
+DATASET_PATH = PROJECT_ROOT / "training_data_levels" / "full_datasets" / "full_dataset_retokenized.txt"
 
 save_all_epochs = True
 

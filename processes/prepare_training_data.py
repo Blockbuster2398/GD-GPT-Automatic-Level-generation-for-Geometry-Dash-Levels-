@@ -29,5 +29,5 @@ for token, freq in sorted_tokens:
 
 token_string = ";".join(all_tokens)
 
-with open(PROJECT_ROOT / "resources" / "data_tokenized_modes.txt", "w") as f:
+with open(PROJECT_ROOT / "resources" / "data_tokenized_gravity_ablated.txt", "w") as f:
     f.write(token_string)

@@ -190,6 +190,10 @@ class GMD_Level:
 
         # Setup gamemode tracking
         game_mode = "cube_mode"
+        size = "normal_size_state"
+        gravity = "normal_gravity_state"
+        speed = "x1_speed_state"
+        dual = "single_player_state"
 
         tokens.append("start")
         for i in self.objects_list:
@@ -202,8 +206,13 @@ class GMD_Level:
                     tokens += get_y_increment(i.details["y_distance"])
 
                 elif i.details["y_distance"] < 0:
+                    # State tokens
                     tokens.append("y_reset")
                     tokens.append(game_mode)
+                    # tokens.append(gravity)
+                    tokens.append(speed)
+                    tokens.append(size)
+                    tokens.append(dual)
                     tokens += get_y_increment(i.details["y_position"])
                     
 
@@ -233,14 +242,16 @@ class GMD_Level:
                 tokens.append("saw_large")
                 i.details["scale"] = .75 + random.random()/4
 
+            elif int(i.details["object_id"]) in (self.map.category_to_id['xhalf_speed']):
+                 tokens.append("xhalf_speed"); speed = "xhalf_speed_state"
             elif int(i.details["object_id"]) in (self.map.category_to_id['x1_speed']):
-                tokens.append("x1_speed")
+                tokens.append("x1_speed"); speed = "x1_speed_state"
             elif int(i.details["object_id"]) in (self.map.category_to_id['x2_speed']):
-                tokens.append("x2_speed")
+                tokens.append("x2_speed"); speed = "x2_speed_state"
             elif int(i.details["object_id"]) in (self.map.category_to_id['x3_speed']):
-                tokens.append("x3_speed")
+                tokens.append("x3_speed"); speed = "x3_speed_state"
             elif int(i.details["object_id"]) in (self.map.category_to_id['x4_speed']):
-                tokens.append("x4_speed")
+                tokens.append("x4_speed"); speed = "x4_speed_state"
 
             elif int(i.details["object_id"]) in (self.map.category_to_id['pulse_deco']):
                             tokens.append("pulse_deco")
@@ -248,28 +259,52 @@ class GMD_Level:
                             tokens.append("gear_deco")
                             i.details["scale"] = .5 + random.random()/2
 
-            elif int(i.details["object_id"]) in (self.map.category_to_id['green_orb']): tokens.append("green_orb")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['green_orb']): 
+                tokens.append("green_orb")
+                # if gravity == "reverse_gravity_state":
+                    # gravity = "normal_gravity_state"
+                # else:
+                    # gravity = "reverse_gravity_state"
             elif int(i.details["object_id"]) in (self.map.category_to_id['red_orb']):tokens.append("red_orb")
             elif int(i.details["object_id"]) in (self.map.category_to_id['black_orb']):tokens.append("black_orb")
             elif int(i.details["object_id"]) in (self.map.category_to_id['purple_orb']):tokens.append("purple_orb")
             elif int(i.details["object_id"]) in (self.map.category_to_id['yellow_orb']):tokens.append("yellow_orb")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['blue_orb']):tokens.append("blue_orb")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['blue_orb']):
+                tokens.append("blue_orb")
+                # if gravity == "reverse_gravity_state":
+                    # gravity = "normal_gravity_state"
+                # else:
+                    # gravity = "reverse_gravity_state"
 
-            elif int(i.details["object_id"]) in (self.map.category_to_id['cube_portal']):tokens.append(["cube_portal"] * 3); game_mode = "cube_mode"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['ship_portal']):tokens.append(["ship_portal"] * 3); game_mode = "ship_mode"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['ball_portal']):tokens.append(["ball_portal"] * 3); game_mode = "ball_mode"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['ufo_portal']):tokens.append(["ufo_portal"] * 3); game_mode = "ufo_mode"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['wave_portal']):tokens.append(["wave_portal"] * 3); game_mode = "wave_mode"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['robot_portal']):tokens.append(["robot_portal"] * 3); game_mode = "robot_mode"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['spider_portal']):tokens.append(["spider_portal"] * 3); game_mode = "spider_mode"
+            elif int(i.details["object_id"]) in (self.map.category_to_id['cube_portal']):
+                tokens.append("cube_portal")
+                game_mode = "cube_mode"
+            elif int(i.details["object_id"]) in (self.map.category_to_id['ship_portal']):
+                tokens.append("ship_portal")
+                game_mode = "ship_mode"
+            elif int(i.details["object_id"]) in (self.map.category_to_id['ball_portal']):
+                tokens.append("ball_portal")
+                game_mode = "ball_mode"
+            elif int(i.details["object_id"]) in (self.map.category_to_id['ufo_portal']):
+                tokens.append("ufo_portal")
+                game_mode = "ufo_mode"
+            elif int(i.details["object_id"]) in (self.map.category_to_id['wave_portal']):
+                tokens.append("wave_portal")
+                game_mode = "wave_mode"
+            elif int(i.details["object_id"]) in (self.map.category_to_id['robot_portal']):
+                tokens.append("robot_portal")
+                game_mode = "robot_mode"
+            elif int(i.details["object_id"]) in (self.map.category_to_id['spider_portal']):
+                tokens.append("spider_portal")
+                game_mode = "spider_mode"
 
             elif int(i.details["object_id"]) in (self.map.category_to_id['teleport_portal']):tokens.append("teleport_portal")
 
-            elif int(i.details["object_id"]) in (self.map.category_to_id['green_size']):tokens.append("green_size")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['pink_size']):tokens.append("pink_size")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['green_size']):tokens.append("green_size"); size = "normal_size_state"
+            elif int(i.details["object_id"]) in (self.map.category_to_id['pink_size']):tokens.append("pink_size"); size = "mini_size_state"
 
-            elif int(i.details["object_id"]) in (self.map.category_to_id['start_dual']):tokens.append("start_dual")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['end_dual']):tokens.append("end_dual")
+            elif int(i.details["object_id"]) in (self.map.category_to_id['start_dual']):tokens.append("start_dual"); dual = "dual_player_state"
+            elif int(i.details["object_id"]) in (self.map.category_to_id['end_dual']):tokens.append("end_dual"); dual = "single_player_state"
 
             elif int(i.details["object_id"]) in (self.map.category_to_id['orange_reflect']):tokens.append("orange_reflect")
             elif int(i.details["object_id"]) in (self.map.category_to_id['blue_reflect']):tokens.append("blue_reflect")
@@ -279,8 +314,10 @@ class GMD_Level:
             # Rotated Portals
             elif int(i.details["object_id"]) in (self.map.category_to_id['blue_gravity']):
                             tokens.append("blue_gravity-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
+                            gravity = "normal_gravity_state"
             elif int(i.details["object_id"]) in (self.map.category_to_id['yellow_gravity']):
                             tokens.append("yellow_gravity-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
+                            gravity = "reverse_gravity_state"
 
             # Half Blocks
             elif int(i.details["object_id"]) in (self.map.category_to_id['half_block']):
@@ -292,6 +329,10 @@ class GMD_Level:
                 tokens.append("yellow_pad-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
             elif int(i.details["object_id"]) in (self.map.category_to_id['blue_pad']):
                 tokens.append("blue_pad-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
+                # if gravity == "reverse_gravity_state":
+                    # gravity = "normal_gravity_state"
+                # else:
+                    # gravity = "reverse_gravity_state" # gravity = "contested_gravity_state"
             elif int(i.details["object_id"]) in (self.map.category_to_id['purple_pad']):
                 tokens.append("purple_pad-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
 
@@ -315,8 +356,6 @@ class GMD_Level:
             elif int(i.details["object_id"]) in (self.map.category_to_id['slope_long']):
                 tokens.append("slope_long-" + get_90_rotation_non_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
 
-
-
             # Deco Blocks
             elif int(i.details["object_id"]) in (self.map.category_to_id['deco_block']): #and self.keepDeco == True:
                 tokens.append("deco_block")
@@ -324,6 +363,11 @@ class GMD_Level:
                 tokens.append("_")
         tokens.append("end")
         # print(tokens)
+
+        # Apply contested gravity state
+        # gravity_tokens = [(index, tokens[index]) for index in range(len(tokens)) if "gravity" in tokens[index]]
+        # print(gravity_tokens)
+
         self.tokens = tokens
 
     @staticmethod
@@ -342,11 +386,16 @@ class GMD_Level:
                 ##print(f"x: {current_x}")
             elif "mode" in i:
                 pass # Do nothing
+            elif "state" in i:
+                 pass # Do nothing again
             elif i == "": pass # Do nothing
+            elif i == "?": pass # Do nothing
             elif i == "x_reset": pass # Do nothing
             elif i == "y_reset": current_y = 0
             elif i == "start": pass # Do nothing
-            elif i == "end": pass #break # Does this make sense?
+            elif i == "end": pass # Do nothing
+            
+            
             # Token must represent an object
             else:
                 parts = i.split("-")
@@ -356,12 +405,15 @@ class GMD_Level:
                 new_object = GMD_Object()
                 new_object.details["x_position"] = (current_x)
                 new_object.details["y_position"] = (current_y)
+                #print(i)
                 new_object.details["object_id"] = (map.category_to_id_create[object_category])
                 # "slope" and "slope_long" both encode a type_1..type_8 token
                 # (see get_90_rotation_slope_type); everything else encodes a
                 # plain rotation number.
                 if object_category in ("slope", "slope_long"):
-                    type = int(parts[1].split("_")[1])
+                    if len((parts[1].split("_"))) > 1:
+                        type = int(parts[1].split("_")[1])
+                    else: type = "dropped"
                     match type:
                         case 1:
                             new_object.details["rotation"] = 0
@@ -429,5 +481,6 @@ class GMD_Level:
             f.write(xml_template)
         print(f"Created {output_path}")
 
-# level = GMD_Level("../GMD_conversion_test_levels/nine_circles.gmd")
-# level.create_gmd("../output_levels/ten_circles.gmd", "ten_circles", "(10/10)")
+if __name__ == "__main__": 
+    level = GMD_Level("../GMD_conversion_test_levels/nine_circles.gmd")
+    level.create_gmd("../output_levels/ten_circles.gmd", "ten_circles", "(10/10)")

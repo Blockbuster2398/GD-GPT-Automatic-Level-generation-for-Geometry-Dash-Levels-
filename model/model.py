@@ -31,7 +31,7 @@ class MultiHeadAttention(nn.Module): # Defines a class that inherits from nn.mod
 
         # Apply mask if provided (useful for preventing attention to certain parts like padding)
         if mask is not None:
-            attn_scores = attn_scores.masked_fill(mask == 0, -1e9)
+            attn_scores = attn_scores.masked_fill(mask == 0, torch.finfo(attn_scores.dtype).min)
 
         # Softmax is applied to obtain attention probabilities
         attn_probs = torch.softmax(attn_scores, dim=-1)
