@@ -22,21 +22,21 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
 if checkpoint_name:
-    h_params = pickle.load(open(f"models/{checkpoint_name}/h_params.pkl", "rb"))
+    h_params = pickle.load(open(f"./model/models/{checkpoint_name}/h_params.pkl", "rb"))
     print(datetime.now())
     print(f"Loading model with...\n{h_params}")
 else:
     h_params = {
-        "D_MODEL": 512,
-        "NUM_HEADS": 8,
-        "NUM_LAYERS": 8,
-        "D_FF": 2048,
-        "MAX_SEQ_LENGTH": 600,
-        "DROPOUT": .20,
-        "BATCH_SIZE": 1,
+        "D_MODEL": 260,
+        "NUM_HEADS": 20,
+        "NUM_LAYERS":16,
+        "D_FF": 512,
+        "MAX_SEQ_LENGTH": 500,
+        "DROPOUT": .30,
+        "BATCH_SIZE": 4,
         "EPOCHS": 50,
         "LR": 0.0001,
-        "OBJECTS_OF_DATASET": 1000000}
+        "OBJECTS_OF_DATASET": 700000}
     print(f"Training model with...\n{h_params}\n")
 
 # Data Loading
@@ -78,7 +78,7 @@ optimizer = optim.Adam(transformer.parameters(), lr=h_params["LR"], betas=(0.9, 
 transformer = transformer.to(device)
 
 if checkpoint_name:
-    checkpoint = torch.load(f"./models/{checkpoint_name}/transformer_checkpoint.pth")
+    checkpoint = torch.load(f"./model/models/{checkpoint_name}/transformer_checkpoint.pth")
     transformer.load_state_dict(checkpoint["model_state_dict"])
     optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
     epoch = checkpoint['epoch']
