@@ -43,7 +43,7 @@ if device.type == "cuda":
     torch.backends.cudnn.benchmark = True
 
 MODEL_ROOT = PROJECT_ROOT / "model" / "models"
-DATASET_PATH = PROJECT_ROOT / "training_data_levels" / "full_datasets" / "full_dataset_gravity.txt"
+DATASET_PATH = PROJECT_ROOT / "training_data_levels" / "full_datasets" / "full_dataset_sorted.txt"
 
 save_all_epochs = False
 
@@ -59,14 +59,14 @@ else:
             "NUM_LAYERS": 12,
             "D_FF": 1536,
             "MAX_SEQ_LENGTH": 200,
-            "DROPOUT": .15,
+            "DROPOUT": .35,
             "BATCH_SIZE": 8,
-            "ACCUMULATION_STEPS": 4,
+            "ACCUMULATION_STEPS": 10,
             "STRIDE": 2,
             "EPOCHS": 500,
             "COMPLETED_EPOCHS": 0,
-            "LR": 0.0001,
-            "OBJECTS_OF_DATASET": 5000,
+            "LR": 0.0002,
+            "OBJECTS_OF_DATASET": 500000,
             "TRAINING_LOSS": None
         }
     print(f"Training model with...\n{h_params}\n")

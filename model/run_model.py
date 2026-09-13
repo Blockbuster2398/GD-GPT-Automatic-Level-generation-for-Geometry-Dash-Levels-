@@ -67,6 +67,7 @@ def generate_level(model : str, prompt : str, level_length : int, seq_length, te
             tgt = torch.tensor([start_idx]).unsqueeze(0).to(device)
             original_temp = temp
             portal_logger = ["cube_mode"]
+            gravity_logger = ["normal_gravity"]
             for i in range(max_len):
                 # Slide both windows to stay within max_seq_length
                 src = torch.tensor(src_tokens[-max_seq_length:]).unsqueeze(0).to(device)
@@ -94,7 +95,9 @@ def generate_level(model : str, prompt : str, level_length : int, seq_length, te
                     #print(f"Next portal type:{next_token_readable}", flush=True)
                     if next_token_readable != portal_logger[-1]:
                         portal_logger.append(next_token_readable)
-
+                if "gravity" in next_token_readable:
+                    if next_token_readable != gravity_logger[-1]:
+                        gravity_logger.append(next_token_readable)
 
                 # Append to the full tgt sequence (not just the window)
                 tgt = torch.cat([tgt, torch.tensor([[next_token]], device=device)], dim=1)
@@ -110,7 +113,11 @@ def generate_level(model : str, prompt : str, level_length : int, seq_length, te
                 print(f"\r{i}/{max_len} tokens generated: {i / max_len * 100:.2f}% Complete! 100 token diversity: {len(last_n_tokens)} unique tokens with temperature: {temp:.4f}", end='', flush=True)
 
         result = tgt[0].tolist()
-        print(f"\nPortal logger is {portal_logger}")
+
+        print("\n")
+        print(f"Portal Logger is {portal_logger}")
+        print(f"Gravity Logger is {gravity_logger}")
+        
         # strip the leading start token so it doesn't become a real object in output
         if len(result) > 0 and result[0] == start_idx:
             result = result[1:]
