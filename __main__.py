@@ -11,16 +11,11 @@ from utils.ObjectMapping import ObjectMap
 
 
 
-level_path = PROJECT_ROOT / "main_levels" / "Theory Of Everything.gmd"
+level_path = PROJECT_ROOT / "main_levels" / "Electroman Adventure.gmd"
 level = GMD_Level(level_path, keepDetail=False)
 level.create_tokens()
 
-test_training_data = True
-if test_training_data:
-    with open(PROJECT_ROOT / "training_data_levels" / "full_datasets" / "full_dataset_retokenized.txt") as f:
-        token_string = f.read()
-else:
-    token_string = ";".join(level.tokens)
+token_string = ";".join(level.tokens)
 data_tokenized_path = PROJECT_ROOT / "resources" / "data_tokenized.txt"
 data_tokenized_path.parent.mkdir(parents=True, exist_ok=True)
 with open(data_tokenized_path, "w") as f:
