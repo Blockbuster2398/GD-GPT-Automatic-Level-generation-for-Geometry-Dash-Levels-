@@ -11,11 +11,8 @@ from utils.ObjectMapping import ObjectMap
 
 
 
-level_path = PROJECT_ROOT / "GMD_conversion_test_levels" / "nine_circles.gmd"
 level_path = PROJECT_ROOT / "main_levels" / "Theory Of Everything.gmd"
-# level_path = PROJECT_ROOT / "main_levels" / "Electroman Adventure.gmd"
 level = GMD_Level(level_path, keepDetail=False)
-# level = GMD_Level(PROJECT_ROOT / "GMD_conversion_test_levels" / "iceland.gmd")
 level.create_tokens()
 
 test_training_data = True
