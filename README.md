@@ -2,7 +2,7 @@
 
 GD-GPT is a research prototype for converting Geometry Dash `.gmd` levels into a compact token sequence, training a PyTorch Transformer on those sequences, and sampling new levels back into `.gmd` files.
 
-## Showcase
+## Generated Level Showcase
 
 [Watch the showcase video](https://github.com/user-attachments/assets/07b4dbcf-4c04-40fe-9e1d-e7b7886be293)
 
