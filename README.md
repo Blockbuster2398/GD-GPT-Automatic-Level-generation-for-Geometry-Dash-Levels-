@@ -10,6 +10,7 @@ GD-GPT is a research prototype for converting Geometry Dash `.gmd` levels into a
 
 - Reads Geometry Dash export files. A `.gmd` file is an XML property list whose `k4` field contains URL-safe Base64 and gzip-compressed level data.
 - Maps raw object IDs to categories such as blocks, spikes, pads, portals, orbs, and speed changes.
+  <img width="1369" height="750" alt="image" src="https://github.com/user-attachments/assets/13517819-0df1-4a50-87fe-338477dcd052" />
 - Converts object placement into tokens for horizontal and vertical movement, object type, rotation, and gameplay state.
 - Trains an autoregressive Transformer with PyTorch on tokenized levels.
 - Generates token sequences from a prompt, with optional portal balancing and dynamic temperature adjustment.
@@ -53,7 +54,7 @@ For library use:
 ```python
 from classes.Level import GMD_Level
 
-level = GMD_Level("main_levels/Theory Of Everything.gmd", keepDetail=False)
+level = GMD_Level("myLevel.gmd", keepDetail=False)
 print(level.tokens[:20])
 
 objects = GMD_Level.decode_tokens(";".join(level.tokens))
@@ -65,7 +66,7 @@ reconstructed.create_gmd(
 )
 ```
 
-`GMD_Level` also accepts `keepDeco=True` when decorative objects should be retained during parsing.
+`GMD_Level` also accepts `keepDeco=True` when uncategorized decorative objects should be retained during parsing.
 
 ## Prepare datasets
 
