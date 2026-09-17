@@ -17,14 +17,14 @@ for i in range(total_datasets):
     dataset_dir = PROJECT_ROOT / "training_data_levels" / f"dataset_{i + 1}" / "levels"
     for file_path in dataset_dir.iterdir():
         
-        print(file_path)
+        #print(file_path)
         level = GMD_Level(file_path, keepDetail=False, keepDeco=False)
         all_tokens += level.tokens
         level_unique_tokens = len(set(level.tokens))
         # print(f"{file_path} level has {level_unique_tokens} individual tokens")
         level_tuple = (file_path, level.tokens, level_unique_tokens)
         levels_data.append(level_tuple)
-        print(f"Running object total = {len(all_tokens)}")
+        #print(f"Running object total = {len(all_tokens)}")
 
 print([(level[2]) for level in levels_data])
 sorted_levels = sorted(levels_data, key=lambda x: x[2])

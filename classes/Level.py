@@ -197,6 +197,7 @@ class GMD_Level:
 
         tokens.append("start")
         for i in self.objects_list:
+            # print(i)
             # handle dx dy tokens
             if i.details["x_distance"] is not None and i.details["x_distance"] > 0:
                 #tokens.append("x_reset")
@@ -361,8 +362,9 @@ class GMD_Level:
                 tokens.append("deco_block")
             elif self.keepDetail:
                 tokens.append("_")
+            # print(tokens[-1], end=" ")
         tokens.append("end")
-        # print(tokens)
+        
 
         # Apply contested gravity state
         # gravity_tokens = [(index, tokens[index]) for index in range(len(tokens)) if "gravity" in tokens[index]]

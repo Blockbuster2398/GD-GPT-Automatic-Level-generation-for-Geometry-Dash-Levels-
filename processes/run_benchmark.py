@@ -36,10 +36,10 @@ def run_benchmark(model_name : str, prompt_cutoff = 500, temperature = 1.0, prom
                     dynamic_temperature=dynamic_temperature)
 
 if __name__ == "__main__":
-    run_benchmark(model_name="lab-video-dropout-1.10",
+    run_benchmark(model_name="lab-video-dropout-1.12",
                   level_length=5000,
-                  prompt_cutoff=500,
-                  temperature=0.70,
+                  prompt_cutoff=400,
+                  temperature=0.001,
                   boost_portals=True,
                   dynamic_temperature=True)
     """run_benchmark(model_name="setback@epoch=1",
