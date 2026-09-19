@@ -6,12 +6,12 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from classes.Level import GMD_Level
+from utils.Level import GMD_Level
 from utils.ObjectMapping import ObjectMap
 
 
 
-level_path = PROJECT_ROOT / "main_levels" / "Electroman Adventure.gmd"
+level_path = PROJECT_ROOT / "training_data" / "GMD_levels" / "Mega.gmd"
 level = GMD_Level(level_path, keepDetail=False)
 level.create_tokens()
 
@@ -27,7 +27,7 @@ with open(data_tokenized_path, "r") as f:
     # print(objects)
 
     level_reconstructed = GMD_Level(objects_list=objects)
-    output_gmd_path = PROJECT_ROOT / "conversion_output" / "output.gmd"
+    output_gmd_path = PROJECT_ROOT / "generated_levels" / "level_conversion_testing" / "converted_levels.gmd"
     output_gmd_path.parent.mkdir(parents=True, exist_ok=True)
     level_reconstructed.create_gmd(output_gmd_path, "conversion_level", "???")
     print(f"Level reconstructed: {level_reconstructed}")
