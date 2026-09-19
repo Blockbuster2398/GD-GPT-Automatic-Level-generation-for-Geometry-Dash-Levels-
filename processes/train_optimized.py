@@ -47,6 +47,7 @@ TRAIN_SET_PATH = PROJECT_ROOT / "training_data" / "compiled_dataset@2026-09-18" 
 VALIDATION_SET_PATH = PROJECT_ROOT / "training_data" / "compiled_dataset@2026-09-18" / "validation.txt"
 
 save_all_epochs = False
+replace_better_models = False
 
 if checkpoint_name:
     h_params = pickle.load(open(MODEL_ROOT / checkpoint_name / "h_params.pkl", "rb"))
@@ -67,7 +68,7 @@ else:
             "EPOCHS": 500,
             "COMPLETED_EPOCHS": 0,
             "LR": 0.0002,
-            "OBJECTS_OF_DATASET": 25000,
+            "OBJECTS_OF_DATASET": 2500000,
             "TRAINING_LOSS": None,
             "VALIDATION_LOSS": None,
             "LOSS_HISTORY": []
@@ -297,8 +298,16 @@ for epoch in range(h_params["EPOCHS"]):
         pickle.dump(h_params, params_file)
         json.dump(h_params, details_file)
 
-        # Save model itself
-        torch.save(transformer.state_dict(), model_file)
+        # Configures updating the model file only if the validation loss improves
+        
+        if (not len(h_params["LOSS_HISTORY"]) == 1):
+            print(f"Current val loss: {h_params["VALIDATION_LOSS"]}, previous val loss: {h_params["LOSS_HISTORY"][-2][1]}")
+        if (replace_better_models 
+            or len(h_params["LOSS_HISTORY"]) == 1
+            or h_params["VALIDATION_LOSS"] <= h_params["LOSS_HISTORY"][-2][1]):
+            torch.save(transformer.state_dict(), model_file)
+            print(f"MODEL FILE UPDATED FOR THIS EPOCH!")
+        else: print(f"MODEL FILE NOT UPDATED FOR THIS EPOCH")
 
     # Plot loss history
     plot_model_loss(model_save_name)
