@@ -11,6 +11,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
+from plot_loss_history import plot_model_loss
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
@@ -29,7 +30,6 @@ checkpoint_name = None
 do_load_checkpoint = input("Loading from a checkpoint?: ").upper()
 if do_load_checkpoint in "YES":
     checkpoint_name = input("Checkpoint name?: ")
-    # details = pickle.load()
 
 new_model_name = input("New model name?: ")
 
@@ -43,7 +43,8 @@ if device.type == "cuda":
     torch.backends.cudnn.benchmark = True
 
 MODEL_ROOT = PROJECT_ROOT / "trained_models"
-DATASET_PATH = PROJECT_ROOT / "training_data" / "compiled_dataset@2026-09-18" / "train.txt"
+TRAIN_SET_PATH = PROJECT_ROOT / "training_data" / "compiled_dataset@2026-09-18" / "train.txt"
+VALIDATION_SET_PATH = PROJECT_ROOT / "training_data" / "compiled_dataset@2026-09-18" / "validation.txt"
 
 save_all_epochs = False
 
@@ -54,66 +55,44 @@ if checkpoint_name:
 else:
     
     h_params = {
-            "D_MODEL": 400,
-            "NUM_HEADS": 25,
-            "NUM_LAYERS": 12,
-            "D_FF": 1536,
-            "MAX_SEQ_LENGTH": 200,
+            "D_MODEL": 150,
+            "NUM_HEADS": 15,
+            "NUM_LAYERS": 10,
+            "D_FF": 768,
+            "MAX_SEQ_LENGTH": 400,
             "DROPOUT": .35,
             "BATCH_SIZE": 8,
             "ACCUMULATION_STEPS": 10,
-            "STRIDE": 2,
+            "STRIDE": 150,
             "EPOCHS": 500,
             "COMPLETED_EPOCHS": 0,
             "LR": 0.0002,
-            "OBJECTS_OF_DATASET": 2500,
-            "TRAINING_LOSS": None
+            "OBJECTS_OF_DATASET": 25000,
+            "TRAINING_LOSS": None,
+            "VALIDATION_LOSS": None,
+            "LOSS_HISTORY": []
         }
     print(f"Training model with...\n{h_params}\n")
 
 
     
 # Data Loading
-with open(DATASET_PATH) as d:
-    content = d.read()
-    #content = f.read() + g.read() + h.read()
+with open(TRAIN_SET_PATH) as d, open(VALIDATION_SET_PATH) as v:
+    train_content = d.read()
+    val_content = v.read()
 
-# print(f"Dataset original size: {len([obj for obj in content.split(";") if obj.strip()])}")
-print(f"Objects available in dataset: {len([obj for obj in content.split(';') if obj.strip()])}")
-objects = [obj for obj in content.split(";") if obj.strip()][:h_params["OBJECTS_OF_DATASET"]]
+print(f"Objects available in dataset: {len([obj for obj in train_content.split(';') if obj.strip()])}")
+train_objects = [obj for obj in train_content.split(";") if obj.strip()][:h_params["OBJECTS_OF_DATASET"]]
+val_objects = [obj for obj in val_content.split(";") if obj.strip()] # Don't truncate eval data
 
-vocab = {token: idx+1 for idx, token in enumerate(sorted(set(objects)))}  # 0 reserved for padding
+vocab = {token: idx+1 for idx, token in enumerate(sorted(set(train_objects).union(set(val_objects))))}  # 0 reserved for padding
 vocab_size = len(vocab) + 1  # +1 for padding token
-# print(f"Dataset size: {len(objects)}, Vocab size: {vocab_size}")
+print(f"Dataset size: {len(train_objects)}, Vocab size: {vocab_size}")
 
 # Tokenize
-num_seq = torch.tensor([vocab[obj] for obj in objects])
+train_num_seq = torch.tensor([vocab[obj] for obj in train_objects])
+val_num_seq = torch.tensor([vocab[obj] for obj in val_objects])
 
-# EFFICIENCY: STRIDE controls how much consecutive windows overlap. The
-# original step of 1 means every token appears in ~MAX_SEQ_LENGTH different
-# windows, so most of an epoch is spent re-training on almost-identical
-# context with barely any new signal. h_params.get(...) keeps checkpoints
-# saved before STRIDE existed loading with the old stride=1 behavior.
-stride = h_params.get("STRIDE", 1)
-
-
-"""# Build src/tgt pairs (sliding window)
-offset = torch.randint(0, stride, (1,)).item()
-sequences = num_seq[offset:].unfold(0, h_params["MAX_SEQ_LENGTH"], stride)"""
-
-# EFFICIENCY: keep data on CPU (was .to(device) here). A DataLoader can only
-# use num_workers>0 / pin_memory when its tensors live on the CPU; batches are
-# moved to the GPU individually below with non_blocking=True instead, which
-# overlaps the transfer with compute.
-"""src_data = sequences[:-1]  # input sequences
-tgt_data = sequences[1:]    # target sequences shifted by 1"""
-
-# DataLoader
-"""dataset = TensorDataset(src_data, tgt_data)
-loader_kwargs = dict(batch_size=h_params["BATCH_SIZE"], shuffle=True)
-if device.type == "cuda":
-    loader_kwargs.update(pin_memory=True)
-loader = DataLoader(dataset, **loader_kwargs) # type: ignore"""
 
 # Model
 transformer = Transformer(
@@ -141,29 +120,28 @@ if checkpoint_name:
 # Training
 transformer.train()
 
-#batches_per_epoch = len(dataset)
-
 time_per_batch = timedelta()
 
+stride  = h_params["STRIDE"]
 print(f"Training with {h_params['OBJECTS_OF_DATASET']} objects, {len(vocab)} unique tokens, (stride={stride}).")
 print(f"Epoch 0/{h_params['EPOCHS']} - Training Loss: N/A")
 
-PRINT_EVERY = 2  # EFFICIENCY: flushing stdout on every single batch is real overhead at thousands of batches/epoch
+PRINT_EVERY = 5  # EFFICIENCY: flushing stdout on every single batch is real overhead at thousands of batches/epoch
 
 for epoch in range(h_params["EPOCHS"]):
 
-    offset = h_params["EPOCHS"] % stride
-    sequences = num_seq[offset:].unfold(0, h_params["MAX_SEQ_LENGTH"], stride)
-
-    src_data = sequences[:-1]  # input sequences
-    tgt_data = sequences[1:]    # target sequences shifted by 1
+    offset = epoch % stride
+    train_sequences = train_num_seq[offset:].unfold(0, h_params["MAX_SEQ_LENGTH"], stride).contiguous()
+    
+    src_data = train_sequences[:-1]  # input sequences
+    tgt_data = train_sequences[1:]    # target sequences shifted by 1
 
     # DataLoader
     dataset = TensorDataset(src_data, tgt_data)
     loader_kwargs = dict(batch_size=h_params["BATCH_SIZE"], shuffle=True)
     if device.type == "cuda":
         loader_kwargs.update(pin_memory=True)
-    loader = DataLoader(dataset, **loader_kwargs) # type: ignore
+    training_loader = DataLoader(dataset, **loader_kwargs) # type: ignore
     batches_per_epoch = len(dataset)
 
     total_loss = torch.zeros((), device=device)
@@ -171,7 +149,7 @@ for epoch in range(h_params["EPOCHS"]):
 
     optimizer.zero_grad(set_to_none=True)
 
-    for batch_idx, (src_batch, tgt_batch) in enumerate(loader):
+    for batch_idx, (src_batch, tgt_batch) in enumerate(training_loader):
 
         batch_start = datetime.now()
         i += 1
@@ -201,7 +179,7 @@ for epoch in range(h_params["EPOCHS"]):
         # Update model weights every ACCUMULATION_STEPS batches
         if (
             (batch_idx + 1) % h_params["ACCUMULATION_STEPS"] == 0
-            or (batch_idx + 1) == len(loader)
+            or (batch_idx + 1) == len(training_loader)
         ):
             scaler.step(optimizer)
             scaler.update()
@@ -220,13 +198,13 @@ for epoch in range(h_params["EPOCHS"]):
         )
 
         # redraw the progress line every PRINT_EVERY batches
-        if i % PRINT_EVERY == 0 or i == len(loader):
+        if i % PRINT_EVERY == 0 or i == len(training_loader):
             print(
                 f"\rEpoch: "
                 f"{(i * 100 * h_params['BATCH_SIZE'] / batches_per_epoch):.2f}%"
                 f" -- Time per Epoch: {time_per_epoch}"
                 f" -- Estimated Epoch Completion: "
-                f"{datetime.now() + time_per_batch * (len(loader) - i)}"
+                f"{datetime.now() + time_per_batch * (len(training_loader) - i)}"
                 f" -- Estimated Total Completion: "
                 f"{datetime.now() + time_per_epoch * (h_params['EPOCHS'] - epoch - 1)}",
                 end="",
@@ -236,31 +214,61 @@ for epoch in range(h_params["EPOCHS"]):
     print(f"\n{datetime.now()}")
 
     # Calculate average loss
-    h_params["TRAINING_LOSS"] = (total_loss / len(loader)).item()  # EFFICIENCY: single sync here instead of one per batch
+    h_params["TRAINING_LOSS"] = (total_loss / len(training_loader)).item()  # EFFICIENCY: single sync here instead of one per batch
 
-    print(
-        f"Epoch {epoch + 1}/{h_params['EPOCHS']} "
-        f"- Training Loss: {h_params['TRAINING_LOSS']:.4f}"
-    )
+    # print(
+    #     f"Epoch {epoch + 1}/{h_params['EPOCHS']} "
+    #     f"- Training Loss: {h_params['TRAINING_LOSS']:.4f}"
+    # )
 
     # Validation
-    """transformer.eval()
+    transformer.eval()
     with torch.no_grad():
-        val_output = transformer(src_data[h_params["OBJECTS_OF_DATASET"]:-1],
-                                 tgt_data[h_params["OBJECTS_OF_DATASET"]:-1])
-        print(src_data.shape)
-        print(tgt_data.shape)
-        print(f"srclen{len(src_data[h_params["OBJECTS_OF_DATASET"]:-1])}")
-        print(f"tgtlen{len(tgt_data[h_params["OBJECTS_OF_DATASET"]:-1])}")
-        print(val_output)
-        val_loss = criterion(
-            val_output.contiguous().view(-1, vocab_size),
-            tgt_data[:h_params["OBJECTS_OF_DATASET"], 1:].contiguous().view(-1)
-        )
-        print(f"Validation Loss: {val_loss.item():.4f}")
+        total_val_loss = 0
+        val_sequences = val_num_seq[offset:].unfold(0, h_params["MAX_SEQ_LENGTH"], stride).contiguous()
 
-    print(f"Epoch {epoch + 1}/{h_params["EPOCHS"]} - Training Loss: {total_loss / len(loader):.4f} - Validation Loss: {val_loss:.4f}")
-    """
+        src_data = val_sequences[:-1]
+        tgt_data = val_sequences[1:]
+
+        dataset = TensorDataset(src_data, tgt_data)
+        loader_kwargs = dict(batch_size=h_params["BATCH_SIZE"], shuffle=True)
+        if device.type == "cuda":
+            loader_kwargs.update(pin_memory=True)
+        validation_loader = DataLoader(dataset, **loader_kwargs) # type: ignore
+        batches_per_epoch = len(dataset)
+        current_batch = 0
+        for batch_idx, (src_batch, tgt_batch) in enumerate(validation_loader):
+            print(f"\rEvaluating Validation Loss... {(current_batch*100)/len(validation_loader):.2f}% complete", end = " ")
+            src_batch = src_batch.to(device, non_blocking=True)
+            tgt_batch = tgt_batch.to(device, non_blocking=True)
+
+            val_output = transformer(src_batch, tgt_batch[:, :-1])
+
+            # print(f"Loader length: {len(loader)}")
+            # print(f"Val Output: {val_output.shape}")
+            # print(f"src_data: {src_data.shape}")
+            # print(f"tgt_data: {tgt_data.shape}")
+            # print(f"src_batch: {src_data.shape}")
+            # print(f"tgt_batch: {tgt_data.shape}")
+            #print(f"srclen{len(src_data[h_params["OBJECTS_OF_DATASET"]:-1])}")
+            #print(f"tgtlen{len(tgt_data[h_params["OBJECTS_OF_DATASET"]:-1])}")
+            # print(f"val_output: {val_output}")
+
+            val_loss = criterion(
+                val_output.contiguous().view(-1, vocab_size),
+                tgt_batch[:, 1:].contiguous().view(-1)
+            )
+            # print(f"Validation Loss: {val_loss.item():.4f}")
+            total_val_loss += val_loss.item()
+            current_batch += 1
+    total_val_loss /= len(validation_loader)
+    print()
+
+    h_params["VALIDATION_LOSS"] = (total_val_loss)
+    h_params["LOSS_HISTORY"].append((h_params["TRAINING_LOSS"], h_params["VALIDATION_LOSS"]))
+    
+    print(f"Epoch {epoch + 1}/{h_params["EPOCHS"]} - Training Loss: {total_loss / len(training_loader):.4f} - Validation Loss: {total_val_loss:.4f}")
+    
     # Save checkpoint for further use
     model_save_name = new_model_name
     if "COMPLETED_EPOCHS" in h_params:
@@ -271,8 +279,6 @@ for epoch in range(h_params["EPOCHS"]):
             if "@epoch" in model_save_name:
                 model_save_name = model_save_name[:model_save_name.index("-epoch")+1]
             model_save_name += f"@epoch={h_params['COMPLETED_EPOCHS']}"
-
-
 
     save_dir = MODEL_ROOT / model_save_name
     save_dir.mkdir(parents=False, exist_ok=True)
@@ -294,5 +300,5 @@ for epoch in range(h_params["EPOCHS"]):
         # Save model itself
         torch.save(transformer.state_dict(), model_file)
 
-
-        # expanse_series_1.4 loss: .026
+    # Plot loss history
+    plot_model_loss(model_save_name)

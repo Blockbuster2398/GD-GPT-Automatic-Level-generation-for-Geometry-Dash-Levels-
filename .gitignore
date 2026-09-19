@@ -1,10 +1,10 @@
 notes.txt
 *.pth
 *.pkl
-/generated/levels
+/generated_levels
 /__pycache__
 *.pyc
 venv/
 .venv/
 */details.txt
-model/models/*
+trained_models/*
