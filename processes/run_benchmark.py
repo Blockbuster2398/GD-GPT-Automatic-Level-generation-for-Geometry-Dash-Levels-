@@ -7,13 +7,13 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from classes import Level
-from model.run_model import generate_level
+from utils import Level
+from run_model import generate_level
 
 
 #from model.run_model import generate_level
 
-def run_benchmark(model_name : str, prompt_cutoff = 500, temperature = 1.0, prompt_source="main_levels", boost_portals=True, dynamic_temperature=True, level_length=5000):
+def run_benchmark(model_name : str, prompt_cutoff = 500, temperature = 1.0, prompt_source="training_data/main_levels", boost_portals=True, dynamic_temperature=True, level_length=5000):
     total_objects = 0
     prompt_path = Path(prompt_source)
     if not prompt_path.is_absolute():
@@ -36,7 +36,7 @@ def run_benchmark(model_name : str, prompt_cutoff = 500, temperature = 1.0, prom
                     dynamic_temperature=dynamic_temperature)
 
 if __name__ == "__main__":
-    run_benchmark(model_name="lab-video-dropout-1.12",
+    run_benchmark(model_name="lab-video-dropout-1.13",
                   level_length=5000,
                   prompt_cutoff=400,
                   temperature=0.001,

@@ -2,6 +2,7 @@ notes.txt
 *.pth
 *.pkl
 /generated/levels
+/__pycache__
 *.pyc
 venv/
 .venv/
