@@ -29,17 +29,17 @@ def run_benchmark(model_name : str, prompt_cutoff = 500, temperature = 1.0, prom
         generate_level(model=model_name,
                     prompt = token_string,
                     level_length=level_length,
-                    seq_length=400,
+                    seq_length=200,
                     temperature=temperature,
                     level_name=file,
                     boost_portals=boost_portals,
                     dynamic_temperature=dynamic_temperature)
 
 if __name__ == "__main__":
-    run_benchmark(model_name="lab-video-dropout-1.13",
+    run_benchmark(model_name="lossier",
                   level_length=5000,
                   prompt_cutoff=400,
-                  temperature=0.001,
+                  temperature=1,
                   boost_portals=True,
                   dynamic_temperature=True)
     """run_benchmark(model_name="setback@epoch=1",
