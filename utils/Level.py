@@ -111,7 +111,7 @@ class GMD_Level:
     def create_tokens(self):
         def get_x_increment(num):
             x_increments = []
-            x_intervals = [200, 50, 10, 5, 1]
+            x_intervals = [800, 400, 200, 150, 100, 75, 50, 40, 30, 20, 10, 5, 3, 2, 1]
             # Sort largest-first so we greedily take the biggest chunk each time
             remaining = num
             for interval in x_intervals:
@@ -124,7 +124,7 @@ class GMD_Level:
 
         def get_y_increment(num):
             y_increments = []
-            y_intervals = [200, 50, 10, 5, 1]
+            y_intervals = [800, 400, 200, 150, 100, 75, 50, 40, 30, 20, 10, 5, 3, 2, 1]
             remaining = num
             for interval in y_intervals:
                 while remaining >= interval:
@@ -370,6 +370,16 @@ class GMD_Level:
         # Apply contested gravity state
         # gravity_tokens = [(index, tokens[index]) for index in range(len(tokens)) if "gravity" in tokens[index]]
         # print(gravity_tokens)
+
+        # Remove repeating blocks
+        compact_tokens = []
+        prev_token = ""
+        for token in tokens:
+             if token != prev_token or "state" in token or "mode" in token or "increment" in token or "reset" in token:
+                  compact_tokens.append(token)
+                  prev_token = token
+             else:
+                  pass 
 
         self.tokens = tokens
 
