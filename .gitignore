@@ -7,4 +7,5 @@ notes.txt
 venv/
 .venv/
 */details.txt
+trained_models/
 trained_models/*

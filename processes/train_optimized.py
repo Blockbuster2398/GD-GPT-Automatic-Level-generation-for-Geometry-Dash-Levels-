@@ -56,19 +56,19 @@ if checkpoint_name:
 else:
     
     h_params = {
-            "D_MODEL": 60,
-            "NUM_HEADS": 15,
-            "NUM_LAYERS": 5,
-            "D_FF": 15,
-            "MAX_SEQ_LENGTH": 250,
-            "DROPOUT": .45,
+            "D_MODEL": 450,
+            "NUM_HEADS": 30,
+            "NUM_LAYERS": 15,
+            "D_FF": 1536,
+            "MAX_SEQ_LENGTH": 400,
+            "DROPOUT": .40,
             "BATCH_SIZE": 6,
             "ACCUMULATION_STEPS": 10,
             "STRIDE": 30,
             "EPOCHS": 500,
             "COMPLETED_EPOCHS": 0,
             "LR": 0.0002,
-            "OBJECTS_OF_DATASET": 10000, # 4115373, #2500000 
+            "OBJECTS_OF_DATASET": 4115373, #2500000 
             "TRAINING_LOSS": None,
             "VALIDATION_LOSS": None,
             "LOSS_HISTORY": []
@@ -284,8 +284,8 @@ for epoch in range(h_params["EPOCHS"]):
     save_dir = MODEL_ROOT / model_save_name
     save_dir.mkdir(parents=False, exist_ok=True)
     with (
-            open(save_dir / "transformer_recent.pth", "wb") as model_file,
-            open(save_dir / "transmformer_best.pth", "wb") as best_model_file,
+            open(save_dir / "transformer_recent.pth", "wb") as recent_model_file,
+            open(save_dir / "transformer_best.pth", "wb") as best_model_file,
             open(save_dir / "transformer_checkpoint.pth", "wb") as checkpoint_file,
             open(save_dir / "vocab.pkl", "wb") as vocab_file,
             open(save_dir / "h_params.pkl", "wb") as params_file,
@@ -299,7 +299,8 @@ for epoch in range(h_params["EPOCHS"]):
         pickle.dump(h_params, params_file)
         json.dump(h_params, details_file)
 
-        # Configures updating the best model file only if the validation loss improves
+        # Configures updating the model file only if the validation loss improves
+        
         if (not len(h_params["LOSS_HISTORY"]) == 1):
             print(f"Current val loss: {h_params["VALIDATION_LOSS"]}, previous val loss: {h_params["LOSS_HISTORY"][-2][1]}")
         if (replace_better_models 
@@ -309,8 +310,7 @@ for epoch in range(h_params["EPOCHS"]):
             print(f"MODEL FILE UPDATED FOR THIS EPOCH!")
         else: print(f"MODEL FILE NOT UPDATED FOR THIS EPOCH")
 
-        torch.save(transformer.state_dict(), model_file)
-
+        torch.save(transformer.state_dict(), recent_model_file)
 
     # Plot loss history
     plot_model_loss(model_save_name)
