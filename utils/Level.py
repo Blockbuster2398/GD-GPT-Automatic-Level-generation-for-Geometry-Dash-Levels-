@@ -192,7 +192,7 @@ class GMD_Level:
         # Setup gamemode tracking
         game_mode = "cube_mode"
         size = "normal_size_state"
-        gravity = "normal_gravity_state"
+        gravity = "blue_gravity_portal_state"
         speed = "x1_speed_state"
         dual = "single_player_state"
 
@@ -211,9 +211,9 @@ class GMD_Level:
                     # State tokens
                     tokens.append("y_reset")
                     tokens.append(game_mode)
-                    # tokens.append(gravity)
+                    tokens.append(gravity)
                     tokens.append(speed)
-                    # tokens.append(size)
+                    tokens.append(size)
                     # tokens.append(dual)
                     tokens += get_y_increment(i.details["y_position"])
                     
@@ -263,20 +263,15 @@ class GMD_Level:
 
             elif int(i.details["object_id"]) in (self.map.category_to_id['green_orb']): 
                 tokens.append("green_orb")
-                # if gravity == "reverse_gravity_state":
-                    # gravity = "normal_gravity_state"
-                # else:
-                    # gravity = "reverse_gravity_state"
+                gravity = "gravity_orb_state"
+            elif int(i.details["object_id"]) in (self.map.category_to_id['blue_orb']):
+                tokens.append("blue_orb")
+                gravity = "gravity_orb_state"
             elif int(i.details["object_id"]) in (self.map.category_to_id['red_orb']):tokens.append("red_orb")
             elif int(i.details["object_id"]) in (self.map.category_to_id['black_orb']):tokens.append("black_orb")
             elif int(i.details["object_id"]) in (self.map.category_to_id['purple_orb']):tokens.append("purple_orb")
             elif int(i.details["object_id"]) in (self.map.category_to_id['yellow_orb']):tokens.append("yellow_orb")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['blue_orb']):
-                tokens.append("blue_orb")
-                # if gravity == "reverse_gravity_state":
-                    # gravity = "normal_gravity_state"
-                # else:
-                    # gravity = "reverse_gravity_state"
+            
 
             elif int(i.details["object_id"]) in (self.map.category_to_id['cube_portal']):
                 tokens.append("cube_portal")
@@ -316,10 +311,10 @@ class GMD_Level:
             # Rotated Portals
             elif int(i.details["object_id"]) in (self.map.category_to_id['blue_gravity']):
                             tokens.append("blue_gravity-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
-                            gravity = "normal_gravity_state"
+                            gravity = "blue_gravity_portal_state"
             elif int(i.details["object_id"]) in (self.map.category_to_id['yellow_gravity']):
                             tokens.append("yellow_gravity-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
-                            gravity = "reverse_gravity_state"
+                            gravity = "yellow_gravity_portal_state"
 
             # Half Blocks
             elif int(i.details["object_id"]) in (self.map.category_to_id['half_block']):
@@ -331,10 +326,10 @@ class GMD_Level:
                 tokens.append("yellow_pad-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
             elif int(i.details["object_id"]) in (self.map.category_to_id['blue_pad']):
                 tokens.append("blue_pad-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
-                # if gravity == "reverse_gravity_state":
-                    # gravity = "normal_gravity_state"
-                # else:
-                    # gravity = "reverse_gravity_state" # gravity = "contested_gravity_state"
+                if int(tokens[-1].split("-")[1]) == 0:
+                    gravity = "gravity_pad_state"
+                else:
+                    gravity = "reverse_gravity_pad_state"
             elif int(i.details["object_id"]) in (self.map.category_to_id['purple_pad']):
                 tokens.append("purple_pad-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
 
