@@ -44,7 +44,7 @@ def generate_level(model : str, prompt : str, level_length : int, seq_length, te
         h_params["D_FF"], h_params["MAX_SEQ_LENGTH"], h_params["DROPOUT"]
     )
 
-    transformer.load_state_dict(torch.load(model_dir / "transformer.pth", map_location=device))
+    transformer.load_state_dict(torch.load(model_dir / "transformer_best.pth", map_location=device))
     transformer.to(device)
 
 

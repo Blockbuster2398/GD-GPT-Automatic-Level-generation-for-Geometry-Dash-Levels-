@@ -63,12 +63,12 @@ else:
             "MAX_SEQ_LENGTH": 400,
             "DROPOUT": .50,
             "BATCH_SIZE": 6,
-            "ACCUMULATION_STEPS": 10,
-            "STRIDE": 50,
+            "ACCUMULATION_STEPS": 15,
+            "STRIDE": 15,
             "EPOCHS": 500,
             "COMPLETED_EPOCHS": 0,
             "LR": 0.0001,
-            "OBJECTS_OF_DATASET": 4115373, #2500000 
+            "OBJECTS_OF_DATASET": 5179517, #2500000 
             "TRAINING_LOSS": None,
             "VALIDATION_LOSS": None,
             "LOSS_HISTORY": []
@@ -278,6 +278,10 @@ for epoch in range(h_params["EPOCHS"]):
 
     h_params["VALIDATION_LOSS"] = (total_val_loss)
     h_params["LOSS_HISTORY"].append((h_params["TRAINING_LOSS"], h_params["VALIDATION_LOSS"]))
+    previous_best_validation_loss = min(
+        (history[1] for history in h_params["LOSS_HISTORY"][:-1]),
+        default=float("inf"),
+    )
     
     print(f"Epoch {epoch + 1}/{h_params["EPOCHS"]} - Training Loss: {total_loss / len(training_loader):.4f} - Validation Loss: {total_val_loss:.4f}")
     
@@ -294,9 +298,15 @@ for epoch in range(h_params["EPOCHS"]):
 
     save_dir = MODEL_ROOT / model_save_name
     save_dir.mkdir(parents=False, exist_ok=True)
+    best_model_path = save_dir / "transformer_best.pth"
+    is_best_model = (
+        replace_better_models
+        or not best_model_path.is_file()
+        or best_model_path.stat().st_size == 0
+        or h_params["VALIDATION_LOSS"] <= previous_best_validation_loss
+    )
     with (
             open(save_dir / "transformer_recent.pth", "wb") as recent_model_file,
-            open(save_dir / "transformer_best.pth", "wb") as best_model_file,
             open(save_dir / "transformer_checkpoint.pth", "wb") as checkpoint_file,
             open(save_dir / "vocab.pkl", "wb") as vocab_file,
             open(save_dir / "h_params.pkl", "wb") as params_file,
@@ -310,18 +320,16 @@ for epoch in range(h_params["EPOCHS"]):
         pickle.dump(h_params, params_file)
         json.dump(h_params, details_file)
 
-        # Configures updating the model file only if the validation loss improves
-        
-        if (not len(h_params["LOSS_HISTORY"]) == 1):
-            print(f"Current val loss: {h_params["VALIDATION_LOSS"]}, previous val loss: {h_params["LOSS_HISTORY"][-2][1]}")
-        if (replace_better_models 
-            or len(h_params["LOSS_HISTORY"]) == 1
-            or h_params["VALIDATION_LOSS"] <= h_params["LOSS_HISTORY"][-2][1]):
-            torch.save(transformer.state_dict(), best_model_file)
-            print(f"MODEL FILE UPDATED FOR THIS EPOCH!")
-        else: print(f"MODEL FILE NOT UPDATED FOR THIS EPOCH")
-
         torch.save(transformer.state_dict(), recent_model_file)
+
+    if is_best_model:
+        torch.save(transformer.state_dict(), best_model_path)
+        print("Best model updated for this epoch.")
+    else:
+        print(
+            f"Best model unchanged: validation loss {h_params['VALIDATION_LOSS']:.6f}; "
+            f"best so far {previous_best_validation_loss:.6f}."
+        )
 
     # Plot loss history
     plot_model_loss(model_save_name)
