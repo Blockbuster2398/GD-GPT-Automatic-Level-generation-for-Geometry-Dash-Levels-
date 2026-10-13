@@ -64,7 +64,7 @@ else:
             "DROPOUT": .50,
             "BATCH_SIZE": 6,
             "ACCUMULATION_STEPS": 10,
-            "STRIDE": 30,
+            "STRIDE": 50,
             "EPOCHS": 500,
             "COMPLETED_EPOCHS": 0,
             "LR": 0.0001,
@@ -93,6 +93,16 @@ print(f"Dataset size: {len(train_objects)}, Vocab size: {vocab_size}")
 # Tokenize
 train_num_seq = torch.tensor([vocab[obj] for obj in train_objects])
 val_num_seq = torch.tensor([vocab[obj] for obj in val_objects])
+start_idx = vocab["start"]
+
+
+def make_seq2seq_windows(sequence, offset, max_seq_length, stride):
+    if sequence.numel() - offset < 2 * max_seq_length:
+        raise ValueError("Sequence must contain at least two full context windows")
+
+    source_windows = sequence[offset:].unfold(0, max_seq_length, stride)
+    target_windows = sequence[offset + max_seq_length:].unfold(0, max_seq_length, stride)
+    return source_windows[:len(target_windows)].contiguous(), target_windows.contiguous()
 
 
 # Model
@@ -132,10 +142,9 @@ PRINT_EVERY = 5  # EFFICIENCY: flushing stdout on every single batch is real ove
 for epoch in range(h_params["EPOCHS"]):
 
     offset = epoch % stride
-    train_sequences = train_num_seq[offset:].unfold(0, h_params["MAX_SEQ_LENGTH"], stride).contiguous()
-    
-    src_data = train_sequences[:-1]  # input sequences
-    tgt_data = train_sequences[1:]    # target sequences shifted by 1
+    src_data, tgt_data = make_seq2seq_windows(
+        train_num_seq, offset, h_params["MAX_SEQ_LENGTH"], stride
+    )
 
     # DataLoader
     dataset = TensorDataset(src_data, tgt_data)
@@ -157,18 +166,19 @@ for epoch in range(h_params["EPOCHS"]):
 
         src_batch = src_batch.to(device, non_blocking=True)
         tgt_batch = tgt_batch.to(device, non_blocking=True)
+        decoder_start = tgt_batch.new_full((tgt_batch.size(0), 1), start_idx)
+        decoder_input = torch.cat((decoder_start, tgt_batch[:, :-1]), dim=1)
 
         # Forward pass
         with autocast_ctx():
             output = transformer(
                 src_batch,
-                tgt_batch[:, :-1]
+                decoder_input
             )
 
-            # Calculate the normal loss
             loss = criterion(
                 output.contiguous().view(-1, vocab_size),
-                tgt_batch[:, 1:].contiguous().view(-1)
+                tgt_batch.contiguous().view(-1)
             )
 
         total_loss += loss.detach()
@@ -226,10 +236,9 @@ for epoch in range(h_params["EPOCHS"]):
     transformer.eval()
     with torch.no_grad():
         total_val_loss = 0
-        val_sequences = val_num_seq[offset:].unfold(0, h_params["MAX_SEQ_LENGTH"], stride).contiguous()
-
-        src_data = val_sequences[:-1]
-        tgt_data = val_sequences[1:]
+        src_data, tgt_data = make_seq2seq_windows(
+            val_num_seq, offset, h_params["MAX_SEQ_LENGTH"], stride
+        )
 
         dataset = TensorDataset(src_data, tgt_data)
         loader_kwargs = dict(batch_size=h_params["BATCH_SIZE"], shuffle=True)
@@ -242,8 +251,10 @@ for epoch in range(h_params["EPOCHS"]):
             print(f"\rEvaluating Validation Loss... {(current_batch*100)/len(validation_loader):.2f}% complete", end = " ")
             src_batch = src_batch.to(device, non_blocking=True)
             tgt_batch = tgt_batch.to(device, non_blocking=True)
+            decoder_start = tgt_batch.new_full((tgt_batch.size(0), 1), start_idx)
+            decoder_input = torch.cat((decoder_start, tgt_batch[:, :-1]), dim=1)
 
-            val_output = transformer(src_batch, tgt_batch[:, :-1])
+            val_output = transformer(src_batch, decoder_input)
 
             # print(f"Loader length: {len(loader)}")
             # print(f"Val Output: {val_output.shape}")
@@ -257,7 +268,7 @@ for epoch in range(h_params["EPOCHS"]):
 
             val_loss = criterion(
                 val_output.contiguous().view(-1, vocab_size),
-                tgt_batch[:, 1:].contiguous().view(-1)
+                tgt_batch.contiguous().view(-1)
             )
             # print(f"Validation Loss: {val_loss.item():.4f}")
             total_val_loss += val_loss.item()

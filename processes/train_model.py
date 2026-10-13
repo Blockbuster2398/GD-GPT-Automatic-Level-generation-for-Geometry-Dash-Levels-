@@ -93,11 +93,13 @@ vocab_size = len(vocab) + 1  # +1 for padding token
 
 # Tokenize
 num_seq = torch.tensor([vocab[obj] for obj in objects])
+start_idx = vocab["start"]
 
-# Build src/tgt pairs (sliding window)
-sequences = num_seq.unfold(0, h_params["MAX_SEQ_LENGTH"], 1)  # (num_samples, MAX_SEQ_LENGTH)
-src_data = sequences[:-1].to(device)  # input sequences
-tgt_data = sequences[1:].to(device)    # target sequences shifted by 1
+# Pair a context window with the following, non-overlapping continuation.
+max_seq_length = h_params["MAX_SEQ_LENGTH"]
+sequences = num_seq.unfold(0, max_seq_length * 2, 1)
+src_data = sequences[:, :max_seq_length].contiguous().to(device)
+tgt_data = sequences[:, max_seq_length:].contiguous().to(device)
 
 # DataLoader
 dataset = TensorDataset(src_data, tgt_data)
@@ -150,15 +152,13 @@ for epoch in range(h_params["EPOCHS"]):
         tgt_batch = tgt_batch.to(device)
 
         # Forward pass
-        output = transformer(
-            src_batch,
-            tgt_batch[:, :-1]
-        )
+        decoder_start = tgt_batch.new_full((tgt_batch.size(0), 1), start_idx)
+        decoder_input = torch.cat((decoder_start, tgt_batch[:, :-1]), dim=1)
+        output = transformer(src_batch, decoder_input)
 
-        # Calculate the normal loss
         loss = criterion(
             output.contiguous().view(-1, vocab_size),
-            tgt_batch[:, 1:].contiguous().view(-1)
+            tgt_batch.contiguous().view(-1)
         )
 
         # Keep the ORIGINAL loss for reporting
