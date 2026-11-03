@@ -44,7 +44,7 @@ def generate_level(model : str, prompt : str, level_length : int, seq_length, te
         h_params["D_FF"], h_params["MAX_SEQ_LENGTH"], h_params["DROPOUT"]
     )
 
-    transformer.load_state_dict(torch.load(model_dir / "transformer_best.pth", map_location=device))
+    transformer.load_state_dict(torch.load(model_dir / "transformer_recent.pth", map_location=device))
     transformer.to(device)
 
 
@@ -88,6 +88,7 @@ def generate_level(model : str, prompt : str, level_length : int, seq_length, te
                     logits[vocab.get("spider_portal", 0)] *= 1.25
                 logits[vocab.get("end", 0)] *= 0.1  # Decrease probability of end token
                 probs = torch.softmax(logits / temp, dim=-1)
+                
                 next_token = torch.multinomial(probs, 1).item()
                 next_token_readable = decode([next_token], vocab)
                 #print(f"Next obj type:{next_token_readable}", flush=True)
@@ -146,9 +147,9 @@ def generate_level(model : str, prompt : str, level_length : int, seq_length, te
     #print(output_text)
 
     if level_name:
-        level.create_gmd(output_folder / f"{level_name}@temperature={temperature}_{file_count}.gmd", f"{model_name}/{level_name}_{file_count}", "AI Generated")
+        level.create_gmd(output_folder / f"{level_name}@temperature={temperature}_{file_count}.gdlvl", f"{model_name}/{level_name}_{file_count}", "AI Generated")
     else:
-        level.create_gmd(output_folder / f"{model_name}@temperature={temperature}_{file_count}.gmd", f"{model_name}/{model_name}_{file_count}", "AI Generated")
+        level.create_gmd(output_folder / f"{model_name}@temperature={temperature}_{file_count}.gdlvl", f"{model_name}/{model_name}_{file_count}", "AI Generated")
 
 
 spike_cap = "spike-0;x_reset;x_increment-80;x_increment-40;x_increment-20;x_increment-10;spike-0;x_reset;x_increment-80;x_increment-40;x_increment-20;x_increment-10;spike-0;x_reset;x_increment-160;x_increment-80;spike-0;x_reset;x_increment-20;x_increment-10;spike-0;x_reset;x_increment-20;x_increment-10;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;x_reset;x_increment-20;x_increment-10;spike_short-0;x_reset;x_increment-5;x_increment-2;x_increment-1;y_increment-10;y_increment-5;y_increment-2;_;x_reset;x_increment-20;x_increment-2;y_reset;y_increment-2;spike_short-0;x_reset;x_increment-20;x_increment-10;spike_short-0;y_increment-10;y_increment-2;y_increment-1;full_block;y_increment-20;y_increment-10;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;x_reset;x_increment-20;x_increment-10;spike_short-0;y_increment-10;y_increment-1;_;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;x_reset;x_increment-20;x_increment-10;spike_short-0;y_increment-10;y_increment-2;y_increment-1;full_block;y_increment-20;y_increment-10;full_block;y_increment-20;y_increment-10;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;y_increment-40;y_increment-20;y_increment-10;y_increment-2;y_increment-1;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;y_increment-40;y_increment-20;y_increment-10;y_increment-2;y_increment-1;full_block;y_increment-20;y_increment-10;spike-0;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;y_increment-10;y_increment-5;y_increment-2;_;y_increment-40;y_increment-10;y_increment-5;y_increment-1;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;y_increment-40;y_increment-20;y_increment-10;y_increment-2;y_increment-1;full_block;y_increment-20;y_increment-10;spike-0;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;y_increment-10;y_increment-2;y_increment-1;full_block;y_increment-20;y_increment-10;full_block;y_increment-20;y_increment-10;full_block;y_increment-20;y_increment-10;full_block;x_reset;x_increment-20;x_increment-10;y_reset;y_increment-2;spike_short-0;x_reset;x_increment-10;x_increment-2;x_increment-2;y_increment-5;y_increment-2;y_increment-2;_;x_reset;x_increment-10;x_increment-5;x_increment-1;y_reset;y_increment-2;spike_short-0;y_increment-160;y_increment-20;"
