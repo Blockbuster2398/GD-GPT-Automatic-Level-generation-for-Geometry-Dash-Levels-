@@ -7,5 +7,6 @@ notes.txt
 venv/
 .venv/
 */details.txt
+*compiled_dataset*
 trained_models/
 trained_models/*
