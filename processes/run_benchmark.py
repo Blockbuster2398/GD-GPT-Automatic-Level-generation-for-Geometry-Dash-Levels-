@@ -36,7 +36,7 @@ def run_benchmark(model_name : str, prompt_cutoff = 500, temperature = 1.0, prom
                     dynamic_temperature=dynamic_temperature)
 
 if __name__ == "__main__":
-    run_benchmark(model_name="uv-prev",
+    run_benchmark(model_name="ultraviolet-1.0",
                   level_length=5000,
                   prompt_cutoff=100,
                   temperature=1,
