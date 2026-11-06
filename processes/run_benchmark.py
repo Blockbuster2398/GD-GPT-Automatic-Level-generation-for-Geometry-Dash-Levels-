@@ -18,6 +18,8 @@ def run_benchmark(model_name : str, prompt_cutoff = 500, temperature = 1.0, prom
     prompt_path = Path(prompt_source)
     if not prompt_path.is_absolute():
         prompt_path = PROJECT_ROOT / prompt_path
+    # Make empty level
+    generate_level(model=model_name,prompt = "start", level_length=level_length, seq_length=500, temperature=temperature, level_name="default", boost_portals=boost_portals, dynamic_temperature=dynamic_temperature)
     for file in os.listdir(prompt_source):
         print(f"Generating a level from: {PROJECT_ROOT / prompt_path / file}")
         level_object = Level.GMD_Level(PROJECT_ROOT / prompt_path / file)
@@ -29,18 +31,18 @@ def run_benchmark(model_name : str, prompt_cutoff = 500, temperature = 1.0, prom
         generate_level(model=model_name,
                     prompt = token_string,
                     level_length=level_length,
-                    seq_length=100,
+                    seq_length=500,
                     temperature=temperature,
                     level_name=file,
                     boost_portals=boost_portals,
                     dynamic_temperature=dynamic_temperature)
 
 if __name__ == "__main__":
-    run_benchmark(model_name="uv-prev",
+    run_benchmark(model_name="gamma-1.03",
                   level_length=5000,
                   prompt_cutoff=100,
                   temperature=1,
-                  boost_portals=True,
+                  boost_portals=False,
                   dynamic_temperature=True)
     """run_benchmark(model_name="setback@epoch=1",
                       prompt_cutoff=500,

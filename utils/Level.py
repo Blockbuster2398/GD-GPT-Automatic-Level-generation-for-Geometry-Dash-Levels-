@@ -190,6 +190,8 @@ class GMD_Level:
         current_x_distance = 0
 
         # Setup gamemode tracking
+        tracking_interval = 10
+        tracking_counter = 0
         game_mode = "cube_mode"
         size = "normal_size_state"
         gravity = "blue_gravity_portal_state"
@@ -208,14 +210,17 @@ class GMD_Level:
                     tokens += get_y_increment(i.details["y_distance"])
 
                 elif i.details["y_distance"] < 0:
-                    # State tokens
                     tokens.append("y_reset")
-                    tokens.append(game_mode)
-                    tokens.append(gravity)
-                    tokens.append(speed)
-                    tokens.append(size)
-                    # tokens.append(dual)
+                    if tracking_counter == tracking_interval:
+                        # State tokens
+                        tokens.append(game_mode)
+                        tokens.append(gravity)
+                        tokens.append(speed)
+                        tokens.append(size)
+                        # tokens.append(dual)
+                        tracking_counter = 0
                     tokens += get_y_increment(i.details["y_position"])
+                    tracking_counter += 1
                     
 
         
