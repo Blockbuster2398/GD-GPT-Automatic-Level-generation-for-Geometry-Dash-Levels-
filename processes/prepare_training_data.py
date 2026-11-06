@@ -15,7 +15,9 @@ validation_tokens = []
 levels_data = []
 token_frequencies = dict()
 dataset_dir = PROJECT_ROOT / "training_data" / "GMD_levels"
+level_num = 0
 for file_path in dataset_dir.iterdir():
+    
     print(f"Processing {file_path.stem}")
     level = GMD_Level(file_path, keepDetail=False, keepDeco=False)
     all_tokens += level.tokens
@@ -25,7 +27,8 @@ for file_path in dataset_dir.iterdir():
     level_tuple = (file_path.stem, level.tokens, level_unique_tokens, level_total_tokens)
     levels_data.append(level_tuple)
     # print(level_tuple)
-    print(f"Running object total = {len(all_tokens)}")
+    level_num += 1
+    print(f"Running object total = {len(all_tokens)} for {level_num} levels!")
 
 # print([(level[2]) for level in levels_data])
 # levels = sorted(levels_data, key=lambda x: x[2]) # Optional sorting
