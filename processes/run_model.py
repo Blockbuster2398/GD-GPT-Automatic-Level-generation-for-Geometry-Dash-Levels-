@@ -4,6 +4,8 @@ import sys
 import time
 from pathlib import Path
 
+import numpy as np
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -22,7 +24,7 @@ MODEL_SPEC.loader.exec_module(model_module)
 Transformer = model_module.Transformer
 
 
-def generate_level(model : str, prompt : str, level_length : int, seq_length, temperature : float, level_name=None, boost_portals=True, dynamic_temperature=True):
+def generate_level(model : str, prompt : str, level_length : int, seq_length, temperature : float, level_name=None, boost_portals=True, dynamic_temperature=True, avoid_prbolematic_tokens=False, top_k=None, top_p=None):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
@@ -60,8 +62,10 @@ def generate_level(model : str, prompt : str, level_length : int, seq_length, te
         return [vocab.get(token, 0) for token in tokens]  # 0 for unknown tokens
 
 
-    def generate(transformer, src_tokens, max_len=level_length, max_seq_length=seq_length, temp=temperature, boost_portals=True, dynamic_temperature=True):
+    def generate(transformer, src_tokens, max_len=level_length, max_seq_length=seq_length, temp=temperature, boost_portals=True, dynamic_temperature=True, avoid_problematic_tokens=avoid_prbolematic_tokens):
         transformer.eval()
+        if top_k is not None and top_p is not None:
+            raise ValueError("top_k and top_p cannot be used together")
         with torch.no_grad():
             # initialize tgt with the proper start token index
             tgt = torch.tensor([start_idx]).unsqueeze(0).to(device)
@@ -87,12 +91,38 @@ def generate_level(model : str, prompt : str, level_length : int, seq_length, te
                     logits[vocab.get("robot_portal", 0)] *= 1.25
                     logits[vocab.get("spider_portal", 0)] *= 1.25
                 logits[vocab.get("end", 0)] *= 0.1  # Decrease probability of end token
+                problematic_tokens = ["yellow_gravity_portal",
+                                      "blue_orb", "blue_pad-0", "blue_pad-90", "blue_pad-180", "blue_pad-270", "green_orb", "start_dual"]
+                if avoid_problematic_tokens:
+                    for token in problematic_tokens:
+                        logits[vocab.get(token, 0)] -= 75 
+                if top_k is not None:
+                    if top_k < 1:
+                        raise ValueError("top_k must be at least 1")
+                    k = min(top_k, logits.numel())
+                    cutoff = torch.topk(logits, k).values[-1]
+                    logits = logits.masked_fill(logits < cutoff, -torch.inf)
+                    
+
                 probs = torch.softmax(logits / temp, dim=-1)
+
+                if top_p is not None:
+                    if top_p <= 0 or top_p > 1:
+                        raise ValueError("top_p must be greater than 0 and less than or equal to 1")
+                    sorted_probs, sorted_indices = torch.sort(probs, descending=True)
+                    cumulative_probs = torch.cumsum(sorted_probs, dim=-1)
+                    sorted_mask = cumulative_probs > top_p
+                    sorted_mask[1:] = sorted_mask[:-1].clone()
+                    sorted_mask[0] = False
+                    mask = torch.zeros_like(sorted_mask).scatter(-1, sorted_indices, sorted_mask)
+                    probs = probs.masked_fill(mask, 0)
+                    probs = probs / probs.sum(dim=-1, keepdim=True)
+
                 
                 next_token = torch.multinomial(probs, 1).item()
                 next_token_readable = decode([next_token], vocab)
                 #print(f"Next obj type:{next_token_readable}", flush=True)
-                if "portal" in next_token_readable or "mode" in next_token_readable:
+                if ("portal" in next_token_readable or "mode" in next_token_readable) and "gravity" not in next_token_readable:
                     #print(f"Next portal type:{next_token_readable}", flush=True)
                     if next_token_readable != portal_logger[-1]:
                         portal_logger.append(next_token_readable)

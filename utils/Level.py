@@ -190,7 +190,7 @@ class GMD_Level:
         current_x_distance = 0
 
         # Setup gamemode tracking
-        tracking_interval = 10
+        tracking_interval = 5
         tracking_counter = 0
         game_mode = "cube_mode"
         size = "normal_size_state"

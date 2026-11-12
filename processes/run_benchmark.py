@@ -13,13 +13,13 @@ from run_model import generate_level
 
 #from model.run_model import generate_level
 
-def run_benchmark(model_name : str, prompt_cutoff = 500, temperature = 1.0, prompt_source="training_data/main_levels", boost_portals=True, dynamic_temperature=True, level_length=5000):
+def run_benchmark(model_name : str, prompt_cutoff = 500, temperature = 1.0, prompt_source="training_data/main_levels", boost_portals=True, dynamic_temperature=True, level_length=5000, avoid_problematic_tokens=False, top_k=None, top_p=None):
     total_objects = 0
     prompt_path = Path(prompt_source)
     if not prompt_path.is_absolute():
         prompt_path = PROJECT_ROOT / prompt_path
     # Make empty level
-    generate_level(model=model_name,prompt = "start", level_length=level_length, seq_length=500, temperature=temperature, level_name="default", boost_portals=boost_portals, dynamic_temperature=dynamic_temperature)
+    # generate_level(model=model_name,prompt = "start", level_length=level_length, seq_length=500, temperature=temperature, level_name="default", boost_portals=boost_portals, dynamic_temperature=dynamic_temperature)
     for file in os.listdir(prompt_source):
         print(f"Generating a level from: {PROJECT_ROOT / prompt_path / file}")
         level_object = Level.GMD_Level(PROJECT_ROOT / prompt_path / file)
@@ -31,19 +31,24 @@ def run_benchmark(model_name : str, prompt_cutoff = 500, temperature = 1.0, prom
         generate_level(model=model_name,
                     prompt = token_string,
                     level_length=level_length,
-                    seq_length=500,
+                    seq_length=400,
                     temperature=temperature,
                     level_name=file,
                     boost_portals=boost_portals,
-                    dynamic_temperature=dynamic_temperature)
+                    dynamic_temperature=dynamic_temperature,
+                    avoid_prbolematic_tokens=avoid_problematic_tokens, 
+                    top_k=top_k,
+                    top_p=top_p)
 
 if __name__ == "__main__":
-    run_benchmark(model_name="gamma-1.03",
+    run_benchmark(model_name="radon-1.06",
                   level_length=5000,
-                  prompt_cutoff=100,
+                  prompt_cutoff=500,
                   temperature=1,
                   boost_portals=False,
-                  dynamic_temperature=True)
+                  dynamic_temperature=True,
+                  avoid_problematic_tokens=True,
+                  top_p=.75)
     """run_benchmark(model_name="setback@epoch=1",
                       prompt_cutoff=500,
                       temperature=2)"""
