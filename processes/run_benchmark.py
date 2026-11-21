@@ -41,14 +41,14 @@ def run_benchmark(model_name : str, prompt_cutoff = 500, temperature = 1.0, prom
                     top_p=top_p)
 
 if __name__ == "__main__":
-    run_benchmark(model_name="radon-1.06",
+    run_benchmark(model_name="omni-1.03",
                   level_length=5000,
-                  prompt_cutoff=500,
-                  temperature=1,
-                  boost_portals=False,
+                  prompt_cutoff=400,
+                  temperature=1.35,
+                  boost_portals=True,
                   dynamic_temperature=True,
                   avoid_problematic_tokens=True,
-                  top_p=.75)
+                  top_p=.95)
     """run_benchmark(model_name="setback@epoch=1",
                       prompt_cutoff=500,
                       temperature=2)"""

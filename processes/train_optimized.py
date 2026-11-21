@@ -43,8 +43,8 @@ if device.type == "cuda":
     torch.backends.cudnn.benchmark = True
 
 MODEL_ROOT = PROJECT_ROOT / "trained_models"
-TRAIN_SET_PATH = PROJECT_ROOT / "training_data" / "compiled_dataset@2026-11-11" / "train.txt"
-VALIDATION_SET_PATH = PROJECT_ROOT / "training_data" / "compiled_dataset@2026-11-11" / "validation.txt"
+TRAIN_SET_PATH = PROJECT_ROOT / "training_data" / "compiled_dataset@2026-11-19" / "train.txt"
+VALIDATION_SET_PATH = PROJECT_ROOT / "training_data" / "compiled_dataset@2026-11-19" / "validation.txt"
 
 save_all_epochs = False
 replace_better_models = False
@@ -60,7 +60,7 @@ else:
             "NUM_HEADS": 10,
             "NUM_LAYERS": 5,
             "D_FF": 2000,
-            "MAX_SEQ_LENGTH": 1000,
+            "MAX_SEQ_LENGTH": 750,
             "DROPOUT": .15,
             "BATCH_SIZE": 16,
             "ACCUMULATION_STEPS": 12,
@@ -68,7 +68,7 @@ else:
             "EPOCHS": 500,
             "COMPLETED_EPOCHS": 0,
             "LR": 0.0002,
-            "OBJECTS_OF_DATASET": 7715567, #2500000 
+            "OBJECTS_OF_DATASET": 11716576, #2500000 
             "TRAINING_LOSS": None,
             "VALIDATION_LOSS": None,
             "LOSS_HISTORY": []

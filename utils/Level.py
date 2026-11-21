@@ -241,13 +241,13 @@ class GMD_Level:
             
             elif int(i.details["object_id"]) in (self.map.category_to_id['saw_mini']):
                 tokens.append("saw_mini")
-                i.details["scale"] = .75 + random.random()/4
+                # i.details["scale"] = .75 + random.random()/4
             elif int(i.details["object_id"]) in (self.map.category_to_id['saw_med']):
                 tokens.append("saw_med")
-                i.details["scale"] = .75 + random.random()/4
+                # i.details["scale"] = .75 + random.random()/4
             elif int(i.details["object_id"]) in (self.map.category_to_id['saw_large']):
                 tokens.append("saw_large")
-                i.details["scale"] = .75 + random.random()/4
+                # i.details["scale"] = .75 + random.random()/4
 
             elif int(i.details["object_id"]) in (self.map.category_to_id['xhalf_speed']):
                  tokens.append("xhalf_speed"); speed = "xhalf_speed_state"
@@ -264,7 +264,7 @@ class GMD_Level:
                  tokens.append("pulse_deco")
             elif int(i.details["object_id"]) in (self.map.category_to_id['gear_deco']):
                 tokens.append("gear_deco")
-                i.details["scale"] = .5 + random.random()/2
+                # i.details["scale"] = .5 + random.random()/2
 
             elif int(i.details["object_id"]) in (self.map.category_to_id['green_orb']): 
                 tokens.append("green_orb")
@@ -349,7 +349,7 @@ class GMD_Level:
                             tokens.append("continuous_spikes-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
             elif int(i.details["object_id"]) in (self.map.category_to_id['decorative_continuous_spikes']):
                             tokens.append("decorative_continuous_spikes-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
-                            i.details["scale"] = .5 + random.random()/2
+                            # i.details["scale"] = .5 + random.random()/2
 
             # Slopes (both categories are the same asymmetric ramp shape at
             # different sizes, so both need the full 8-state rotation+flip encoding)
