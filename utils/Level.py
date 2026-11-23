@@ -10,6 +10,14 @@ from .Object import GMD_Object
 from .ObjectMapping import ObjectMap
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+NON_REFLECTABLE_22_5_CATEGORIES = (
+    "spike",
+    "spike_short",
+    "spike_mini",
+    "continuous_spikes",
+    "decorative_continuous_spikes",
+    "decorative_continuous_spikes_small",
+)
 
 
 class GMD_Level:
@@ -135,24 +143,20 @@ class GMD_Level:
         def get_90_rotation_reflectable(rotation, vFlip, hFlip):
             rotation = int(rotation)
             rotation = rotation % 360
-
-            if (rotation == 0 and vFlip == 0 and hFlip == 0) or (rotation == 180 and vFlip != 0 and hFlip != 0):
-                return "0"
-            elif (rotation == 0 and vFlip != 0 and hFlip == 0) or (rotation == 180 and vFlip == 0 and hFlip != 0):
-                return "180"
-            elif (rotation == 0 and vFlip == 0 and hFlip != 0) or (rotation == 180 and vFlip != 0 and hFlip == 0):
-                return "0"
-            elif (rotation == 0 and vFlip != 0 and hFlip != 0) or (rotation == 180 and vFlip == 0 and hFlip == 0):
-                return "180"
-
-            elif (rotation == 90 and vFlip == 0 and hFlip == 0) or (rotation == 270 and vFlip != 0 and hFlip != 0):
-                return "90"
-            elif (rotation == 90 and vFlip != 0 and hFlip == 0) or (rotation == 270 and vFlip == 0 and hFlip != 0):
-                return "270"
-            elif (rotation == 90 and vFlip == 0 and hFlip != 0) or (rotation == 270 and vFlip != 0 and hFlip == 0):
-                return "90"
-            else:
-                return "270"
+            rotations = {
+                (0, 0, 0): "0", (0, 1, 0): "180",
+                (0, 0, 1): "0", (0, 1, 1): "180",
+                (90, 0, 0): "90", (90, 1, 0): "270",
+                (90, 0, 1): "90", (90, 1, 1): "270",
+                (180, 0, 0): "180", (180, 1, 0): "0",
+                (180, 0, 1): "180", (180, 1, 1): "0",
+                (270, 0, 0): "270", (270, 1, 0): "270",
+                (270, 0, 1): "90", (270, 1, 1): "90",
+            }
+            return rotations.get(
+                (rotation, int(vFlip != 0), int(hFlip != 0)),
+                "270",
+            )
         # No longer needed
         def get_180_rotation(rotation, vFlip):
             # Same fix as get_90_rotation_reflectable above: modulo-wrap both times
@@ -163,27 +167,27 @@ class GMD_Level:
             return str(rotation)
 
         def get_90_rotation_non_reflectable(rotation, vFlip, hFlip):
-            #print(f"rotation is {rotation}")
-            rotation = int(rotation)
-            rotation = rotation % 360
+            rotation = int(rotation) % 360
+            types = {
+                (0, 0, 0): "type_1", (0, 1, 0): "type_2",
+                (0, 0, 1): "type_3", (0, 1, 1): "type_4",
+                (90, 0, 0): "type_5", (90, 1, 0): "type_6",
+                (90, 0, 1): "type_7", (90, 1, 1): "type_8",
+                (180, 0, 0): "type_4", (180, 1, 0): "type_3",
+                (180, 0, 1): "type_2", (180, 1, 1): "type_1",
+                (270, 0, 0): "type_8", (270, 1, 0): "type_7",
+                (270, 0, 1): "type_6", (270, 1, 1): "type_5",
+            }
+            return types.get(
+                (rotation, int(vFlip != 0), int(hFlip != 0)),
+                "type_8",
+            )
 
-            if (rotation == 0 and vFlip == 0 and hFlip == 0) or (rotation == 180 and vFlip != 0 and hFlip != 0):
-                return "type_1"
-            elif (rotation == 0 and vFlip != 0 and hFlip == 0) or (rotation == 180 and vFlip == 0 and hFlip != 0):
-                return "type_2"
-            elif (rotation == 0 and vFlip == 0 and hFlip != 0) or (rotation == 180 and vFlip != 0 and hFlip == 0):
-                return "type_3"
-            elif (rotation == 0 and vFlip != 0 and hFlip != 0) or (rotation == 180 and vFlip == 0 and hFlip == 0):
-                return "type_4"
-
-            elif (rotation == 90 and vFlip == 0 and hFlip == 0) or (rotation == 270 and vFlip != 0 and hFlip != 0):
-                return "type_5"
-            elif (rotation == 90 and vFlip != 0 and hFlip == 0) or (rotation == 270 and vFlip == 0 and hFlip != 0):
-                return "type_6"
-            elif (rotation == 90 and vFlip == 0 and hFlip != 0) or (rotation == 270 and vFlip != 0 and hFlip == 0):
-                return "type_7"
-            else:
-                return "type_8"
+        def get_22_5_non_reflectable(rotation, vFlip, hFlip):
+            rotation_step = round(float(rotation) / 22.5)
+            if int(vFlip) != 0:
+                rotation_step += 8
+            return f"type_{rotation_step % 16 + 1}"
 
 
         tokens = []
@@ -221,146 +225,95 @@ class GMD_Level:
                         tracking_counter = 0
                     tokens += get_y_increment(i.details["y_position"])
                     tracking_counter += 1
-                    
-
-        
-
 
 
             # Handle object categorization
+            object_id = int(i.details["object_id"])
+            category_priority = (
+                "full_block", "full_block_variation_1", "mini_block",
+                "breakable_block", "saw_mini", "saw_med", "saw_large",
+                "xhalf_speed", "x1_speed", "x2_speed", "x3_speed", "x4_speed",
+                "pulse_deco", "gear_deco", "green_orb", "blue_orb", "red_orb",
+                "black_orb", "purple_orb", "yellow_orb", "cube_portal",
+                "ship_portal", "ball_portal", "ufo_portal", "wave_portal",
+                "robot_portal", "spider_portal", "teleport_portal",
+                "green_size", "pink_size", "start_dual", "end_dual",
+                "orange_reflect", "blue_reflect", "blue_gravity",
+                "yellow_gravity", "half_block", "red_pad", "yellow_pad",
+                "blue_pad", "purple_pad", "spike", "spike_short",
+                "spike_mini", "continuous_spikes",
+                "decorative_continuous_spikes",
+                "decorative_continuous_spikes_small", "slope", "slope_long",
+                "spike_slope", "spike_slope_long", "deco_block",
+            )
+            object_category = next(
+                (category for category in category_priority
+                 if object_id in self.map.category_to_id[category]),
+                None,
+            )
 
-            # No rotational details
-            if int(i.details["object_id"]) in (self.map.category_to_id['full_block']):
-                tokens.append("full_block")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['full_block_variation_1']):
-                            tokens.append("full_block_variation_1")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['mini_block']):
-                tokens.append("mini_block")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['breakable_block']):
-                tokens.append("breakable_block")
-            
-            elif int(i.details["object_id"]) in (self.map.category_to_id['saw_mini']):
-                tokens.append("saw_mini")
-                # i.details["scale"] = .75 + random.random()/4
-            elif int(i.details["object_id"]) in (self.map.category_to_id['saw_med']):
-                tokens.append("saw_med")
-                # i.details["scale"] = .75 + random.random()/4
-            elif int(i.details["object_id"]) in (self.map.category_to_id['saw_large']):
-                tokens.append("saw_large")
-                # i.details["scale"] = .75 + random.random()/4
+            speed_categories = {
+                "xhalf_speed": "xhalf_speed_state", "x1_speed": "x1_speed_state",
+                "x2_speed": "x2_speed_state", "x3_speed": "x3_speed_state",
+                "x4_speed": "x4_speed_state",
+            }
+            mode_categories = {
+                "cube_portal": "cube_mode", "ship_portal": "ship_mode",
+                "ball_portal": "ball_mode", "ufo_portal": "ufo_mode",
+                "wave_portal": "wave_mode", "robot_portal": "robot_mode",
+                "spider_portal": "spider_mode",
+            }
 
-            elif int(i.details["object_id"]) in (self.map.category_to_id['xhalf_speed']):
-                 tokens.append("xhalf_speed"); speed = "xhalf_speed_state"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['x1_speed']):
-                tokens.append("x1_speed"); speed = "x1_speed_state"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['x2_speed']):
-                tokens.append("x2_speed"); speed = "x2_speed_state"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['x3_speed']):
-                tokens.append("x3_speed"); speed = "x3_speed_state"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['x4_speed']):
-                tokens.append("x4_speed"); speed = "x4_speed_state"
-
-            elif int(i.details["object_id"]) in (self.map.category_to_id['pulse_deco']):
-                 tokens.append("pulse_deco")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['gear_deco']):
-                tokens.append("gear_deco")
-                # i.details["scale"] = .5 + random.random()/2
-
-            elif int(i.details["object_id"]) in (self.map.category_to_id['green_orb']): 
-                tokens.append("green_orb")
+            if object_category in speed_categories:
+                tokens.append(object_category)
+                speed = speed_categories[object_category]
+            elif object_category in mode_categories:
+                tokens.append(object_category)
+                game_mode = mode_categories[object_category]
+            elif object_category in ("green_orb", "blue_orb"):
+                tokens.append(object_category)
                 gravity = "gravity_orb_state"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['blue_orb']):
-                tokens.append("blue_orb")
-                gravity = "gravity_orb_state"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['red_orb']):tokens.append("red_orb")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['black_orb']):tokens.append("black_orb")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['purple_orb']):tokens.append("purple_orb")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['yellow_orb']):tokens.append("yellow_orb")
-            
-
-            elif int(i.details["object_id"]) in (self.map.category_to_id['cube_portal']):
-                tokens.append("cube_portal")
-                game_mode = "cube_mode"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['ship_portal']):
-                tokens.append("ship_portal")
-                game_mode = "ship_mode"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['ball_portal']):
-                tokens.append("ball_portal")
-                game_mode = "ball_mode"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['ufo_portal']):
-                tokens.append("ufo_portal")
-                game_mode = "ufo_mode"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['wave_portal']):
-                tokens.append("wave_portal")
-                game_mode = "wave_mode"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['robot_portal']):
-                tokens.append("robot_portal")
-                game_mode = "robot_mode"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['spider_portal']):
-                tokens.append("spider_portal")
-                game_mode = "spider_mode"
-
-            elif int(i.details["object_id"]) in (self.map.category_to_id['teleport_portal']):tokens.append("teleport_portal")
-
-            elif int(i.details["object_id"]) in (self.map.category_to_id['green_size']):tokens.append("green_size"); size = "normal_size_state"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['pink_size']):tokens.append("pink_size"); size = "mini_size_state"
-
-            elif int(i.details["object_id"]) in (self.map.category_to_id['start_dual']):tokens.append("start_dual"); dual = "dual_player_state"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['end_dual']):tokens.append("end_dual"); dual = "single_player_state"
-
-            elif int(i.details["object_id"]) in (self.map.category_to_id['orange_reflect']):tokens.append("orange_reflect")
-            elif int(i.details["object_id"]) in (self.map.category_to_id['blue_reflect']):tokens.append("blue_reflect")
-
-            # Require special rotation logic
-            
-            # Rotated Portals
-            elif int(i.details["object_id"]) in (self.map.category_to_id['blue_gravity']):
-                            tokens.append("blue_gravity-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
-                            gravity = "blue_gravity_portal_state"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['yellow_gravity']):
-                            tokens.append("yellow_gravity-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
-                            gravity = "yellow_gravity_portal_state"
-
-            # Half Blocks
-            elif int(i.details["object_id"]) in (self.map.category_to_id['half_block']):
-                tokens.append("half_block-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
-            # Pads
-            elif int(i.details["object_id"]) in (self.map.category_to_id['red_pad']):
-                tokens.append("red_pad-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
-            elif int(i.details["object_id"]) in (self.map.category_to_id['yellow_pad']):
-                tokens.append("yellow_pad-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
-            elif int(i.details["object_id"]) in (self.map.category_to_id['blue_pad']):
-                tokens.append("blue_pad-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
-                if int(tokens[-1].split("-")[1]) == 0:
-                    gravity = "gravity_pad_state"
-                else:
-                    gravity = "reverse_gravity_pad_state"
-            elif int(i.details["object_id"]) in (self.map.category_to_id['purple_pad']):
-                tokens.append("purple_pad-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"],0))
-
-            # Spikes
-            elif int(i.details["object_id"]) in (self.map.category_to_id['spike']):
-                tokens.append("spike-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
-            elif int(i.details["object_id"]) in (self.map.category_to_id['spike_short']):
-                tokens.append("spike_short-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
-            elif int(i.details["object_id"]) in (self.map.category_to_id['spike_mini']):
-                tokens.append("spike_mini-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
-            elif int(i.details["object_id"]) in (self.map.category_to_id['continuous_spikes']):
-                            tokens.append("continuous_spikes-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
-            elif int(i.details["object_id"]) in (self.map.category_to_id['decorative_continuous_spikes']):
-                            tokens.append("decorative_continuous_spikes-" + get_90_rotation_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
-                            # i.details["scale"] = .5 + random.random()/2
-
-            # Slopes (both categories are the same asymmetric ramp shape at
-            # different sizes, so both need the full 8-state rotation+flip encoding)
-            elif int(i.details["object_id"]) in (self.map.category_to_id['slope']):
-                tokens.append("slope-" + get_90_rotation_non_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
-            elif int(i.details["object_id"]) in (self.map.category_to_id['slope_long']):
-                tokens.append("slope_long-" + get_90_rotation_non_reflectable(i.details["rotation"], i.details["flip_vertical"], i.details["flip_horizontal"]))
-
-            # Deco Blocks
-            elif int(i.details["object_id"]) in (self.map.category_to_id['deco_block']): #and self.keepDeco == True:
-                tokens.append("deco_block")
+            elif object_category == "green_size":
+                tokens.append(object_category)
+                size = "normal_size_state"
+            elif object_category == "pink_size":
+                tokens.append(object_category)
+                size = "mini_size_state"
+            elif object_category == "start_dual":
+                tokens.append(object_category)
+                dual = "dual_player_state"
+            elif object_category == "end_dual":
+                tokens.append(object_category)
+                dual = "single_player_state"
+            elif object_category in ("blue_gravity", "yellow_gravity"):
+                rotation = get_90_rotation_reflectable(
+                    i.details["rotation"], i.details["flip_vertical"], 0
+                )
+                tokens.append(f"{object_category}-{rotation}")
+                gravity = f"{object_category}_portal_state"
+            elif object_category in (
+                "half_block", "red_pad", "yellow_pad", "blue_pad", "purple_pad"
+            ):
+                rotation = get_90_rotation_reflectable(
+                    i.details["rotation"], i.details["flip_vertical"], 0
+                )
+                tokens.append(f"{object_category}-{rotation}")
+                if object_category == "blue_pad":
+                    gravity = "gravity_pad_state" if rotation == "0" else "reverse_gravity_pad_state"
+            elif object_category in NON_REFLECTABLE_22_5_CATEGORIES:
+                rotation = get_22_5_non_reflectable(
+                    i.details["rotation"], i.details["flip_vertical"],
+                    i.details["flip_horizontal"],
+                )
+                tokens.append(f"{object_category}-{rotation}")
+            elif object_category in ("slope", "slope_long", "spike_slope", "spike_slope_long"):
+                rotation = get_90_rotation_non_reflectable(
+                    i.details["rotation"], i.details["flip_vertical"],
+                    i.details["flip_horizontal"],
+                )
+                tokens.append(f"{object_category}-{rotation}")
+            elif object_category is not None:
+                tokens.append(object_category)
             elif self.keepDetail:
                 tokens.append("_")
             # print(tokens[-1], end=" ")
@@ -420,10 +373,9 @@ class GMD_Level:
                 new_object.details["y_position"] = (current_y)
                 #print(i)
                 new_object.details["object_id"] = (map.category_to_id_create[object_category])
-                # "slope" and "slope_long" both encode a type_1..type_8 token
-                # (see get_90_rotation_slope_type); everything else encodes a
-                # plain rotation number.
-                if object_category in ("slope", "slope_long"):
+                # Slopes use type_1..type_8; spike-family objects use
+                # type_1..type_16 to encode canonical 22.5-degree angles.
+                if object_category in ("slope", "slope_long", "spike_slope", "spike_slope_long"):
                     if len((parts[1].split("_"))) > 1:
                         type = int(parts[1].split("_")[1])
                     else: type = "dropped"
@@ -460,6 +412,17 @@ class GMD_Level:
                             new_object.details["rotation"] = 90
                             new_object.details["flip_vertical"] = 1
                             new_object.details["flip_horizontal"] = 1
+                elif (
+                    object_category in NON_REFLECTABLE_22_5_CATEGORIES
+                    and len(parts) > 1
+                    and parts[1].startswith("type_")
+                ):
+                    state = int(parts[1].removeprefix("type_"))
+                    if not 1 <= state <= 16:
+                        raise ValueError(f"Invalid 22.5-degree rotation token: {i}")
+                    new_object.details["rotation"] = (state - 1) * 22.5
+                    new_object.details["flip_vertical"] = 0
+                    new_object.details["flip_horizontal"] = 0
                 # Handle 180 rotations
                 elif len(parts) > 1:
                     new_object.details["rotation"] = parts[1]

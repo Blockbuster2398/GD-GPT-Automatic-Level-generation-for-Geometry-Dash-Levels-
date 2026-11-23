@@ -19,7 +19,7 @@ def run_benchmark(model_name : str, prompt_cutoff = 500, temperature = 1.0, prom
     if not prompt_path.is_absolute():
         prompt_path = PROJECT_ROOT / prompt_path
     # Make empty level
-    # generate_level(model=model_name,prompt = "start", level_length=level_length, seq_length=500, temperature=temperature, level_name="default", boost_portals=boost_portals, dynamic_temperature=dynamic_temperature)
+    generate_level(model=model_name,prompt = "start", level_length=level_length, seq_length=500, temperature=temperature, level_name="default", boost_portals=boost_portals, dynamic_temperature=dynamic_temperature)
     for file in os.listdir(prompt_source):
         print(f"Generating a level from: {PROJECT_ROOT / prompt_path / file}")
         level_object = Level.GMD_Level(PROJECT_ROOT / prompt_path / file)
@@ -31,7 +31,7 @@ def run_benchmark(model_name : str, prompt_cutoff = 500, temperature = 1.0, prom
         generate_level(model=model_name,
                     prompt = token_string,
                     level_length=level_length,
-                    seq_length=400,
+                    seq_length=750,
                     temperature=temperature,
                     level_name=file,
                     boost_portals=boost_portals,
@@ -41,14 +41,14 @@ def run_benchmark(model_name : str, prompt_cutoff = 500, temperature = 1.0, prom
                     top_p=top_p)
 
 if __name__ == "__main__":
-    run_benchmark(model_name="omni-1.03",
+    run_benchmark(model_name="omni-2.01",
                   level_length=5000,
-                  prompt_cutoff=400,
-                  temperature=1.35,
-                  boost_portals=True,
+                  prompt_cutoff=750,
+                  temperature=1.20,
+                  boost_portals=False,
                   dynamic_temperature=True,
                   avoid_problematic_tokens=True,
-                  top_p=.95)
+                  top_p=.9)
     """run_benchmark(model_name="setback@epoch=1",
                       prompt_cutoff=500,
                       temperature=2)"""
